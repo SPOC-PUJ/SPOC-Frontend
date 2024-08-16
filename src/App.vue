@@ -1,3 +1,7 @@
+<script setup>
+import Navbar from "@/components/Navbar.vue";
+</script>
+
 <template>
-  <h1 class="text-3xl">SPOC - Signal Processing on Cloud</h1>
+  <Navbar />
 </template>

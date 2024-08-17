@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "title": "Leer EDF",
+    "subtitle": "Acceso sin esfuerzo a tus datos neurofisiológicos",
+    "description": "Importa archivos en formato European Data Format (EDF), el estándar por excelencia para datos multicanal en neurociencia, incluyendo EEG, EMG y otros estudios clínicos.",
+    "benefits": "Procesa y analiza tus estudios neurofisiológicos con facilidad, asegurando que todos los datos relevantes estén disponibles para un análisis detallado y preciso.",
+    "processTime": "Tiempo de procesamiento: N/A segundos"
+  },
+  {
+    "id": 2,
+    "title": "Leer ABF",
+    "subtitle": "La puerta de entrada a tus datos electrofisiológicos",
+    "description": "Carga archivos Axon Binary File (ABF) utilizados en la adquisición de datos electrofisiológicos, esenciales para estudios de neuronas, canales iónicos y experimentos de patch-clamp.",
+    "benefits": "Integra datos de experimentos neurocientíficos directamente en tu flujo de trabajo, permitiendo un análisis continuo y profundo de las propiedades bioeléctricas neuronales.",
+    "processTime": "Tiempo de procesamiento: N/A segundos"
+  },
+  {
+    "id": 3,
+    "title": "FFT (Transformada Rápida de Fourier)",
+    "subtitle": "Revela patrones ocultos en las señales neuronales",
+    "description": "Transforma señales temporales en el dominio frecuencial para identificar ritmos cerebrales, oscilaciones neuronales y otros patrones frecuenciales críticos en la investigación neurocientífica.",
+    "benefits": "Facilita la identificación de componentes frecuenciales clave, como las bandas alfa, beta y gamma, que son fundamentales en el estudio de la actividad cerebral.",
+    "processTime": "Tiempo de procesamiento: N/A segundos"
+  },
+  {
+    "id": 4,
+    "title": "IFFT (Transformada Inversa de Fourier)",
+    "subtitle": "Reconstrucción precisa de la actividad cerebral",
+    "description": "Utiliza la IFFT para revertir la FFT y reconstruir señales neuronales en el dominio temporal después de un análisis frecuencial, asegurando la integridad de la señal.",
+    "benefits": "Permite una manipulación avanzada de las señales cerebrales para análisis específicos y la restauración precisa de datos neuronales críticos.",
+    "processTime": "Tiempo de procesamiento: N/A segundos"
+  },
+  {
+    "id": 5,
+    "title": "Transformada Wavelet",
+    "subtitle": "Análisis multiresolución de la actividad cerebral",
+    "description": "Aplica la transformada wavelet para descomponer señales cerebrales en diferentes escalas y frecuencias, ideal para estudiar señales no estacionarias como EEG y MEG.",
+    "benefits": "Proporciona una visión detallada de la actividad cerebral a lo largo del tiempo, capturando tanto eventos rápidos como tendencias prolongadas, crucial para investigaciones sobre dinámicas cerebrales.",
+    "processTime": "Tiempo de procesamiento: N/A segundos"
+  },
+  {
+    "id": 6,
+    "title": "Convoluciones",
+    "subtitle": "Refinamiento de señales cerebrales para análisis avanzado",
+    "description": "Realiza convoluciones en señales neuronales para tareas como el filtrado de ruido o la detección de patrones específicos en EEG, MEG, y señales de neuroimagen.",
+    "benefits": "Mejora la precisión del análisis de señales cerebrales, permitiendo la detección y el estudio de fenómenos sutiles y específicos dentro de los datos neuronales.",
+    "processTime": "Tiempo de procesamiento: N/A segundos"
+  },
+  {
+    "id": 7,
+    "title": "Filtro Moving Average",
+    "subtitle": "Suaviza la actividad cerebral para revelar tendencias claras",
+    "description": "Aplica un filtro de media móvil para suavizar las fluctuaciones rápidas en datos neurofisiológicos, ayudando a resaltar tendencias y patrones subyacentes.",
+    "benefits": "Esencial para eliminar el ruido de las señales neuronales, permitiendo que las tendencias significativas en la actividad cerebral se destaquen con mayor claridad.",
+    "processTime": "Tiempo de procesamiento: N/A segundos"
+  },
+  {
+    "id": 8,
+    "title": "Generar Señales Aleatorias",
+    "subtitle": "Simulación y validación de modelos neuronales",
+    "description": "Genera señales neuronales aleatorias con características definidas por el usuario, ideal para la simulación de redes neuronales y la validación de algoritmos de análisis.",
+    "benefits": "Proporciona un entorno controlado para probar y ajustar modelos de procesamiento de señales neuronales antes de aplicarlos a datos experimentales reales.",
+    "processTime": "Tiempo de procesamiento: N/A segundos"
+  },
+  {
+    "id": 9,
+    "title": "Suma Acumulativa (Running Sum)",
+    "subtitle": "Monitoriza el acúmulo de potenciales de acción",
+    "description": "Calcula la suma acumulativa de eventos neuronales, como potenciales de acción, para estudiar la dinámica acumulativa de la actividad cerebral.",
+    "benefits": "Facilita el análisis del comportamiento acumulativo en redes neuronales, ayudando a entender cómo se integran los eventos neuronales a lo largo del tiempo.",
+    "processTime": "Tiempo de procesamiento: N/A segundos"
+  },
+  {
+    "id": 10,
+    "title": "Primera Diferencia (First Difference)",
+    "subtitle": "Detecta cambios críticos en la actividad cerebral",
+    "description": "Calcula la diferencia entre valores consecutivos en señales neurofisiológicas, resaltando cambios abruptos o tendencias emergentes en la actividad cerebral.",
+    "benefits": "Ideal para detectar transiciones y eventos significativos en el comportamiento neuronal, proporcionando insights cruciales para el análisis de dinámicas cerebrales.",
+    "processTime": "Tiempo de procesamiento: N/A segundos"
+  }
+]

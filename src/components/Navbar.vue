@@ -1,4 +1,5 @@
 <script setup>
+import { RouterLink } from "vue-router";
 import logo from '../assets/img/logo.svg';
 </script>
 
@@ -10,33 +11,33 @@ import logo from '../assets/img/logo.svg';
             class="flex flex-1 items-center justify-center md:items-stretch md:justify-start"
         >
           <!-- Logo -->
-          <a class="flex flex-shrink-0 items-center mr-4" href="index.html">
+          <RouterLink class="flex flex-shrink-0 items-center mr-4" to="/">
             <img class="h-10 w-auto" v-bind:src="logo" alt="SPOC - Signal Processing on Cloud" />
-            <span class="hidden md:block text-[#F2E74B] text-2xl font-bold ml-2"
-            >SPOC - Signal Processing on Cloud</span
-            >
-          </a>
+            <span class="hidden md:block text-[#F2E74B] text-2xl font-bold ml-2">
+              SPOC - Signal Processing on Cloud
+            </span>
+          </RouterLink>
           <div class="md:ml-auto">
             <div class="flex space-x-2">
-              <a href="/" class="text-[#F2E74B] bg-[#735620] hover:bg-[#F2B441] hover:text-[#010D00] rounded-md px-3 py-2">
+              <RouterLink to="/" class="text-[#F2E74B] bg-[#735620] hover:bg-[#F2B441] hover:text-[#010D00] rounded-md px-3 py-2">
                 Home
-              </a>
+              </RouterLink>
 
-              <a href="/functionalities" class="text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2">
+              <RouterLink to="/functionalities" class="text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2">
                 Funcionalidades
-              </a>
+              </RouterLink>
 
-              <a href="/signal-visualizer" class="text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2">
+              <RouterLink to="/signal-visualizer" class="text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2">
                 Visualizador
-              </a>
+              </RouterLink>
 
-              <a href="/processing-tools" class="text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2">
+              <RouterLink to="/processing-tools" class="text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2">
                 Herramientas de Procesamiento
-              </a>
+              </RouterLink>
 
-              <a href="/documentation" class="text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2">
+              <RouterLink to="/documentation" class="text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2">
                 Documentación
-              </a>
+              </RouterLink>
             </div>
           </div>
         </div>

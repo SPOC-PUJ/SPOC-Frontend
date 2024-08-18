@@ -1,5 +1,6 @@
 <script setup>
 import { defineProps, ref, computed } from 'vue';
+import { RouterLink } from "vue-router";
 
 const props = defineProps({
   funcionality: Object
@@ -75,9 +76,9 @@ const shorterBenefits = computed(() => {
           <i class="pi pi-clock text-orange-700"></i>
           {{ funcionality.processTime }}
         </div>
-        <a href="/functionalities" class="h-[36px] bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-center text-sm">
+        <RouterLink v-bind:to="'/functionalities/' + funcionality.id" class="h-[36px] bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-center text-sm">
           Ver más
-        </a>
+        </RouterLink>
       </div>
     </div>
   </div>

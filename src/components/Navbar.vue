@@ -4,7 +4,7 @@ import logo from '../assets/img/logo.svg';
 
 <template>
   <nav class="bg-[#010D00] border-b border-[#735620]">
-    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-9xl px-2 sm:px-6 lg:px-8">
       <div class="flex h-20 items-center justify-between">
         <div
             class="flex flex-1 items-center justify-center md:items-stretch md:justify-start"

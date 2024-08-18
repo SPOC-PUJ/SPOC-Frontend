@@ -9,5 +9,5 @@ import FunctionalitiesList from "@/components/FunctionalitiesList.vue";
   <Navbar />
   <Hero />
   <HomeCards />
-  <FunctionalitiesList />
+  <FunctionalitiesList :limitOfFuncionalities="6" />
 </template>

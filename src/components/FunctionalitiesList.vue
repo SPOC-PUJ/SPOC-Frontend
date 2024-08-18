@@ -1,15 +1,19 @@
 <script setup>
+// Se crea una variable reactiva para almacenar las funcionalidades.
+import { ref, defineProps } from "vue";
+
 import Funcionality from "@/components/Funcionality.vue";
 
 // Se importa el archivo JSON con las funcionalidades de SPOC.
 import FuncionalitiesItems from "@/Funcionalities.json"
 
-// Se crea una variable reactiva para almacenar las funcionalidades.
-import { ref } from "vue";
-
 // Se almacenan las funcionalidades en la variable reactiva.
 const funcionalities = ref(FuncionalitiesItems);
 console.log("Funcionalities Items: ", funcionalities.value);
+
+defineProps({
+  limitOfFuncionalities: Number
+})
 </script>
 
 <template>
@@ -20,7 +24,7 @@ console.log("Funcionalities Items: ", funcionalities.value);
       </h2>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Funcionality v-for="funcionality in funcionalities" :key="funcionality.id" v-bind:funcionality="funcionality"/>
+        <Funcionality v-for="funcionality in funcionalities.slice(0, limitOfFuncionalities || funcionalities.lenght)" :key="funcionality.id" v-bind:funcionality="funcionality"/>
       </div>
     </div>
   </section>

@@ -18,7 +18,7 @@ import logo from '../assets/img/logo.svg';
           </a>
           <div class="md:ml-auto">
             <div class="flex space-x-2">
-              <a href="index.html" class="text-[#F2E74B] bg-[#735620] hover:bg-[#F2B441] hover:text-[#010D00] rounded-md px-3 py-2">
+              <a href="/" class="text-[#F2E74B] bg-[#735620] hover:bg-[#F2B441] hover:text-[#010D00] rounded-md px-3 py-2">
                 Home
               </a>
 

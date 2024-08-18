@@ -1,9 +1,43 @@
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, ref, computed } from 'vue';
 
-defineProps({
+const props = defineProps({
   funcionality: Object
 });
+
+const toggleFullFuncionalityDescription = () => {
+  showFullFuncionalityDescription.value = !showFullFuncionalityDescription.value;
+};
+
+const toggleFullFuncionalityBenefits = () => {
+  showFullFuncionalityBenefits.value = !showFullFuncionalityBenefits.value;
+};
+
+const showFullFuncionalityDescription = ref(false);
+
+const shorterDescription = computed(() => {
+  let description = props.funcionality.description;
+
+  if(showFullFuncionalityDescription.value === false)
+  {
+    description = description.substring(0, 100) + '...';
+  }
+  return description;
+});
+
+
+const showFullFuncionalityBenefits = ref(false);
+
+const shorterBenefits = computed(() => {
+  let benefits = props.funcionality.benefits;
+
+  if(showFullFuncionalityBenefits.value === false)
+  {
+    benefits = benefits.substring(0, 100) + '...';
+  }
+  return benefits;
+});
+
 </script>
 
 <template>
@@ -15,7 +49,12 @@ defineProps({
       </div>
 
       <div class="mb-5">
-        {{ funcionality.description }}
+        <div>
+          {{ shorterDescription }}
+        </div>
+        <button @click="toggleFullFuncionalityDescription" class="text-green-500 hover:text-green-600 mb-5">
+          {{ showFullFuncionalityDescription ? 'Ver menos' : 'Ver mas' }}
+        </button>
       </div>
 
       <!--  <h3 class="text-green-500 mb-2">$70 - $80K / Year</h3>  -->
@@ -23,7 +62,12 @@ defineProps({
       <div class="border border-gray-100 mb-5"></div>
 
       <div class="mb-5">
-        {{ funcionality.benefits }}
+        <div>
+          {{ shorterBenefits }}
+        </div>
+        <button @click="toggleFullFuncionalityBenefits" class="text-green-500 hover:text-green-600 mb-5">
+          {{ showFullFuncionalityBenefits ? 'Ver menos' : 'Ver mas' }}
+        </button>
       </div>
 
       <div class="flex flex-col lg:flex-row justify-between mb-4">

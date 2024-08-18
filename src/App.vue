@@ -9,5 +9,5 @@ import FunctionalitiesList from "@/components/FunctionalitiesList.vue";
   <Navbar />
   <Hero />
   <HomeCards />
-  <FunctionalitiesList :limitOfFuncionalities="6" />
+  <FunctionalitiesList v-bind:limitOfFuncionalities="6" v-bind:showSeeAllButton="true" />
 </template>

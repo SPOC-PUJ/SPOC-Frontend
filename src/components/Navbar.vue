@@ -18,26 +18,25 @@ import logo from '../assets/img/logo.svg';
           </a>
           <div class="md:ml-auto">
             <div class="flex space-x-2">
-              <a
-                  href="index.html"
-                  class="text-[#F2E74B] bg-[#735620] hover:bg-[#F2B441] hover:text-[#010D00] rounded-md px-3 py-2"
-              >Home</a
-              >
-              <a
-                  href="jobs.html"
-                  class="text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2"
-              >Visualizador</a
-              >
-              <a
-                  href="add-job.html"
-                  class="text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2"
-              >Herramientas</a
-              >
-              <a
-                  href="add-job.html"
-                  class="text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2"
-              >Documentación</a
-              >
+              <a href="index.html" class="text-[#F2E74B] bg-[#735620] hover:bg-[#F2B441] hover:text-[#010D00] rounded-md px-3 py-2">
+                Home
+              </a>
+
+              <a href="/functionalities" class="text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2">
+                Funcionalidades
+              </a>
+
+              <a href="/signal-visualizer" class="text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2">
+                Visualizador
+              </a>
+
+              <a href="/processing-tools" class="text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2">
+                Herramientas de Procesamiento
+              </a>
+
+              <a href="/documentation" class="text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2">
+                Documentación
+              </a>
             </div>
           </div>
         </div>

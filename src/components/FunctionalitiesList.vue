@@ -12,11 +12,16 @@ const funcionalities = ref(FuncionalitiesItems);
 console.log("Funcionalities Items: ", funcionalities.value);
 
 defineProps({
-  limitOfFuncionalities: Number
+  limitOfFuncionalities: Number,
+  showSeeAllButton: {
+    type: Boolean,
+    default: false
+  }
 })
 </script>
 
 <template>
+  <!-- Sección de funcionalidades -->
   <section class="bg-blue-50 px-4 py-10">
     <div class="container-xl lg:container m-auto">
       <h2 class="text-3xl font-bold text-green-500 mb-6 text-center">
@@ -27,6 +32,15 @@ defineProps({
         <Funcionality v-for="funcionality in funcionalities.slice(0, limitOfFuncionalities || funcionalities.lenght)" :key="funcionality.id" v-bind:funcionality="funcionality"/>
       </div>
     </div>
+  </section>
+
+  <!-- Botón para ver todas las funcionalidades -->
+  <section v-if="showSeeAllButton === true" class="m-auto max-w-lg my-10 px-6">
+    <a
+        href="/functionalities"
+        class="block bg-black text-white text-center py-4 px-6 rounded-xl hover:bg-gray-700"
+    >View All Jobs</a
+    >
   </section>
 
 </template>

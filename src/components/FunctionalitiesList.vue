@@ -36,11 +36,9 @@ defineProps({
 
   <!-- Botón para ver todas las funcionalidades -->
   <section v-if="showSeeAllButton === true" class="m-auto max-w-lg my-10 px-6">
-    <a
-        href="/functionalities"
-        class="block bg-black text-white text-center py-4 px-6 rounded-xl hover:bg-gray-700"
-    >View All Jobs</a
-    >
+    <a href="/functionalities" class="block bg-black text-white text-center py-4 px-6 rounded-xl hover:bg-gray-700">
+      Ver todas las funcionalidades
+    </a>
   </section>
 
 </template>

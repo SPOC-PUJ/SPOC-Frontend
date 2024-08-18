@@ -1,6 +1,11 @@
 <script setup>
-import { RouterLink } from "vue-router";
+import { RouterLink, useRoute } from "vue-router";
 import logo from '../assets/img/logo.svg';
+
+const isActiveLink = (routePath) => {
+  const route = useRoute();
+  return route.path === routePath;
+}
 </script>
 
 <template>
@@ -19,23 +24,23 @@ import logo from '../assets/img/logo.svg';
           </RouterLink>
           <div class="md:ml-auto">
             <div class="flex space-x-2">
-              <RouterLink to="/" class="text-[#F2E74B] bg-[#735620] hover:bg-[#F2B441] hover:text-[#010D00] rounded-md px-3 py-2">
+              <RouterLink to="/" v-bind:class="[isActiveLink('/') ? 'bg-[#735620]' : 'hover:bg-[#F2B441]' , 'text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2']">
                 Home
               </RouterLink>
 
-              <RouterLink to="/functionalities" class="text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2">
+              <RouterLink to="/functionalities" v-bind:class="[isActiveLink('/functionalities') ? 'bg-[#735620]' : 'hover:bg-[#F2B441]' , 'text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2']">
                 Funcionalidades
               </RouterLink>
 
-              <RouterLink to="/signal-visualizer" class="text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2">
+              <RouterLink to="/signal-visualizer" v-bind:class="[isActiveLink('/signal-visualizer') ? 'bg-[#735620]' : 'hover:bg-[#F2B441]' , 'text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2']">
                 Visualizador
               </RouterLink>
 
-              <RouterLink to="/processing-tools" class="text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2">
+              <RouterLink to="/processing-tools" v-bind:class="[isActiveLink('/processing-tools') ? 'bg-[#735620]' : 'hover:bg-[#F2B441]' , 'text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2']">
                 Herramientas de Procesamiento
               </RouterLink>
 
-              <RouterLink to="/documentation" class="text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2">
+              <RouterLink to="/documentation" v-bind:class="[isActiveLink('/documentation') ? 'bg-[#735620]' : 'hover:bg-[#F2B441]' , 'text-[#F2E74B] hover:bg-[#F2D544] hover:text-[#010D00] rounded-md px-3 py-2']">
                 Documentación
               </RouterLink>
             </div>

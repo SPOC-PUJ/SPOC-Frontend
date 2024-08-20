@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import EdfReader from '@/components/EdfReader.vue';
 
 const fileName = ref(null);
 
@@ -32,7 +33,10 @@ onMounted(() => {
     <h1>Signal Visualizer</h1>
     <input type="file" @change="handleFileUpload" />
     <p v-if="fileName">Archivo cargado: {{ fileName }}</p>
+    <EdfReader />
   </div>
+
+  
 </template>
 
 <style scoped>

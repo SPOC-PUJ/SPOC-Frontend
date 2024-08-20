@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import EdfReader from '@/components/EdfReader.vue';
+import SimpleChart from "@/components/SimpleChart.vue";
 
 const fileName = ref(null);
 
@@ -29,16 +30,18 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
+  <div class="border-dotted border-4 border-red-400">
     <h1>Signal Visualizer</h1>
-    <input type="file" @change="handleFileUpload" />
+    <input type="file" @change="handleFileUpload"/>
     <p v-if="fileName">Archivo cargado: {{ fileName }}</p>
-    <EdfReader />
+    <EdfReader/>
+  </div>
+  <div class="border-dotted border-4 border-sky-500">
+    <SimpleChart/>
   </div>
 
-  
 </template>
 
 <style scoped>
-/* Aquí puedes agregar estilos personalizados si es necesario */
+
 </style>

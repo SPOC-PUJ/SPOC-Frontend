@@ -42,7 +42,7 @@ onMounted(() => {
 
       // Paso #5: Definir los dominios de las escalas X e Y (los dominios son los valores reales que se mostrarán en el gráfico)
       x.domain(d3.extent(dataset, d => d.punto)); // El dominio de la escala X es el rango de valores de la propiedad 'punto' del dataset
-      y.domain([0, d3.max(dataset, d => d.value) * 1.1]); // El dominio de la escala Y es de 0 al valor máximo de la propiedad 'value' del dataset
+      y.domain([d3.min(dataset, d => d.value) * 1.1, d3.max(dataset, d => d.value) * 1.1]); // El dominio de la escala Y es de 0 al valor máximo de la propiedad 'value' del dataset
 
       svg.selectAll('*').remove(); // Limpiar el gráfico antes de redibujar
 
@@ -64,7 +64,7 @@ onMounted(() => {
           .datum(dataset) // Añade el dataset a la línea
           .attr('fill', 'none') // Relleno de la línea (en este caso no tiene relleno)
           .attr('stroke', 'steelblue') // Color de la línea
-          .attr('stroke-width', 2) // Grosor de la línea (en este caso 2 píxeles)
+          .attr('stroke-width', 0.1) // Grosor de la línea (en este caso 0.1 píxeles)
           .attr('d', line); // Añade la línea al gráfico
     }
   }, {immediate: true});

@@ -3,7 +3,8 @@ import { ref, onMounted } from 'vue';
 import EdfReader from '@/components/EdfReader.vue';
 import SimpleChart from "@/components/SimpleChart.vue";
 
-const fileName = ref(null);
+const fileName = ref(null); // Nombre del archivo cargado
+const realValues = ref([]); // Array para almacenar los valores reales y pasarlos al graficador
 
 function handleFileUpload(event) {
   const file = event.target.files[0];
@@ -21,6 +22,12 @@ function handleFileUpload(event) {
   }
 }
 
+function handleFileProcessed(values)
+{
+  // Almacenar los valores reales obtenidos del EDFReader
+  realValues.value = values;
+}
+
 onMounted(() => {
   const storedFileName = localStorage.getItem('uploadedFileName');
   if (storedFileName) {
@@ -34,12 +41,11 @@ onMounted(() => {
     <h1>Signal Visualizer</h1>
     <input type="file" @change="handleFileUpload"/>
     <p v-if="fileName">Archivo cargado: {{ fileName }}</p>
-    <EdfReader/>
+    <EdfReader @fileProcessed="handleFileProcessed"/> <!-- Escuchar el evento fileProcessed -->
   </div>
   <div class="border-dotted border-4 border-sky-500">
-    <SimpleChart/>
+    <SimpleChart v-bind:data="realValues"/> <!-- Pasar los valores reales al graficador -->
   </div>
-
 </template>
 
 <style scoped>

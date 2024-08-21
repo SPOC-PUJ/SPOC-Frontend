@@ -1,5 +1,7 @@
 <script setup>
-import {onMounted, ref} from 'vue';
+import { onMounted, ref, defineEmits } from 'vue';
+
+const emit = defineEmits(['fileProcessed']); // Esto permite emitir eventos personalizados (los datos que usará el graficador)
 
 const output = ref('');
 
@@ -7,14 +9,16 @@ const processFile = (event) => {
   const file = event.target.files[0];
   const reader = new FileReader();
 
-  reader.onload = () => {
+  reader.onload = (e) => { // La "e" es el evento de carga del archivo
     const data = new Uint8Array(reader.result);
 
+    // Crear un archivo en el sistema de archivos del módulo WebAssembly
     Module.FS_createDataFile('/', 'filename', data, true, true, true);
 
+    // Crear una instancia del lector EDF
     const edfInstance = new Module.EDF('filename');
 
-    // Example of using the EDF instance
+    // Ejemplo de uso de la instancia EDF
     edfInstance.PrintHeaderRecords();
     edfInstance.PrintDataRecords();
     edfInstance.PrintSizeSignals();
@@ -22,6 +26,7 @@ const processFile = (event) => {
 
     console.log(edfInstance);
 
+    // Obtener la instancia de señales
     const signalsInstance = edfInstance.Signals;
 
     console.log(signalsInstance);
@@ -35,25 +40,32 @@ const processFile = (event) => {
     console.log(sigInstanc);
     if (sigInstanc.size() !== 0) {
       console.log(sigInstanc.size());
-
       console.log('signals found.');
     }
 
     var veceigen = sigInstanc.get(0);
     console.log(veceigen);
     console.log(veceigen.size);
+
+    // Almacenar los valores reales en un array y emitirlos
+    const realValues = []; // Array para almacenar los valores reales y pasarlos al graficador
     for (let i = 0; i < veceigen.size; i++) {
       var complexValue = veceigen.get(i);
       console.log('Complex value:', complexValue);
       console.log('Real part:', complexValue.real());
       console.log('Imaginary part:', complexValue.imag());
+
+      realValues.push(complexValue.real()); // Solo almacenar la parte real y enviarla al graficador
     }
+
+    // Emitir los valores reales procesados
+    emit('fileProcessed', realValues); // Emitir los valores reales para que el graficador los muestre
 
     output.value = 'File processed successfully';
     event.target.value = ''; // Clear the file input after processing
   };
 
-  reader.readAsArrayBuffer(file); // Read as binary data
+  reader.readAsArrayBuffer(file); // Leer como datos binarios
 };
 
 onMounted(() => {

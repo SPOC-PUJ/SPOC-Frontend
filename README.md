@@ -27,3 +27,9 @@ npm run dev
 ```sh
 npm run build
 ```
+
+## Compile protoc
+
+```sh
+    npx protoc --ts_out ./src/proto/proto-ts --proto_path proto proto/<archivo.proto>
+```

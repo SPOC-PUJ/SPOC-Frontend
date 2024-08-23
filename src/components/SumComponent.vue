@@ -27,7 +27,7 @@ export default {
     const resultado = ref(null);
 
     const client = new SumServiceClient(
-      new GrpcWebFetchTransport({ baseUrl: 'http://localhost:5000' })
+      new GrpcWebFetchTransport({ baseUrl: 'http://localhost:8080' })
     );
 
     const sumarNumeros = async () => {
@@ -37,10 +37,11 @@ export default {
       });
 
       try {
-        const response = await client.suma(request);
+        const {response} = await client.suma(request);
+        console.log(response);
         resultado.value = response.value;
       } catch (error) {
-        console.error("Error al realizar la suma:", error);
+        console.error('Error al realizar la solicitud gRPC:', error);
       }
     };
 
@@ -53,7 +54,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .sum-component {

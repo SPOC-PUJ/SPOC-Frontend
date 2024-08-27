@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue';
 import EdfReader from '@/components/EdfReader.vue';
 import SimpleChart from "@/components/SimpleChart.vue";
 import SumComponent from '@/components/SumComponent.vue';
+import MovingAverage from '@/components/MovingAverage.vue';
 const fileName = ref(null);
 
 function handleFileUpload(event) {
@@ -38,7 +39,8 @@ onMounted(() => {
   </div>
   <div class="border-dotted border-4 border-sky-500">
     <SimpleChart/>
-    <SumComponent/>
+    <!-- <SumComponent/> -->
+    <MovingAverage/>
   </div>
   
 </template>

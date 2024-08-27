@@ -61,7 +61,7 @@ const processFile = (event) => {
     // Emitir los valores reales procesados
     emit('fileProcessed', realValues); // Emitir los valores reales para que el graficador los muestre
 
-    output.value = 'File processed successfully';
+    output.value = 'File processed successfully (Quitar)';
     event.target.value = ''; // Clear the file input after processing
   };
 

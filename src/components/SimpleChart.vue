@@ -14,8 +14,8 @@ const props = defineProps({
 
 onMounted(() => {
   // Paso #1: Crear el contenedor del gráfico
-  const margin = {top: 20, right: 20, bottom: 30, left: 70}; // Márgenes del gráfico
-  const width = 960 - margin.left - margin.right; // Ancho del gráfico
+  const margin = {top: 50, right: 20, bottom: 50, left: 70}; // Márgenes del gráfico
+  const width = chartContainer.value.clientWidth - margin.left - margin.right; // Ancho dinámico del gráfico
   const height = 500 - margin.top - margin.bottom; // Alto del gráfico
 
   // Paso #2: Crear las escalas para los ejes X e Y (esto es para definir el rango de valores que se mostrarán en el gráfico)
@@ -49,17 +49,72 @@ onMounted(() => {
       // Paso #6: Añadir el eje X
       svg.append('g') // Añade un grupo al SVG
           .attr('transform', `translate(0, ${height})`) // Desplaza el grupo al final del eje Y (esto es para que el eje X se muestre en la parte inferior del gráfico)
-          .call(d3.axisBottom(x).ticks(10).tickFormat(d3.format('d'))); // Esto le dice a D3 que añada un eje X al grupo, con 10 divisiones y formato de número entero
+          .call(d3.axisBottom(x).ticks(20).tickFormat(d3.format('d'))); // Esto le dice a D3 que añada un eje X al grupo, con 10 divisiones y formato de número entero
 
       // Paso #7: Añadir el eje Y
-      svg.append('g').call(d3.axisLeft(y)); // Añade un eje Y al grupo (esto es para que el eje Y se muestre en la parte izquierda del gráfico)
+      svg.append('g')
+          .call(d3.axisLeft(y)
+              .ticks((d3.max(dataset, d => d.value) - d3.min(dataset, d => d.value)) / 1000) // Esto le dice a D3 que añada un eje Y al grupo, con 1000 divisiones
+              .tickFormat(d => {
+                return `${(d / 1000).toFixed(1)}k`; // Formato de los números del eje Y
+              })) // Añade un eje Y al grupo (esto es para que el eje Y se muestre en la parte izquierda del gráfico)
 
-      // Paso #8: Generar la línea del gráfico
+
+      // Paso #7.1.1: Añadir gridlines verticales
+      svg.selectAll("xGrid")
+          .data(x.ticks(100).slice(0))
+          .join("line")
+          .attr("x1", d => x(d))
+          .attr("x2", d => x(d))
+          .attr("y1", 0)
+          .attr("y2", height)
+          .attr("stroke", "#e0e0e0")
+          .attr("stroke-width", 1);
+
+      // Paso #7.1.2: Añadir gridlines verticales
+      svg.selectAll("yGrid")
+          .data(y.ticks((d3.max(dataset, d => d.value) - d3.min(dataset, d => d.value)) / 1000).slice(0))
+          .join("line")
+          .attr("x1", 0)
+          .attr("x2", width)
+          .attr("y1", d => y(d))
+          .attr("y2", d => y(d))
+          .attr("stroke", "#e0e0e0")
+          .attr("stroke-width", 1);
+
+      // Paso #8: Añadir titulos a los ejes
+      // Título de la gráfica
+      svg.append('text')
+          .attr("class", "chart-title")
+          .attr('x', width / 2)
+          .attr('y', margin.top - 65)
+          .style('font-size', '24px').style('font-weight', 'bold').style("font-family", "Arial")
+          .text('Señal de ECG');
+
+      // Título del eje Y
+      svg.append('text')
+          .attr('transform', 'rotate(-90)')
+          .attr('y', 0 - margin.left + 10)
+          .attr('x', 0 - (height / 2))
+          .attr('dy', '1em')
+          .style('text-anchor', 'middle')
+          .style('font-size', '16px').style('font-weight', 'bold').style("font-family", "Arial")
+          .text('Amplitud (mV)');
+
+      // Título del eje X
+      svg.append('text')
+          .attr('x', width / 2)
+          .attr('y', height + margin.top - 5)
+          .style('text-anchor', 'middle')
+          .style('font-size', '16px').style('font-weight', 'bold').style("font-family", "Arial")
+          .text('Tiempo (ms)');
+
+      // Paso #9: Generar la línea del gráfico
       const line = d3.line() // La variable line es la función que generará la línea del gráfico
           .x(d => x(d.punto)) // La coordenada X de la línea se basa en la propiedad 'punto' del dataset
           .y(d => y(d.value)); // La coordenada Y de la línea se basa en la propiedad 'value' del dataset
 
-      // Paso #9: Añadir la línea al gráfico (esto es lo que realmente dibuja la línea en el gráfico)
+      // Paso #10: Añadir la línea al gráfico (esto es lo que realmente dibuja la línea en el gráfico)
       svg.append('path') // Añade un elemento path al grupo (esto es para añadir la línea al gráfico)
           .datum(dataset) // Añade el dataset a la línea
           .attr('fill', 'none') // Relleno de la línea (en este caso no tiene relleno)
@@ -76,5 +131,5 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* Estilos personalizados para el gráfico */
+
 </style>

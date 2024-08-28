@@ -21,19 +21,11 @@ function handleFileProcessed(values) {
 <template>
   <LoadFileCard @fileProcessed="handleFileProcessed"/>
   <div class="border-dotted border-4 border-sky-500">
-
-    <SimpleChart/>
-    <!-- <SumComponent/> -->
-    
     <SimpleChart v-bind:data="realValues"/> <!-- Pasar los valores reales al graficador -->
-    <MovingAverage/>
-    
+    <!-- <SumComponent/> -->
+
+    <!-- <MovingAverage/> -->
   </div>
-  
-
-    
-
-
 </template>
 
 <style scoped>

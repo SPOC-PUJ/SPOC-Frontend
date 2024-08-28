@@ -1,5 +1,8 @@
 <script setup>
 import { onMounted, ref, defineEmits } from 'vue';
+import DangerModal from "@/components/DangerModal.vue";
+
+const showDangerModal = ref(false); // Controlar la visibilidad del modal
 
 const emit = defineEmits(['fileProcessed']); // Esto permite emitir eventos personalizados (los datos que usará el graficador)
 
@@ -8,6 +11,18 @@ const output = ref('');
 const processFile = (event) => {
   const file = event.target.files[0];
   const reader = new FileReader();
+
+  console.log(file.name);
+
+  if (file.name.endsWith(".edf") || file.name.endsWith(".abf")) {
+    output.value = "Formato Correcto";
+  }
+  else
+  {
+    output.value = "Formato Incorrecto, solo se aceptan archivos .edf y .abf.";
+    showDangerModal.value = true; // Mostrar el modal de error
+    return;
+  }
 
   reader.onload = (e) => { // La "e" es el evento de carga del archivo
     const data = new Uint8Array(reader.result);
@@ -81,6 +96,7 @@ onMounted(() => {
 <template>
   <div>
     <h1>EDF File Processor</h1>
+    <DangerModal v-if="showDangerModal" @close="showDangerModal = false" /> <!-- Mostrar el modal de error -->
     <input type="file" @change="processFile"/>
     <pre>{{ output }}</pre>
   </div>

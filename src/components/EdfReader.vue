@@ -108,15 +108,12 @@ onMounted(() => {
 
 <template>
   <div>
-    <h1>EDF File Processor</h1>
-    <DangerModal
-        v-if="showDangerModal"
-        @close="showDangerModal = false"
-        @retry="handleRetry"
-        v-bind:fileName="incompatibleFileName"
-        v-bind:fileExtension="incompatibleFileExtension"
-    /> <!-- Mostrar el modal de error -->
-    <input ref="fileInputRef" type="file" @change="processFile" />
+    <DangerModal v-if="showDangerModal" @close="showDangerModal = false" @retry="handleRetry" v-bind:fileName="incompatibleFileName" v-bind:fileExtension="incompatibleFileExtension"/> <!-- Mostrar el modal de error -->
+    <div class="flex justify-center items-center">
+      <label for="fileInputRef" class="pi pi-upload cursor-pointer inline-block px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">   Cargar Archivo</label>
+    </div>
+
+    <input id="fileInputRef" type="file" @change="processFile" hidden/>
     <pre>{{ output }}</pre>
   </div>
 </template>

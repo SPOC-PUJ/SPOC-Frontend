@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import {ref, onMounted} from 'vue';
 import SimpleChart from "@/components/SimpleChart.vue";
 import LoadFileCard from "@/components/LoadFileCard.vue";
 
@@ -13,9 +13,7 @@ function handleFileProcessed(values) {
 </script>
 
 <template>
-  <div class="border-dotted border-4 border-red-400">
-    <LoadFileCard @fileProcessed="handleFileProcessed" />
-  </div>
+  <LoadFileCard @fileProcessed="handleFileProcessed"/>
   <div class="border-dotted border-4 border-sky-500">
     <SimpleChart v-bind:data="realValues"/> <!-- Pasar los valores reales al graficador -->
   </div>

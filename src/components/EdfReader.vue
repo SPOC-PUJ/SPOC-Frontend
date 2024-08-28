@@ -2,7 +2,9 @@
 import { onMounted, ref, defineEmits } from 'vue';
 import DangerModal from "@/components/DangerModal.vue";
 
-const showDangerModal = ref(false); // Controlar la visibilidad del modal
+const showDangerModal = ref(false); // Controlar la visibilidad del modal.
+const incompatibleFileName = ref(''); // Almacenar el nombre del archivo incompatible.
+const incompatibleFileExtension = ref(''); // Almacenar la extensión del archivo incompatible.
 
 const emit = defineEmits(['fileProcessed']); // Esto permite emitir eventos personalizados (los datos que usará el graficador)
 
@@ -14,12 +16,17 @@ const processFile = (event) => {
 
   console.log(file.name);
 
+  // Verificar la extensión del archivo
   if (file.name.endsWith(".edf") || file.name.endsWith(".abf")) {
     output.value = "Formato Correcto";
   }
   else
   {
     output.value = "Formato Incorrecto, solo se aceptan archivos .edf y .abf.";
+
+    incompatibleFileName.value = file.name; // Asignar el nombre del archivo
+    incompatibleFileExtension.value = file.name.split('.').pop(); // Extraer la extensión del archivo
+
     showDangerModal.value = true; // Mostrar el modal de error
     return;
   }
@@ -96,7 +103,7 @@ onMounted(() => {
 <template>
   <div>
     <h1>EDF File Processor</h1>
-    <DangerModal v-if="showDangerModal" @close="showDangerModal = false" /> <!-- Mostrar el modal de error -->
+    <DangerModal v-if="showDangerModal" @close="showDangerModal = false" v-bind:fileName="incompatibleFileName" v-bind:fileExtension="incompatibleFileExtension"/> <!-- Mostrar el modal de error -->
     <input type="file" @change="processFile"/>
     <pre>{{ output }}</pre>
   </div>

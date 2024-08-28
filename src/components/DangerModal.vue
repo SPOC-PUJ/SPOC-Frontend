@@ -1,9 +1,15 @@
 <script setup>
-import { ref } from 'vue'
-import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
+import { ref, defineProps } from 'vue';
+import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
+import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline';
 
-const open = ref(true)
+const open = ref(true);
+
+// Recibir las propiedades para personalizar el mensaje
+const props = defineProps({
+  fileName: String,
+  fileExtension: String
+});
 </script>
 
 <template>
@@ -25,7 +31,9 @@ const open = ref(true)
                   <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                     <DialogTitle as="h3" class="text-base font-semibold leading-6 text-gray-900">Archivo Incorrecto</DialogTitle>
                     <div class="mt-2">
-                      <p class="text-sm text-gray-500">La extensión del archivo es invalida.</p>
+                      <p class="text-sm text-gray-500">
+                        La extensión ".{{ fileExtension }}" del archivo "{{ fileName }}" no está implementada. Por favor, utiliza un archivo con una extensión compatible.
+                      </p>
                     </div>
                   </div>
                 </div>

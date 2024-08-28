@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  grpcserver:
+    image: mygrpc_image
+    container_name: grpcserver
+    ports:
+      - "5000:5000" # Exponer el puerto 5000 del contenedor en el puerto 5000 del host
+    networks:
+      - grpc_network
+    stdin_open: true # Mantener el stdin abierto para la interacción
+    tty: true # Asignar un pseudo-TTY
+
+  envoy:
+    image: envoy-proxy
+    container_name: envoy-proxy
+    ports:
+      - "8080:8080" # Exponer el puerto 8080 del contenedor en el puerto 8080 del host
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml # Montar el archivo de configuración de Envoy
+    networks:
+      - grpc_network
+    depends_on:
+      - grpcserver # Asegura que grpcserver esté listo antes de iniciar Envoy
+
+networks:
+  grpc_network:
+    driver: bridge

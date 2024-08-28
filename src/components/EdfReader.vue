@@ -1,12 +1,14 @@
 <script setup>
 import { onMounted, ref, defineEmits } from 'vue';
 import DangerModal from "@/components/DangerModal.vue";
+import {useSignalStore} from "@/stores/signalStore";
 
 const showDangerModal = ref(false); // Controlar la visibilidad del modal.
 const incompatibleFileName = ref(''); // Almacenar el nombre del archivo incompatible.
 const incompatibleFileExtension = ref(''); // Almacenar la extensión del archivo incompatible.
 const fileInputRef = ref(null); // Referencia al input de archivo.
 
+const signalStore = useSignalStore();
 const emit = defineEmits(['fileProcessed']); // Esto permite emitir eventos personalizados (los datos que usará el graficador)
 
 const output = ref('');
@@ -59,6 +61,7 @@ const processFile = (event) => {
     signalsInstance.PrintMeanAndDeviation();
 
     var sigInstanc = signalsInstance.signals;
+    signalStore.setSignalObject(sigInstanc);
 
     console.log(sigInstanc);
     if (sigInstanc.size() !== 0) {
@@ -70,13 +73,21 @@ const processFile = (event) => {
     console.log(veceigen);
     console.log(veceigen.size);
 
+    // for (let i = 0; i < veceigen.size; i++) {
+    //   var complexValue = veceigen.get(i);
+    //   console.log('Complex value:', complexValue);
+    //   console.log('Real part:', complexValue.real());
+    //   console.log('Imaginary part:', complexValue.imag());
+    // }
+
+
     // Almacenar los valores reales en un array y emitirlos
     const realValues = []; // Array para almacenar los valores reales y pasarlos al graficador
     for (let i = 0; i < veceigen.size; i++) {
       var complexValue = veceigen.get(i);
-      console.log('Complex value:', complexValue);
-      console.log('Real part:', complexValue.real());
-      console.log('Imaginary part:', complexValue.imag());
+      // console.log('Complex value:', complexValue);
+      // console.log('Real part:', complexValue.real());
+      // console.log('Imaginary part:', complexValue.imag());
 
       realValues.push(complexValue.real()); // Solo almacenar la parte real y enviarla al graficador
     }
@@ -86,6 +97,11 @@ const processFile = (event) => {
 
     output.value = 'File processed successfully (Quitar)';
     event.target.value = ''; // Clear the file input after processing
+
+    // Liberar memoria de los objetos de WebAssembly
+    edfInstance.delete();
+    signalsInstance.delete(); 
+    Module.FS_unlink('/filename');
   };
 
   reader.readAsArrayBuffer(file); // Leer como datos binarios

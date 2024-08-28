@@ -5,6 +5,7 @@ import DangerModal from "@/components/DangerModal.vue";
 const showDangerModal = ref(false); // Controlar la visibilidad del modal.
 const incompatibleFileName = ref(''); // Almacenar el nombre del archivo incompatible.
 const incompatibleFileExtension = ref(''); // Almacenar la extensión del archivo incompatible.
+const fileInputRef = ref(null); // Referencia al input de archivo.
 
 const emit = defineEmits(['fileProcessed']); // Esto permite emitir eventos personalizados (los datos que usará el graficador)
 
@@ -90,6 +91,11 @@ const processFile = (event) => {
   reader.readAsArrayBuffer(file); // Leer como datos binarios
 };
 
+const handleRetry = () => {
+  showDangerModal.value = false;
+  fileInputRef.value.click(); // Reabrir el selector de archivos
+};
+
 onMounted(() => {
   const script = document.createElement('script');
   script.src = 'wasm/edf.js';
@@ -103,8 +109,14 @@ onMounted(() => {
 <template>
   <div>
     <h1>EDF File Processor</h1>
-    <DangerModal v-if="showDangerModal" @close="showDangerModal = false" v-bind:fileName="incompatibleFileName" v-bind:fileExtension="incompatibleFileExtension"/> <!-- Mostrar el modal de error -->
-    <input type="file" @change="processFile"/>
+    <DangerModal
+        v-if="showDangerModal"
+        @close="showDangerModal = false"
+        @retry="handleRetry"
+        v-bind:fileName="incompatibleFileName"
+        v-bind:fileExtension="incompatibleFileExtension"
+    /> <!-- Mostrar el modal de error -->
+    <input ref="fileInputRef" type="file" @change="processFile" />
     <pre>{{ output }}</pre>
   </div>
 </template>

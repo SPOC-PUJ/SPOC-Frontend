@@ -1,5 +1,15 @@
 <script setup>
-import {onMounted, ref} from 'vue';
+import { onMounted, ref, defineEmits } from 'vue';
+import DangerModal from "@/components/DangerModal.vue";
+import {useSignalStore} from "@/stores/signalStore";
+
+const showDangerModal = ref(false); // Controlar la visibilidad del modal.
+const incompatibleFileName = ref(''); // Almacenar el nombre del archivo incompatible.
+const incompatibleFileExtension = ref(''); // Almacenar la extensión del archivo incompatible.
+const fileInputRef = ref(null); // Referencia al input de archivo.
+
+const signalStore = useSignalStore();
+const emit = defineEmits(['fileProcessed']); // Esto permite emitir eventos personalizados (los datos que usará el graficador)
 
 const output = ref('');
 
@@ -7,14 +17,33 @@ const processFile = (event) => {
   const file = event.target.files[0];
   const reader = new FileReader();
 
-  reader.onload = () => {
+  console.log(file.name);
+
+  // Verificar la extensión del archivo
+  if (file.name.endsWith(".edf") || file.name.endsWith(".abf")) {
+    output.value = "Formato Correcto";
+  }
+  else
+  {
+    output.value = "Formato Incorrecto, solo se aceptan archivos .edf y .abf.";
+
+    incompatibleFileName.value = file.name; // Asignar el nombre del archivo
+    incompatibleFileExtension.value = file.name.split('.').pop(); // Extraer la extensión del archivo
+
+    showDangerModal.value = true; // Mostrar el modal de error
+    return;
+  }
+
+  reader.onload = (e) => { // La "e" es el evento de carga del archivo
     const data = new Uint8Array(reader.result);
 
+    // Crear un archivo en el sistema de archivos del módulo WebAssembly
     Module.FS_createDataFile('/', 'filename', data, true, true, true);
 
+    // Crear una instancia del lector EDF
     const edfInstance = new Module.EDF('filename');
 
-    // Example of using the EDF instance
+    // Ejemplo de uso de la instancia EDF
     edfInstance.PrintHeaderRecords();
     edfInstance.PrintDataRecords();
     edfInstance.PrintSizeSignals();
@@ -22,6 +51,7 @@ const processFile = (event) => {
 
     console.log(edfInstance);
 
+    // Obtener la instancia de señales
     const signalsInstance = edfInstance.Signals;
 
     console.log(signalsInstance);
@@ -31,17 +61,18 @@ const processFile = (event) => {
     signalsInstance.PrintMeanAndDeviation();
 
     var sigInstanc = signalsInstance.signals;
+    signalStore.setSignalObject(sigInstanc);
 
     console.log(sigInstanc);
     if (sigInstanc.size() !== 0) {
       console.log(sigInstanc.size());
-
       console.log('signals found.');
     }
 
     var veceigen = sigInstanc.get(0);
     console.log(veceigen);
     console.log(veceigen.size);
+
     // for (let i = 0; i < veceigen.size; i++) {
     //   var complexValue = veceigen.get(i);
     //   console.log('Complex value:', complexValue);
@@ -49,11 +80,36 @@ const processFile = (event) => {
     //   console.log('Imaginary part:', complexValue.imag());
     // }
 
-    output.value = 'File processed successfully';
+
+    // Almacenar los valores reales en un array y emitirlos
+    const realValues = []; // Array para almacenar los valores reales y pasarlos al graficador
+    for (let i = 0; i < veceigen.size; i++) {
+      var complexValue = veceigen.get(i);
+      // console.log('Complex value:', complexValue);
+      // console.log('Real part:', complexValue.real());
+      // console.log('Imaginary part:', complexValue.imag());
+
+      realValues.push(complexValue.real()); // Solo almacenar la parte real y enviarla al graficador
+    }
+
+    // Emitir los valores reales procesados
+    emit('fileProcessed', realValues); // Emitir los valores reales para que el graficador los muestre
+
+    output.value = 'File processed successfully (Quitar)';
     event.target.value = ''; // Clear the file input after processing
+
+    // Liberar memoria de los objetos de WebAssembly
+    edfInstance.delete();
+    signalsInstance.delete(); 
+    Module.FS_unlink('/filename');
   };
 
-  reader.readAsArrayBuffer(file); // Read as binary data
+  reader.readAsArrayBuffer(file); // Leer como datos binarios
+};
+
+const handleRetry = () => {
+  showDangerModal.value = false;
+  fileInputRef.value.click(); // Reabrir el selector de archivos
 };
 
 onMounted(() => {
@@ -69,7 +125,14 @@ onMounted(() => {
 <template>
   <div>
     <h1>EDF File Processor</h1>
-    <input type="file" @change="processFile"/>
+    <DangerModal
+        v-if="showDangerModal"
+        @close="showDangerModal = false"
+        @retry="handleRetry"
+        v-bind:fileName="incompatibleFileName"
+        v-bind:fileExtension="incompatibleFileExtension"
+    /> <!-- Mostrar el modal de error -->
+    <input ref="fileInputRef" type="file" @change="processFile" />
     <pre>{{ output }}</pre>
   </div>
 </template>

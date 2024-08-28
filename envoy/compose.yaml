@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   grpcserver:
-    image: contenedor_puertos
+    image: mygrpc_image
     container_name: grpcserver
     ports:
       - "5000:5000" # Exponer el puerto 5000 del contenedor en el puerto 5000 del host

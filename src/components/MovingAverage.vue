@@ -30,7 +30,7 @@ export default {
       try {
         const {response} = await client.computeMovingAverage(request);
         console.log(response);
-        resultado.value = response.resultado;
+        
       } catch (error) {
         console.error('Error al realizar la solicitud gRPC:', error);
       }

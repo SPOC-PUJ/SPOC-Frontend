@@ -42,12 +42,12 @@ const processFile = (event) => {
     var veceigen = sigInstanc.get(0);
     console.log(veceigen);
     console.log(veceigen.size);
-    for (let i = 0; i < veceigen.size; i++) {
-      var complexValue = veceigen.get(i);
-      console.log('Complex value:', complexValue);
-      console.log('Real part:', complexValue.real());
-      console.log('Imaginary part:', complexValue.imag());
-    }
+    // for (let i = 0; i < veceigen.size; i++) {
+    //   var complexValue = veceigen.get(i);
+    //   console.log('Complex value:', complexValue);
+    //   console.log('Real part:', complexValue.real());
+    //   console.log('Imaginary part:', complexValue.imag());
+    // }
 
     output.value = 'File processed successfully';
     event.target.value = ''; // Clear the file input after processing

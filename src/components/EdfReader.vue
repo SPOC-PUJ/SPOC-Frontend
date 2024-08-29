@@ -2,7 +2,7 @@
 import { onMounted, ref, defineEmits } from 'vue';
 import DangerModal from "@/components/DangerModal.vue";
 import {useSignalStore} from "@/stores/signalStore";
-
+import { Complex } from '../proto/proto-ts/signal';
 const showDangerModal = ref(false); // Controlar la visibilidad del modal.
 const incompatibleFileName = ref(''); // Almacenar el nombre del archivo incompatible.
 const incompatibleFileExtension = ref(''); // Almacenar la extensión del archivo incompatible.
@@ -69,19 +69,19 @@ const processFile = (event) => {
       console.log('signals found.');
     }
 
-    var veceigen = sigInstanc.get(0);
-    console.log(veceigen);
-    console.log(veceigen.size);
-
-    // for (let i = 0; i < veceigen.size; i++) {
-    //   var complexValue = veceigen.get(i);
-    //   console.log('Complex value:', complexValue);
-    //   console.log('Real part:', complexValue.real());
-    //   console.log('Imaginary part:', complexValue.imag());
-    // }
-
-
+    const signalData = [];
+    for(let i = 0; i < sigInstanc.size(); i++){
+      const vectorEigen = sigInstanc.get(i);
+      const complexArray = [];
+      for (let j = 0; j < vectorEigen.size; j++) {
+        var complexValue = vectorEigen.get(j);
+        complexArray.push(Complex.create({ real: complexValue.real(), imag: complexValue.imag() }));
+      }
+      signalData.push(complexArray); // Añadir el array de complejos al array principal
+    }
+    signalStore.setSignalJson(signalData);
     // Almacenar los valores reales en un array y emitirlos
+    var veceigen = sigInstanc.get(0);
     const realValues = []; // Array para almacenar los valores reales y pasarlos al graficador
     for (let i = 0; i < veceigen.size; i++) {
       var complexValue = veceigen.get(i);

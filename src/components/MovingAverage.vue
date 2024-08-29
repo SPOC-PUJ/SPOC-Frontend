@@ -4,7 +4,7 @@
 
 <script>
 import { ref, computed , toRaw} from 'vue';
-import { MovingAverageRequest, Complex } from '../proto/proto-ts/signal'; // Asegúrate de que este es el mensaje correcto
+import { MovingAverageRequest, Complex } from '../proto/proto-ts/signal'; 
 import { SignalServiceClient } from '../proto/proto-ts/signal.client';
 import { GrpcWebFetchTransport } from '@protobuf-ts/grpcweb-transport';
 import {useSignalStore} from "@/stores/signalStore";
@@ -21,6 +21,7 @@ export default {
     );
 
     const calcularPromedioMovil = async () => {
+
       if (!signalComputed.value) {
         console.error('El objeto signalObject es null o no está inicializado.');
         return;
@@ -28,6 +29,9 @@ export default {
       const signal = toRaw(signalStore.signalObject);
       const signalData = [];
       const veceigen = signal.get(0);
+      const signalJson = toRaw(signalStore.signalJson)
+      console.log("despues de traer el json",signalJson[0]);
+      
 
       for(let i=0; i< veceigen.size ; i++){
         const complexValue = veceigen.get(i);
@@ -36,7 +40,7 @@ export default {
       }
 
       const request = MovingAverageRequest.fromJson({
-        signal: signalData,
+        signal: signalJson[0],
         window_size: 10,
       });
 

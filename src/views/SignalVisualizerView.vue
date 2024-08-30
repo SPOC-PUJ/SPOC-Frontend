@@ -2,8 +2,10 @@
 import { ref, onMounted } from 'vue';
 import SimpleChart from "@/components/SimpleChart.vue";
 
-import SumComponent from '@/components/SumComponent.vue';
+import RuningSum from '@/components/RuningSum.vue';
 import MovingAverage from '@/components/MovingAverage.vue';
+import FirstDifference from '@/components/FirstDifference.vue';
+
 const fileName = ref(null);
 
 import LoadFileCard from "@/components/LoadFileCard.vue";
@@ -28,8 +30,9 @@ function handleFileProcessed(values) {
     <!-- <SumComponent/> -->
     
     <SimpleChart v-bind:data="realValues"/> <!-- Pasar los valores reales al graficador -->
-    <MovingAverage/>
-    
+    <!-- <MovingAverage/>
+    <RuningSum/>
+    <FirstDifference/> -->
   </div>
   
 

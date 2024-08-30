@@ -1,6 +1,7 @@
 <template>
-    <button @click="calcularPromedioMovil">EL PROMEDIO</button>
+    <button @click="calcularFirstDifference">First Difference</button>
 </template>
+
 
 <script>
 import { ref, computed , toRaw} from 'vue';
@@ -15,19 +16,17 @@ export default {
     const signalStore = useSignalStore()
     const signalComputed = computed(() => signalStore.signalObject);
 
-
-    const calcularPromedioMovil = async () => {
+    const calcularFirstDifference = async () => {
 
       if (!signalComputed.value) {
         console.error('El objeto signalObject es null o no está inicializado.');
         return;
       }
-
       // despues se decide como trabajar esto
       // const signal = toRaw(signalStore.signalObject);
       // const signalData = [];
       // const veceigen = signal.get(0);
-      
+
       // for(let i=0; i< veceigen.size ; i++){
       //   const complexValue = veceigen.get(i);
 
@@ -36,8 +35,9 @@ export default {
 
       const signalJson = toRaw(signalStore.signalJson)
       console.log("despues de traer el json",signalJson[0]);
+      
       try {
-        const response = await SignalService.computeMovingAverage(signalJson[0],10);
+        const response = await SignalService.computeFirstDifference(signalJson[0]);
         console.log(response);
         
       } catch (error) {
@@ -46,7 +46,7 @@ export default {
     };
 
     return {
-      calcularPromedioMovil,
+        calcularFirstDifference,
     };
   },
 };

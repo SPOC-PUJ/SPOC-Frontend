@@ -69,17 +69,6 @@ const processFile = (event) => {
       console.log('signals found.');
     }
 
-    const signalData = [];
-    for(let i = 0; i < sigInstanc.size(); i++){
-      const vectorEigen = sigInstanc.get(i);
-      const complexArray = [];
-      for (let j = 0; j < vectorEigen.size; j++) {
-        var complexValue = vectorEigen.get(j);
-        complexArray.push(Complex.create({ real: complexValue.real(), imag: complexValue.imag() }));
-      }
-      signalData.push(complexArray); // Añadir el array de complejos al array principal
-    }
-    signalStore.setSignalJson(signalData);
     // Almacenar los valores reales en un array y emitirlos
     var veceigen = sigInstanc.get(0);
     const realValues = []; // Array para almacenar los valores reales y pasarlos al graficador
@@ -94,6 +83,19 @@ const processFile = (event) => {
 
     // Emitir los valores reales procesados
     emit('fileProcessed', realValues); // Emitir los valores reales para que el graficador los muestre
+
+    // Para crear el mensaje para grpc de una
+    const signalData = [];
+    for(let i = 0; i < sigInstanc.size(); i++){
+      const vectorEigen = sigInstanc.get(i);
+      const complexArray = [];
+      for (let j = 0; j < vectorEigen.size; j++) {
+        var complexValue = vectorEigen.get(j);
+        complexArray.push(Complex.create({ real: complexValue.real(), imag: complexValue.imag() }));
+      }
+      signalData.push(complexArray); // Añadir el array de complejos al array principal
+    }
+    signalStore.setSignalJson(signalData);
 
     output.value = 'File processed successfully (Quitar)';
     event.target.value = ''; // Clear the file input after processing

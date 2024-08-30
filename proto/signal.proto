@@ -19,7 +19,26 @@ message MovingAverageResponse {
     repeated Complex result = 1; // The result of moving average
 }
 
+message RuningSumRequest {
+    repeated Complex signal = 1;      
+}
+
+message RuningSumResponse {
+    repeated Complex result = 1; 
+}
+
+message FirstDifferenceRequest {
+    repeated Complex signal = 1;      
+}
+
+
+message FirstDifferenceResponse {
+    repeated Complex result = 1; 
+}
+
 // The signal service definition.
 service SignalService {
     rpc ComputeMovingAverage (MovingAverageRequest) returns (MovingAverageResponse);
+    rpc ComputeRuningSum (RuningSumRequest) returns (RuningSumResponse);
+    rpc ComputeFirstDifference (FirstDifferenceRequest) returns (FirstDifferenceResponse);
 }

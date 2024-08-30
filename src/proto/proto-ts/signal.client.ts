@@ -4,6 +4,10 @@
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { SignalService } from "./signal";
+import type { FirstDifferenceResponse } from "./signal";
+import type { FirstDifferenceRequest } from "./signal";
+import type { RuningSumResponse } from "./signal";
+import type { RuningSumRequest } from "./signal";
 import { stackIntercept } from "@protobuf-ts/runtime-rpc";
 import type { MovingAverageResponse } from "./signal";
 import type { MovingAverageRequest } from "./signal";
@@ -19,6 +23,14 @@ export interface ISignalServiceClient {
      * @generated from protobuf rpc: ComputeMovingAverage(signal.MovingAverageRequest) returns (signal.MovingAverageResponse);
      */
     computeMovingAverage(input: MovingAverageRequest, options?: RpcOptions): UnaryCall<MovingAverageRequest, MovingAverageResponse>;
+    /**
+     * @generated from protobuf rpc: ComputeRuningSum(signal.RuningSumRequest) returns (signal.RuningSumResponse);
+     */
+    computeRuningSum(input: RuningSumRequest, options?: RpcOptions): UnaryCall<RuningSumRequest, RuningSumResponse>;
+    /**
+     * @generated from protobuf rpc: ComputeFirstDifference(signal.FirstDifferenceRequest) returns (signal.FirstDifferenceResponse);
+     */
+    computeFirstDifference(input: FirstDifferenceRequest, options?: RpcOptions): UnaryCall<FirstDifferenceRequest, FirstDifferenceResponse>;
 }
 /**
  * The signal service definition.
@@ -37,5 +49,19 @@ export class SignalServiceClient implements ISignalServiceClient, ServiceInfo {
     computeMovingAverage(input: MovingAverageRequest, options?: RpcOptions): UnaryCall<MovingAverageRequest, MovingAverageResponse> {
         const method = this.methods[0], opt = this._transport.mergeOptions(options);
         return stackIntercept<MovingAverageRequest, MovingAverageResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: ComputeRuningSum(signal.RuningSumRequest) returns (signal.RuningSumResponse);
+     */
+    computeRuningSum(input: RuningSumRequest, options?: RpcOptions): UnaryCall<RuningSumRequest, RuningSumResponse> {
+        const method = this.methods[1], opt = this._transport.mergeOptions(options);
+        return stackIntercept<RuningSumRequest, RuningSumResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: ComputeFirstDifference(signal.FirstDifferenceRequest) returns (signal.FirstDifferenceResponse);
+     */
+    computeFirstDifference(input: FirstDifferenceRequest, options?: RpcOptions): UnaryCall<FirstDifferenceRequest, FirstDifferenceResponse> {
+        const method = this.methods[2], opt = this._transport.mergeOptions(options);
+        return stackIntercept<FirstDifferenceRequest, FirstDifferenceResponse>("unary", this._transport, method, opt, input);
     }
 }

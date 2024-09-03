@@ -20,7 +20,7 @@ function handleFileProcessed(values) {
 
 <template>
   <UploadFileButtonCard @fileProcessed="handleFileProcessed"/>
-  <div class="border-dotted border-4 border-sky-500">
+  <div class="border-dotted">
     <SimpleChart v-bind:data="realValues"/> <!-- Pasar los valores reales al graficador -->
     <!-- <SumComponent/> -->
 

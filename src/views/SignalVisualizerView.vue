@@ -2,9 +2,8 @@
 import { ref, onMounted } from 'vue';
 import SimpleChart from "@/components/SimpleChart.vue";
 
-import RuningSum from '@/components/RuningSum.vue';
-import MovingAverage from '@/components/MovingAverage.vue';
-import FirstDifference from '@/components/FirstDifference.vue';
+import IFFTComponent from '@/components/IFFTComponent.vue';
+
 
 const fileName = ref(null);
 
@@ -27,12 +26,11 @@ function handleFileProcessed(values) {
   <div class="border-dotted border-4 border-sky-500">
 
     <SimpleChart/>
-    <!-- <SumComponent/> -->
     
     <SimpleChart v-bind:data="realValues"/> <!-- Pasar los valores reales al graficador -->
-    <!-- <MovingAverage/>
-    <RuningSum/>
-    <FirstDifference/> -->
+
+    <IFFTComponent/>
+
   </div>
   
 

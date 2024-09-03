@@ -4,6 +4,8 @@
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { SignalService } from "./signal";
+import type { IFFTResponse } from "./signal";
+import type { IFFTRequest } from "./signal";
 import type { FirstDifferenceResponse } from "./signal";
 import type { FirstDifferenceRequest } from "./signal";
 import type { RuningSumResponse } from "./signal";
@@ -31,6 +33,10 @@ export interface ISignalServiceClient {
      * @generated from protobuf rpc: ComputeFirstDifference(signal.FirstDifferenceRequest) returns (signal.FirstDifferenceResponse);
      */
     computeFirstDifference(input: FirstDifferenceRequest, options?: RpcOptions): UnaryCall<FirstDifferenceRequest, FirstDifferenceResponse>;
+    /**
+     * @generated from protobuf rpc: ComputeIFFT(signal.IFFTRequest) returns (signal.IFFTResponse);
+     */
+    computeIFFT(input: IFFTRequest, options?: RpcOptions): UnaryCall<IFFTRequest, IFFTResponse>;
 }
 /**
  * The signal service definition.
@@ -63,5 +69,12 @@ export class SignalServiceClient implements ISignalServiceClient, ServiceInfo {
     computeFirstDifference(input: FirstDifferenceRequest, options?: RpcOptions): UnaryCall<FirstDifferenceRequest, FirstDifferenceResponse> {
         const method = this.methods[2], opt = this._transport.mergeOptions(options);
         return stackIntercept<FirstDifferenceRequest, FirstDifferenceResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: ComputeIFFT(signal.IFFTRequest) returns (signal.IFFTResponse);
+     */
+    computeIFFT(input: IFFTRequest, options?: RpcOptions): UnaryCall<IFFTRequest, IFFTResponse> {
+        const method = this.methods[3], opt = this._transport.mergeOptions(options);
+        return stackIntercept<IFFTRequest, IFFTResponse>("unary", this._transport, method, opt, input);
     }
 }

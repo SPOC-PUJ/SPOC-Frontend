@@ -99,6 +99,8 @@ const processFile = (event) => {
       realValues.push(complexValue.real()); // Solo almacenar la parte real y enviarla al graficador
     }
 
+    
+
     // Emitir los valores reales procesados
     emit('fileProcessed', realValues); // Emitir los valores reales para que el graficador los muestre
 
@@ -140,9 +142,12 @@ onMounted(() => {
       <label for="fileInputRef" class="pi pi-upload cursor-pointer inline-block px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">   Cargar Archivo</label>
     </div>
 
-    <div class="flex justify-center items-center w-[30vw] h-[30vh]" v-if="loadingStatus">
-      <JellyfishLoader color="#3B82F6" :size="100"/>
+    <div class="flex justify-center items-center w-[50vw] h-[50vh] fixed inset-0 m-auto border-orange-300 border-4" v-if="loadingStatus">
+      <div class="transform scale-[2]">
+        <JellyfishLoader color="#3B82F6" />
+      </div>
     </div>
+
 
     <input id="fileInputRef" type="file" @change="processFile" hidden/>
     <pre>{{ output }}</pre>

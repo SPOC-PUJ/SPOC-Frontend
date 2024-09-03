@@ -2,6 +2,7 @@
 import { onMounted, ref, defineEmits } from 'vue';
 import DangerModal from "@/components/DangerModal.vue";
 import {useSignalStore} from "@/stores/signalStore";
+import {JellyfishLoader} from "vue3-spinner";
 
 const showDangerModal = ref(false); // Controlar la visibilidad del modal.
 const incompatibleFileName = ref(''); // Almacenar el nombre del archivo incompatible.
@@ -13,6 +14,9 @@ const emit = defineEmits(['fileProcessed']); // Esto permite emitir eventos pers
 
 const output = ref('');
 
+// Estado de carga inicial
+let loadingStatus = false;
+
 const processFile = (event) => {
   const file = event.target.files[0];
   const reader = new FileReader();
@@ -22,6 +26,9 @@ const processFile = (event) => {
   // Verificar la extensión del archivo
   if (file.name.endsWith(".edf") || file.name.endsWith(".abf")) {
     output.value = "Formato Correcto";
+
+    // Activar el estado de carga
+    loadingStatus = true;
   }
   else
   {
@@ -96,11 +103,15 @@ const processFile = (event) => {
     emit('fileProcessed', realValues); // Emitir los valores reales para que el graficador los muestre
 
     output.value = 'File processed successfully (Quitar)';
+
+    // Desactivar el estado de carga
+    loadingStatus = false;
+
     event.target.value = ''; // Clear the file input after processing
 
     // Liberar memoria de los objetos de WebAssembly
     edfInstance.delete();
-    signalsInstance.delete(); 
+    signalsInstance.delete();
     Module.FS_unlink('/filename');
   };
 
@@ -127,6 +138,10 @@ onMounted(() => {
     <DangerModal v-if="showDangerModal" @close="showDangerModal = false" @retry="handleRetry" v-bind:fileName="incompatibleFileName" v-bind:fileExtension="incompatibleFileExtension"/> <!-- Mostrar el modal de error -->
     <div class="flex justify-center items-center">
       <label for="fileInputRef" class="pi pi-upload cursor-pointer inline-block px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">   Cargar Archivo</label>
+    </div>
+
+    <div class="flex justify-center items-center w-[30vw] h-[30vh]" v-if="loadingStatus">
+      <JellyfishLoader color="#3B82F6" :size="100"/>
     </div>
 
     <input id="fileInputRef" type="file" @change="processFile" hidden/>

@@ -1,6 +1,6 @@
 import { SignalServiceClient } from '../proto/proto-ts/signal.client';
 import { GrpcWebFetchTransport } from '@protobuf-ts/grpcweb-transport';
-import { RuningSumRequest , MovingAverageRequest, FirstDifferenceRequest, IFFTRequest, FastWaveletTransformHaarRequest} from '../proto/proto-ts/signal';
+import { RuningSumRequest , MovingAverageRequest, FirstDifferenceRequest, IFFTRequest, FastWaveletTransformHaarRequest, FastWaveletTransformRequest} from '../proto/proto-ts/signal';
 
 const client = new SignalServiceClient(
     new GrpcWebFetchTransport({ baseUrl: 'http://localhost:8080' })
@@ -74,6 +74,23 @@ export const SignalService = {
       });
       try {
           const { response } = await client.computeFastWaveletTransformHaar(request);
+          return response;
+      } catch (error) {
+          console.error('Error al realizar la solicitud gRPC:', error);
+          throw error;
+      }
+  },
+
+    async computeFastWaveletTransform(signalJson, decLevel,WaveName){
+      const request = FastWaveletTransformRequest.fromJson({
+          signal: signalJson,
+          dec_level:decLevel,
+          wave_name:WaveName,
+      });
+      try {
+          console.log(WaveName);
+          
+          const { response } = await client.computeFastWaveletTransform(request);
           return response;
       } catch (error) {
           console.error('Error al realizar la solicitud gRPC:', error);

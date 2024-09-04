@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue';
 import SimpleChart from "@/components/SimpleChart.vue";
 
-import FastWaveletHarr from '@/components/FastWaveletHarr.vue';
+import FastWaveletTransform from '@/components/FastWaveletTransform.vue';
 
 
 const fileName = ref(null);
@@ -29,7 +29,7 @@ function handleFileProcessed(values) {
     
     <SimpleChart v-bind:data="realValues"/> <!-- Pasar los valores reales al graficador -->
 
-    <FastWaveletHarr/>
+    <FastWaveletTransform/>
 
   </div>
   

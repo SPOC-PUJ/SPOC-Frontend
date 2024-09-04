@@ -4,6 +4,8 @@
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { SignalService } from "./signal";
+import type { FastWaveletTransformResponse } from "./signal";
+import type { FastWaveletTransformRequest } from "./signal";
 import type { FastWaveletTransformHaarResponse } from "./signal";
 import type { FastWaveletTransformHaarRequest } from "./signal";
 import type { IFFTResponse } from "./signal";
@@ -43,6 +45,10 @@ export interface ISignalServiceClient {
      * @generated from protobuf rpc: ComputeFastWaveletTransformHaar(signal.FastWaveletTransformHaarRequest) returns (signal.FastWaveletTransformHaarResponse);
      */
     computeFastWaveletTransformHaar(input: FastWaveletTransformHaarRequest, options?: RpcOptions): UnaryCall<FastWaveletTransformHaarRequest, FastWaveletTransformHaarResponse>;
+    /**
+     * @generated from protobuf rpc: ComputeFastWaveletTransform(signal.FastWaveletTransformRequest) returns (signal.FastWaveletTransformResponse);
+     */
+    computeFastWaveletTransform(input: FastWaveletTransformRequest, options?: RpcOptions): UnaryCall<FastWaveletTransformRequest, FastWaveletTransformResponse>;
 }
 /**
  * The signal service definition.
@@ -89,5 +95,12 @@ export class SignalServiceClient implements ISignalServiceClient, ServiceInfo {
     computeFastWaveletTransformHaar(input: FastWaveletTransformHaarRequest, options?: RpcOptions): UnaryCall<FastWaveletTransformHaarRequest, FastWaveletTransformHaarResponse> {
         const method = this.methods[4], opt = this._transport.mergeOptions(options);
         return stackIntercept<FastWaveletTransformHaarRequest, FastWaveletTransformHaarResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: ComputeFastWaveletTransform(signal.FastWaveletTransformRequest) returns (signal.FastWaveletTransformResponse);
+     */
+    computeFastWaveletTransform(input: FastWaveletTransformRequest, options?: RpcOptions): UnaryCall<FastWaveletTransformRequest, FastWaveletTransformResponse> {
+        const method = this.methods[5], opt = this._transport.mergeOptions(options);
+        return stackIntercept<FastWaveletTransformRequest, FastWaveletTransformResponse>("unary", this._transport, method, opt, input);
     }
 }

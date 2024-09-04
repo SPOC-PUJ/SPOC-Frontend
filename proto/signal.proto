@@ -8,15 +8,15 @@ message Complex {
     double imag = 2;
 }
 
-// The request message containing the signal data and window size.
+
 message MovingAverageRequest {
-    repeated Complex signal = 1; // The input signal
-    int32 window_size = 2;       // The window size for moving average
+    repeated Complex signal = 1; 
+    int32 window_size = 2;       
 }
 
-// The response message containing the result of moving average.
+
 message MovingAverageResponse {
-    repeated Complex result = 1; // The result of moving average
+    repeated Complex result = 1; 
 }
 
 message RuningSumRequest {
@@ -45,6 +45,16 @@ message IFFTResponse {
     repeated Complex result = 1; 
 }
 
+message FastWaveletTransformHaarRequest {
+    repeated Complex signal = 1;      
+}
+
+
+message FastWaveletTransformHaarResponse  {
+    repeated Complex approximation = 1;
+    repeated Complex detail = 2;
+}
+
 
 // The signal service definition.
 service SignalService {
@@ -52,4 +62,5 @@ service SignalService {
     rpc ComputeRuningSum (RuningSumRequest) returns (RuningSumResponse);
     rpc ComputeFirstDifference (FirstDifferenceRequest) returns (FirstDifferenceResponse);
     rpc ComputeIFFT (IFFTRequest) returns (IFFTResponse);
+    rpc ComputeFastWaveletTransformHaar (FastWaveletTransformHaarRequest) returns (FastWaveletTransformHaarResponse);
 }

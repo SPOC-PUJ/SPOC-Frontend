@@ -4,6 +4,8 @@
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { SignalService } from "./signal";
+import type { FastWaveletTransformHaarResponse } from "./signal";
+import type { FastWaveletTransformHaarRequest } from "./signal";
 import type { IFFTResponse } from "./signal";
 import type { IFFTRequest } from "./signal";
 import type { FirstDifferenceResponse } from "./signal";
@@ -37,6 +39,10 @@ export interface ISignalServiceClient {
      * @generated from protobuf rpc: ComputeIFFT(signal.IFFTRequest) returns (signal.IFFTResponse);
      */
     computeIFFT(input: IFFTRequest, options?: RpcOptions): UnaryCall<IFFTRequest, IFFTResponse>;
+    /**
+     * @generated from protobuf rpc: ComputeFastWaveletTransformHaar(signal.FastWaveletTransformHaarRequest) returns (signal.FastWaveletTransformHaarResponse);
+     */
+    computeFastWaveletTransformHaar(input: FastWaveletTransformHaarRequest, options?: RpcOptions): UnaryCall<FastWaveletTransformHaarRequest, FastWaveletTransformHaarResponse>;
 }
 /**
  * The signal service definition.
@@ -76,5 +82,12 @@ export class SignalServiceClient implements ISignalServiceClient, ServiceInfo {
     computeIFFT(input: IFFTRequest, options?: RpcOptions): UnaryCall<IFFTRequest, IFFTResponse> {
         const method = this.methods[3], opt = this._transport.mergeOptions(options);
         return stackIntercept<IFFTRequest, IFFTResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: ComputeFastWaveletTransformHaar(signal.FastWaveletTransformHaarRequest) returns (signal.FastWaveletTransformHaarResponse);
+     */
+    computeFastWaveletTransformHaar(input: FastWaveletTransformHaarRequest, options?: RpcOptions): UnaryCall<FastWaveletTransformHaarRequest, FastWaveletTransformHaarResponse> {
+        const method = this.methods[4], opt = this._transport.mergeOptions(options);
+        return stackIntercept<FastWaveletTransformHaarRequest, FastWaveletTransformHaarResponse>("unary", this._transport, method, opt, input);
     }
 }

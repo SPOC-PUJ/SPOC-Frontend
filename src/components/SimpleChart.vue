@@ -1,9 +1,12 @@
 <script setup>
+import SimpleChartControls from './SimpleChartControls.vue'; // Importar el nuevo componente
+
 import * as d3 from 'd3';
 import { ref, onMounted, watch } from 'vue';
 
 const chartContainer = ref(null);
-const zoomYEnabled = ref(false); // Nueva variable para el checkbox
+const zoomYEnabled = ref(false); // Estado del checkbox para habilitar/deshabilitar el zoom en Y
+const lineWidth = ref(1); // Estado para el grosor de la línea
 
 const props = defineProps({
   data: {
@@ -11,6 +14,16 @@ const props = defineProps({
     default: () => []
   }
 });
+
+// Función que se llama cuando el checkbox de "Habilitar Zoom en Y" cambia de estado
+function handleZoomYToggle(isZoomYEnabled) {
+  zoomYEnabled.value = isZoomYEnabled; // Actualiza el estado de zoom en Y
+}
+
+// Función que se llama cuando el grosor de la línea cambia
+function handleLineWidthUpdate(newLineWidth) {
+  lineWidth.value = newLineWidth; // Actualiza el grosor de la línea
+}
 
 onMounted(() => {
   // Paso #1: Crear el contenedor del gráfico
@@ -85,7 +98,7 @@ onMounted(() => {
           .datum(dataset)
           .attr('fill', 'none')
           .attr('stroke', 'steelblue')
-          .attr('stroke-width', 0.5)
+          .attr('stroke-width', lineWidth.value) // Usar el grosor de la línea dinámico
           .attr('d', line);
 
       // Paso #11: Dibujar los ejes X e Y
@@ -150,7 +163,8 @@ onMounted(() => {
         .y(d => newY(d.value));
 
     lineGroup.selectAll('path')
-        .attr('d', line);
+        .attr('d', line)
+        .attr('stroke-width', lineWidth.value); // Actualizar el grosor de la línea durante el zoom
   }
 
 });
@@ -158,11 +172,13 @@ onMounted(() => {
 
 <template>
   <div>
-    <label>
-      <input type="checkbox" v-model="zoomYEnabled" />
-      Habilitar zoom en Y
-    </label>
     <div ref="chartContainer" style="width: 100%; height: 100%;"></div>
+
+    <!-- Componente de control como Zoom en Y, slider de grosor y TODO, más -->
+    <SimpleChartControls
+        @toggle-zoom-y="handleZoomYToggle"
+        @update-line-width="handleLineWidthUpdate" />
+
   </div>
 </template>
 

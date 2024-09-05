@@ -1,10 +1,10 @@
 <script setup>
 import * as d3 from 'd3';
-import {ref, onMounted, watch} from 'vue';
+import { ref, onMounted, watch } from 'vue';
 
 const chartContainer = ref(null);
+const zoomYEnabled = ref(false); // Nueva variable para el checkbox
 
-// Definir las propiedades que el componente recibirá
 const props = defineProps({
   data: {
     type: Array,
@@ -100,24 +100,27 @@ onMounted(() => {
   function zoomed(event) {
     const transform = event.transform;
 
-// Aplicar un escalado más fuerte en el eje X que en el eje Y
-    const newX = transform.rescaleX(x); // Zoom normal en X
-    const newY = transform.rescaleY(y); // Zoom normal en Y
+    // Reescalar solo la escala X siempre
+    const newX = transform.rescaleX(x);
 
+    // Condicionalmente reescalar la escala Y solo si el checkbox está marcado
+    const newY = zoomYEnabled.value ? transform.rescaleY(y) : y;
 
     // Paso #13: Actualizar los ejes con las nuevas escalas
     xAxisGroup.call(d3.axisBottom(newX).ticks(20).tickFormat(d3.format('d')));
+
+    // Actualizar el eje Y solo si zoom en Y está habilitado, si no, mantener la escala Y fija
     yAxisGroup.call(d3.axisLeft(newY)
-        .ticks((d3.max(newY.domain()) - d3.min(newY.domain())) / 500)
+        .ticks((d3.max(newY.domain()) - d3.min(newY.domain())) / 1000)
         .tickFormat(d => `${(d / 1000).toFixed(1)}k`));
 
     // Añadir gridlines verticales (para el eje X)
-    svg.selectAll(".xGrid") // Selecciona las gridlines previas
+    svg.selectAll(".xGrid")
         .data(newX.ticks(20)) // Basado en la nueva escala X
         .join(
-            enter => enter.append("line").attr("class", "xGrid"), // Crea nuevas líneas si no existen
-            update => update, // Actualiza las existentes
-            exit => exit.remove() // Elimina las líneas sobrantes
+            enter => enter.append("line").attr("class", "xGrid"),
+            update => update,
+            exit => exit.remove()
         )
         .attr("x1", d => newX(d))
         .attr("x2", d => newX(d))
@@ -126,13 +129,13 @@ onMounted(() => {
         .attr("stroke", "#e0e0e0")
         .attr("stroke-width", 1);
 
-// Añadir gridlines horizontales (para el eje Y)
-    svg.selectAll(".yGrid") // Selecciona las gridlines previas
-        .data(newY.ticks((d3.max(newY.domain()) - d3.min(newY.domain())) / 500)) // Basado en la nueva escala Y
+    // Añadir gridlines verticales (para el eje X)
+    svg.selectAll(".yGrid")
+        .data(newY.ticks((d3.max(newY.domain()) - d3.min(newY.domain())) / 1000)) // Basado en la nueva escala Y
         .join(
-            enter => enter.append("line").attr("class", "yGrid"), // Crea nuevas líneas si no existen
-            update => update, // Actualiza las existentes
-            exit => exit.remove() // Elimina las líneas sobrantes
+            enter => enter.append("line").attr("class", "yGrid"),
+            update => update,
+            exit => exit.remove()
         )
         .attr("x1", 0)
         .attr("x2", width)
@@ -141,8 +144,7 @@ onMounted(() => {
         .attr("stroke", "#e0e0e0")
         .attr("stroke-width", 1);
 
-
-    // Paso #14: Redibujar la línea del gráfico con las nuevas escalas
+    // Redibujar la línea del gráfico con la nueva escala X y Y (si está habilitado)
     const line = d3.line()
         .x(d => newX(d.punto))
         .y(d => newY(d.value));
@@ -150,12 +152,20 @@ onMounted(() => {
     lineGroup.selectAll('path')
         .attr('d', line);
   }
+
 });
 </script>
 
 <template>
-  <div ref="chartContainer" style="width: 100%; height: 100%;"></div>
+  <div>
+    <label>
+      <input type="checkbox" v-model="zoomYEnabled" />
+      Habilitar zoom en Y
+    </label>
+    <div ref="chartContainer" style="width: 100%; height: 100%;"></div>
+  </div>
 </template>
+
 
 <style scoped>
 </style>

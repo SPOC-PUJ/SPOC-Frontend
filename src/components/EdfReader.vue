@@ -152,6 +152,6 @@ onMounted(() => {
 
 
     <input id="fileInputRef" type="file" @change="processFile" hidden/>
-    <!-- <pre>{{ output }}</pre> -->
+    <pre>{{ output }}</pre>
   </div>
 </template>

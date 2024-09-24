@@ -1,10 +1,13 @@
 <script setup>
+import SimpleChartControls from './SimpleChartControls.vue'; // Importar el nuevo componente
+
 import * as d3 from 'd3';
 import { ref, onMounted, watch } from 'vue';
 
 const chartContainer = ref(null);
+const zoomYEnabled = ref(false); // Estado del checkbox para habilitar/deshabilitar el zoom en Y
+const lineWidth = ref(1); // Estado para el grosor de la línea
 
-// Definir las propiedades que el componente recibirá
 const props = defineProps({
   data: {
     type: Array,
@@ -12,11 +15,21 @@ const props = defineProps({
   }
 });
 
+// Función que se llama cuando el checkbox de "Habilitar Zoom en Y" cambia de estado
+function handleZoomYToggle(isZoomYEnabled) {
+  zoomYEnabled.value = isZoomYEnabled; // Actualiza el estado de zoom en Y
+}
+
+// Función que se llama cuando el grosor de la línea cambia
+function handleLineWidthUpdate(newLineWidth) {
+  lineWidth.value = newLineWidth; // Actualiza el grosor de la línea
+}
+
 onMounted(() => {
   // Paso #1: Crear el contenedor del gráfico
-  const margin = {top: 20, right: 20, bottom: 30, left: 70}; // Márgenes del gráfico
-  const width = 960 - margin.left - margin.right; // Ancho del gráfico
-  const height = 500 - margin.top - margin.bottom; // Alto del gráfico
+  const margin = {top: 50, right: 20, bottom: 50, left: 70}; // Márgenes del gráfico
+  const width = chartContainer.value.clientWidth - margin.left - margin.right; // Ancho dinámico del gráfico
+  const height = 1000 - margin.top - margin.bottom; // Alto del gráfico TODO hacerlo dinaámico
 
   // Paso #2: Crear las escalas para los ejes X e Y (esto es para definir el rango de valores que se mostrarán en el gráfico)
   const x = d3.scaleLinear().range([0, width]); // Escala para el eje X, en este caso se mostrarán valores lineales de 0 a width (width es el ancho del gráfico)
@@ -31,50 +44,144 @@ onMounted(() => {
       .append('g') // Añade un elemento g (grupo) al SVG (estos grupos es donde se añadirán los elementos del gráfico)
       .attr('transform', `translate(${margin.left}, ${margin.top})`); // Añade un desplazamiento al grupo para que no se superpongan los ejes
 
+  // Paso #4: Definir clipping para el gráfico (evitar que la línea salga del área visible)
+  const clip = svg.append("defs").append("svg:clipPath") // Añadir un clipPath al SVG
+      .attr("id", "clip") // Asignar un ID al clipPath
+      .append("svg:rect") // Añadir un rectángulo al clipPath (esto es para definir el área visible del gráfico)
+      .attr("width", width) // Ancho del rectángulo
+      .attr("height", height) // Alto del rectángulo
+      .attr("x", 0) // Posición X del rectángulo
+      .attr("y", 0); // Posición Y del rectángulo
+
+  // Paso #5: Añadir el grupo de la línea con clipping al SVG
+  const lineGroup = svg.append("g") // Añadir un grupo al SVG
+      .attr("clip-path", "url(#clip)"); // Añadir el clipPath al grupo
+
+  // Paso #6: Crear el comportamiento de zoom
+  const zoom = d3.zoom() // Crear un comportamiento de zoom y pan para el gráfico
+      // .scaleExtent([0.5, 10]) // Limitar el nivel de zoom (TODO AJUSTAR PARÁMETRO PARA QUE NO SE VEA TAN LEJOS)
+      .translateExtent([[-width, -height], [width * 2, height * 2]]) // Limitar el área de pan
+      .extent([[0, 0], [width, height]]) // Limitar el área de zoom
+      .on('zoom', zoomed); // Añadir un evento de zoom al comportamiento
+
+  d3.select(chartContainer.value).select('svg').call(zoom); // Añadir comportamiento de zoom y pan al SVG del gráfico
+
+  // Grupos de ejes X e Y
+  let xAxisGroup = svg.append('g')
+      .attr('transform', `translate(0, ${height})`);
+
+  let yAxisGroup = svg.append('g');
+
   // Observar los cambios en la propiedad `data`
   watch(() => props.data, (newData) => {
     if (newData.length > 0) {
-      // Paso #4: Crear el dataset a partir de los datos proporcionados
+      // Paso #7: Crear el dataset a partir de los datos proporcionados
       const dataset = newData.map((value, index) => ({
         punto: index + 1,
         value
       }));
 
-      // Paso #5: Definir los dominios de las escalas X e Y (los dominios son los valores reales que se mostrarán en el gráfico)
-      x.domain(d3.extent(dataset, d => d.punto)); // El dominio de la escala X es el rango de valores de la propiedad 'punto' del dataset
-      y.domain([d3.min(dataset, d => d.value) * 1.1, d3.max(dataset, d => d.value) * 1.1]); // El dominio de la escala Y es de 0 al valor máximo de la propiedad 'value' del dataset
+      // Paso #8: Definir los dominios de las escalas X e Y
+      x.domain(d3.extent(dataset, d => d.punto)); // Escala en X basada en el índice de los datos
+      y.domain([d3.min(dataset, d => d.value) * 1.1, d3.max(dataset, d => d.value) * 1.1]); // Escala en Y basada en el valor de los datos
 
-      svg.selectAll('*').remove(); // Limpiar el gráfico antes de redibujar
+      // Paso #9: Crear la línea del gráfico
+      const line = d3.line()
+          .x(d => x(d.punto))
+          .y(d => y(d.value));
 
-      // Paso #6: Añadir el eje X
-      svg.append('g') // Añade un grupo al SVG
-          .attr('transform', `translate(0, ${height})`) // Desplaza el grupo al final del eje Y (esto es para que el eje X se muestre en la parte inferior del gráfico)
-          .call(d3.axisBottom(x).ticks(10).tickFormat(d3.format('d'))); // Esto le dice a D3 que añada un eje X al grupo, con 10 divisiones y formato de número entero
+      // Limpiar el gráfico antes de redibujar
+      lineGroup.selectAll('path').remove();
 
-      // Paso #7: Añadir el eje Y
-      svg.append('g').call(d3.axisLeft(y)); // Añade un eje Y al grupo (esto es para que el eje Y se muestre en la parte izquierda del gráfico)
+      // Paso #10: Dibujar la línea del gráfico
+      lineGroup.append('path')
+          .datum(dataset)
+          .attr('fill', 'none')
+          .attr('stroke', 'steelblue')
+          .attr('stroke-width', lineWidth.value) // Usar el grosor de la línea dinámico
+          .attr('d', line);
 
-      // Paso #8: Generar la línea del gráfico
-      const line = d3.line() // La variable line es la función que generará la línea del gráfico
-          .x(d => x(d.punto)) // La coordenada X de la línea se basa en la propiedad 'punto' del dataset
-          .y(d => y(d.value)); // La coordenada Y de la línea se basa en la propiedad 'value' del dataset
-
-      // Paso #9: Añadir la línea al gráfico (esto es lo que realmente dibuja la línea en el gráfico)
-      svg.append('path') // Añade un elemento path al grupo (esto es para añadir la línea al gráfico)
-          .datum(dataset) // Añade el dataset a la línea
-          .attr('fill', 'none') // Relleno de la línea (en este caso no tiene relleno)
-          .attr('stroke', 'steelblue') // Color de la línea
-          .attr('stroke-width', 0.1) // Grosor de la línea (en este caso 0.1 píxeles)
-          .attr('d', line); // Añade la línea al gráfico
+      // Paso #11: Dibujar los ejes X e Y
+      xAxisGroup.call(d3.axisBottom(x).ticks(20).tickFormat(d3.format('d'))); // Eje X
+      yAxisGroup.call(d3.axisLeft(y)
+          .ticks((d3.max(dataset, d => d.value) - d3.min(dataset, d => d.value)) / 1000) // Eje Y con formato de k (miles)
+          .tickFormat(d => `${(d / 1000).toFixed(1)}k`)); // Formato de los números del eje Y
     }
   }, {immediate: true});
+
+  // Función para aplicar zoom a las escalas y redibujar el gráfico
+  function zoomed(event) {
+    const transform = event.transform;
+
+    // Reescalar solo la escala X siempre
+    const newX = transform.rescaleX(x);
+
+    // Condicionalmente reescalar la escala Y solo si el checkbox está marcado
+    const newY = zoomYEnabled.value ? transform.rescaleY(y) : y;
+
+    // Paso #13: Actualizar los ejes con las nuevas escalas
+    xAxisGroup.call(d3.axisBottom(newX).ticks(20).tickFormat(d3.format('d')));
+
+    // Actualizar el eje Y solo si zoom en Y está habilitado, si no, mantener la escala Y fija
+    yAxisGroup.call(d3.axisLeft(newY)
+        .ticks((d3.max(newY.domain()) - d3.min(newY.domain())) / 1000)
+        .tickFormat(d => `${(d / 1000).toFixed(1)}k`));
+
+    // Añadir gridlines verticales (para el eje X)
+    svg.selectAll(".xGrid")
+        .data(newX.ticks(20)) // Basado en la nueva escala X
+        .join(
+            enter => enter.append("line").attr("class", "xGrid"),
+            update => update,
+            exit => exit.remove()
+        )
+        .attr("x1", d => newX(d))
+        .attr("x2", d => newX(d))
+        .attr("y1", 0)
+        .attr("y2", height)
+        .attr("stroke", "#e0e0e0")
+        .attr("stroke-width", 1);
+
+    // Añadir gridlines verticales (para el eje X)
+    svg.selectAll(".yGrid")
+        .data(newY.ticks((d3.max(newY.domain()) - d3.min(newY.domain())) / 1000)) // Basado en la nueva escala Y
+        .join(
+            enter => enter.append("line").attr("class", "yGrid"),
+            update => update,
+            exit => exit.remove()
+        )
+        .attr("x1", 0)
+        .attr("x2", width)
+        .attr("y1", d => newY(d))
+        .attr("y2", d => newY(d))
+        .attr("stroke", "#e0e0e0")
+        .attr("stroke-width", 1);
+
+    // Redibujar la línea del gráfico con la nueva escala X y Y (si está habilitado)
+    const line = d3.line()
+        .x(d => newX(d.punto))
+        .y(d => newY(d.value));
+
+    lineGroup.selectAll('path')
+        .attr('d', line)
+        .attr('stroke-width', lineWidth.value); // Actualizar el grosor de la línea durante el zoom
+  }
+
 });
 </script>
 
 <template>
-  <div ref="chartContainer" style="width: 100%; height: 100%;"></div>
+  <div>
+    <div ref="chartContainer" style="width: 100%; height: 100%;"></div>
+
+    <!-- Componente de control como Zoom en Y, slider de grosor y TODO, más -->
+    <SimpleChartControls
+        @toggle-zoom-y="handleZoomYToggle"
+        @update-line-width="handleLineWidthUpdate" />
+
+  </div>
 </template>
 
+
 <style scoped>
-/* Estilos personalizados para el gráfico */
 </style>

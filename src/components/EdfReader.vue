@@ -3,6 +3,9 @@ import { onMounted, ref, defineEmits } from 'vue';
 import DangerModal from "@/components/DangerModal.vue";
 import {useSignalStore} from "@/stores/signalStore";
 import { Complex } from '../proto/proto-ts/signal';
+import {JellyfishLoader} from "vue3-spinner";
+
+
 const showDangerModal = ref(false); // Controlar la visibilidad del modal.
 const incompatibleFileName = ref(''); // Almacenar el nombre del archivo incompatible.
 const incompatibleFileExtension = ref(''); // Almacenar la extensión del archivo incompatible.
@@ -13,6 +16,9 @@ const emit = defineEmits(['fileProcessed']); // Esto permite emitir eventos pers
 
 const output = ref('');
 
+// Estado de carga inicial
+let loadingStatus = false;
+
 const processFile = (event) => {
   const file = event.target.files[0];
   const reader = new FileReader();
@@ -22,6 +28,9 @@ const processFile = (event) => {
   // Verificar la extensión del archivo
   if (file.name.endsWith(".edf") || file.name.endsWith(".abf")) {
     output.value = "Formato Correcto";
+
+    // Activar el estado de carga
+    loadingStatus = true;
   }
   else
   {
@@ -34,7 +43,8 @@ const processFile = (event) => {
     return;
   }
 
-  reader.onload = (e) => { // La "e" es el evento de carga del archivo
+  // ELIMINAR EL ASYNC
+  reader.onload = async (e) => { // La "e" es el evento de carga del archivo
     const data = new Uint8Array(reader.result);
 
     // Crear un archivo en el sistema de archivos del módulo WebAssembly
@@ -81,6 +91,9 @@ const processFile = (event) => {
       realValues.push(complexValue.real()); // Solo almacenar la parte real y enviarla al graficador
     }
 
+    // ELIMINAR EL SLEEP
+    await new Promise(r => setTimeout(r, 5000));
+
     // Emitir los valores reales procesados
     emit('fileProcessed', realValues); // Emitir los valores reales para que el graficador los muestre
 
@@ -98,11 +111,15 @@ const processFile = (event) => {
     signalStore.setSignalJson(signalData);
 
     output.value = 'File processed successfully (Quitar)';
+
+    // Desactivar el estado de carga
+    loadingStatus = false;
+
     event.target.value = ''; // Clear the file input after processing
 
     // Liberar memoria de los objetos de WebAssembly
     edfInstance.delete();
-    signalsInstance.delete(); 
+    signalsInstance.delete();
     Module.FS_unlink('/filename');
   };
 
@@ -126,15 +143,20 @@ onMounted(() => {
 
 <template>
   <div>
-    <h1>EDF File Processor</h1>
-    <DangerModal
-        v-if="showDangerModal"
-        @close="showDangerModal = false"
-        @retry="handleRetry"
-        v-bind:fileName="incompatibleFileName"
-        v-bind:fileExtension="incompatibleFileExtension"
-    /> <!-- Mostrar el modal de error -->
-    <input ref="fileInputRef" type="file" @change="processFile" />
-    <pre>{{ output }}</pre>
+    <DangerModal v-if="showDangerModal" @close="showDangerModal = false" @retry="handleRetry" v-bind:fileName="incompatibleFileName" v-bind:fileExtension="incompatibleFileExtension"/> <!-- Mostrar el modal de error -->
+    <div class="flex justify-center items-center">
+      <label for="fileInputRef" class="pi pi-upload cursor-pointer inline-block px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">   Cargar Archivo</label>
+    </div>
+
+    <div class="flex justify-center items-center w-[50vw] h-[50vh] fixed inset-0 m-auto" v-if="loadingStatus">
+      <div class="transform scale-[2] flex justify-center items-center">
+        <JellyfishLoader color="#3B82F6" />
+        <h2 class="#3B82F6">Procesando archivo...</h2>
+      </div>
+    </div>
+
+
+    <input id="fileInputRef" type="file" @change="processFile" hidden/>
+    <pre hidden>{{ output }}</pre> <!-- TODO: Eliminarlo... bien -->
   </div>
 </template>

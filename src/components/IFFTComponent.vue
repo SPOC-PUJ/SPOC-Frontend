@@ -1,6 +1,7 @@
 <template>
-    <button @click="calcularPromedioMovil">EL PROMEDIO</button>
+    <button @click="CalcularIFFT">IFFT</button>
 </template>
+
 
 <script>
 import { ref, computed , toRaw} from 'vue';
@@ -8,15 +9,13 @@ import { Complex } from '../proto/proto-ts/signal';
 import {useSignalStore} from "@/stores/signalStore";
 import { SignalService } from '@/services/signalService';
 
-
 export default {
   setup() {
   
     const signalStore = useSignalStore()
     const signalComputed = computed(() => signalStore.signalObject);
 
-
-    const calcularPromedioMovil = async () => {
+    const CalcularIFFT = async () => {
 
       if (!signalComputed.value) {
         console.error('El objeto signalObject es null o no está inicializado.');
@@ -27,7 +26,7 @@ export default {
       // const signal = toRaw(signalStore.signalObject);
       // const signalData = [];
       // const veceigen = signal.get(0);
-      
+
       // for(let i=0; i< veceigen.size ; i++){
       //   const complexValue = veceigen.get(i);
 
@@ -37,7 +36,7 @@ export default {
       const signalJson = toRaw(signalStore.signalJson)
       console.log("despues de traer el json",signalJson[0]);
       try {
-        const response = await SignalService.computeMovingAverage(signalJson[0],10);
+        const response = await SignalService.computeIFFT(signalJson[0]);
         console.log(response);
         
       } catch (error) {
@@ -46,7 +45,7 @@ export default {
     };
 
     return {
-      calcularPromedioMovil,
+        CalcularIFFT,
     };
   },
 };

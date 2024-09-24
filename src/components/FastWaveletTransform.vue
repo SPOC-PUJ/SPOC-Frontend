@@ -1,5 +1,5 @@
 <template>
-    <button @click="calcularPromedioMovil">EL PROMEDIO</button>
+    <button @click="calcularFastWaveletTransform">FastWavelet Transform</button>
 </template>
 
 <script>
@@ -16,7 +16,7 @@ export default {
     const signalComputed = computed(() => signalStore.signalObject);
 
 
-    const calcularPromedioMovil = async () => {
+    const calcularFastWaveletTransform = async () => {
 
       if (!signalComputed.value) {
         console.error('El objeto signalObject es null o no está inicializado.');
@@ -37,7 +37,7 @@ export default {
       const signalJson = toRaw(signalStore.signalJson)
       console.log("despues de traer el json",signalJson[0]);
       try {
-        const response = await SignalService.computeMovingAverage(signalJson[0],10);
+        const response = await SignalService.computeFastWaveletTransform(signalJson[0],3,"db1");
         console.log(response);
         
       } catch (error) {
@@ -46,7 +46,7 @@ export default {
     };
 
     return {
-      calcularPromedioMovil,
+        calcularFastWaveletTransform,
     };
   },
 };

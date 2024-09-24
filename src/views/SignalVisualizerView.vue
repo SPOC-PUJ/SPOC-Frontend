@@ -2,8 +2,9 @@
 import {ref, onMounted} from 'vue';
 import SimpleChart from "@/components/SimpleChart.vue";
 
-import SumComponent from '@/components/SumComponent.vue';
-import MovingAverage from '@/components/MovingAverage.vue';
+import FastWaveletTransform from '@/components/FastWaveletTransform.vue';
+
+
 const fileName = ref(null);
 
 import UploadFileButtonCard from "@/components/UploadFileButtonCard.vue";
@@ -19,6 +20,22 @@ function handleFileProcessed(values) {
 </script>
 
 <template>
+  <div class="border-dotted border-4 border-red-400">
+    <LoadFileCard @fileProcessed="handleFileProcessed" />
+  </div>
+  <div class="border-dotted border-4 border-sky-500">
+
+    <SimpleChart/>
+    
+    <SimpleChart v-bind:data="realValues"/> <!-- Pasar los valores reales al graficador -->
+
+    <FastWaveletTransform/>
+
+  </div>
+  
+
+    
+
   <UploadFileButtonCard @fileProcessed="handleFileProcessed"/>
   <div class="border-dotted">
     <SimpleChart v-bind:data="realValues"/> <!-- Pasar los valores reales al graficador -->

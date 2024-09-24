@@ -145,8 +145,9 @@ onMounted(() => {
     </div>
 
     <div class="flex justify-center items-center w-[50vw] h-[50vh] fixed inset-0 m-auto" v-if="loadingStatus">
-      <div class="transform scale-[2]">
+      <div class="transform scale-[2] flex justify-center items-center">
         <JellyfishLoader color="#3B82F6" />
+        <h2 class="#3B82F6">Procesando archivo...</h2>
       </div>
     </div>
 

@@ -1,112 +1,114 @@
-<script>
+<script setup>
 import { ref, watch } from 'vue';
+import { useSignalStore } from '@/stores/signalStore';
 
-export default {
-  props: {
-    data: {
-      type: Array,
-      required: true,
+// Props
+const props = defineProps({
+  data: {
+    type: Array,
+    required: true
+  }
+});
+
+// Acceso al store de señales
+const signalStore = useSignalStore();
+
+// Reactive variables
+const selectedTool = ref('');
+
+// Datos para cada formulario
+// Tool 1: Fast Wavelet Harr
+const tool1Data = ref({
+  field1: ''
+});
+
+// Tool 2: Fast Wavelet Transform
+const tool2Data = ref({
+  decLevel: '',
+  waveName: 'db1' // valor por defecto
+});
+
+// Tool 3: First Difference
+const tool3Data = ref({
+  field1: ''
+});
+
+// Tool 4: Inverse Fast Fourier Transform
+const tool4Data = ref({
+  field1: ''
+});
+
+// Tool 5: Moving Average
+const tool5Data = ref({
+  field1: ''
+});
+
+// Tool 6: Running Sum
+const tool6Data = ref({
+  field1: ''
+});
+
+// TODO: Revisar si se queda o no  el revisar la señal desde el graficador
+watch(
+    () => props.data,
+    (newValues) => {
+      console.log('Valores reales actualizados:', newValues);
     }
-  },
-  setup(props) {
-    const selectedTool = ref('');
+);
 
-    // Se almacenarán las transformaciones o resultados procesados basados en los valores reales
-    const tool1Data = ref({
-      field1: ''
-    });
 
-    const tool2Data = ref({
-      decLevel: '',
-      waveName: 'db1' // valor por defecto
-    });
+// Validación de datos y submit
+// Tool 1: Fast Wavelet Harr
+const submitTool1 = () => {
+  if (!tool1Data.value.field1) {
+    console.error('Error: Falta llenar el campo en Tool 1');
+  } else {
+    console.log('Tool 1 Data:', tool1Data.value, 'Real Values:', props.data);
+  }
+};
 
-    const tool3Data = ref({
-      field1: ''
-    });
+// Tool 2: Fast Wavelet Transform
+const submitTool2 = () => {
+  if (!tool2Data.value.decLevel) {
+    console.error('Error: Falta llenar el campo Dec Level en Tool 2');
+  } else {
+    console.log('Tool 2 Data:', tool2Data.value, 'Real Values:', props.data);
+  }
+};
 
-    const tool4Data = ref({
-      field1: ''
-    });
+// Tool 3: First Difference
+const submitTool3 = () => {
+  if (!tool3Data.value.field1) {
+    console.error('Error: Falta llenar el campo en Tool 3');
+  } else {
+    console.log('Tool 3 Data:', tool3Data.value, 'Real Values:', props.data);
+  }
+};
 
-    const tool5Data = ref({
-      field1: ''
-    });
+// Tool 4: Inverse Fast Fourier Transform
+const submitTool4 = () => {
+  if (!tool4Data.value.field1) {
+    console.error('Error: Falta llenar el campo en Tool 4');
+  } else {
+    console.log('Tool 4 Data:', tool4Data.value, 'Real Values:', props.data);
+  }
+};
 
-    const tool6Data = ref({
-      field1: ''
-    });
+// Tool 5: Moving Average
+const submitTool5 = () => {
+  if (!tool5Data.value.field1) {
+    console.error('Error: Falta llenar el campo Window Size en Tool 5');
+  } else {
+    console.log('Tool 5 Data:', tool5Data.value, 'Real Values:', props.data, 'Signal Store:', signalStore.signalJson);
+  }
+};
 
-    // Observa los cambios en los valores reales (data)
-    watch(() => props.data, (newValues) => {
-      console.log("Valores reales actualizados:", newValues);
-      // Aquí puedes agregar lógica para usar los valores reales en tus herramientas.
-    });
-
-    // Validación de datos y submit
-    const submitTool1 = () => {
-      if (!tool1Data.value.field1) {
-        console.error('Error: Falta llenar el campo en Tool 1');
-      } else {
-        console.log("Tool 1 Data:", tool1Data.value, "Real Values:", props.data);
-      }
-    };
-
-    const submitTool2 = () => {
-      if (!tool2Data.value.decLevel) {
-        console.error('Error: Falta llenar el campo Dec Level en Tool 2');
-      } else {
-        console.log("Tool 2 Data:", tool2Data.value, "Real Values:", props.data);
-      }
-    };
-
-    const submitTool3 = () => {
-      if (!tool3Data.value.field1) {
-        console.error('Error: Falta llenar el campo en Tool 3');
-      } else {
-        console.log("Tool 3 Data:", tool3Data.value, "Real Values:", props.data);
-      }
-    };
-
-    const submitTool4 = () => {
-      if (!tool4Data.value.field1) {
-        console.error('Error: Falta llenar el campo en Tool 4');
-      } else {
-        console.log("Tool 4 Data:", tool4Data.value, "Real Values:", props.data);
-      }
-    };
-
-    const submitTool5 = () => {
-      if (!tool5Data.value.field1) {
-        console.error('Error: Falta llenar el campo Window Size en Tool 5');
-      } else {
-        console.log("Tool 5 Data:", tool5Data.value, "Real Values:", props.data);
-      }
-    };
-
-    const submitTool6 = () => {
-      if (!tool6Data.value.field1) {
-        console.error('Error: Falta llenar el campo Window Size en Tool 6');
-      } else {
-        console.log("Tool 6 Data:", tool6Data.value, "Real Values:", props.data);
-      }
-    };
-
-    return {
-      selectedTool,
-      tool1Data,
-      tool2Data,
-      tool3Data,
-      tool4Data,
-      tool5Data,
-      tool6Data,
-      submitTool1,
-      submitTool2,
-      submitTool3,
-      submitTool4,
-      submitTool5,
-      submitTool6
-    };
+// Tool 6: Running Sum
+const submitTool6 = () => {
+  if (!tool6Data.value.field1) {
+    console.error('Error: Falta llenar el campo Window Size en Tool 6');
+  } else {
+    console.log('Tool 6 Data:', tool6Data.value, 'Real Values:', props.data);
   }
 };
 </script>

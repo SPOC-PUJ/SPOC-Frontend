@@ -27,6 +27,15 @@ export interface Complex {
     imag: number;
 }
 /**
+ * @generated from protobuf message signal.VectorXcd
+ */
+export interface VectorXcd {
+    /**
+     * @generated from protobuf field: repeated signal.Complex values = 1;
+     */
+    values: Complex[];
+}
+/**
  * @generated from protobuf message signal.MovingAverageRequest
  */
 export interface MovingAverageRequest {
@@ -125,15 +134,6 @@ export interface FastWaveletTransformHaarResponse {
     detail: Complex[];
 }
 /**
- * @generated from protobuf message signal.VectorXcd
- */
-export interface VectorXcd {
-    /**
-     * @generated from protobuf field: repeated signal.Complex values = 1;
-     */
-    values: Complex[];
-}
-/**
  * @generated from protobuf message signal.FastWaveletTransformRequest
  */
 export interface FastWaveletTransformRequest {
@@ -162,6 +162,77 @@ export interface FastWaveletTransformResponse {
      * @generated from protobuf field: repeated signal.VectorXcd details = 2;
      */
     details: VectorXcd[];
+}
+/**
+ * @generated from protobuf message signal.FftConvolveRequest
+ */
+export interface FftConvolveRequest {
+    /**
+     * @generated from protobuf field: repeated signal.Complex signalx = 1;
+     */
+    signalx: Complex[];
+    /**
+     * @generated from protobuf field: repeated signal.Complex signalh = 2;
+     */
+    signalh: Complex[];
+    /**
+     * @generated from protobuf field: bool shift = 3;
+     */
+    shift: boolean;
+}
+/**
+ * @generated from protobuf message signal.FftConvolveResponse
+ */
+export interface FftConvolveResponse {
+    /**
+     * @generated from protobuf field: repeated signal.Complex result = 1;
+     */
+    result: Complex[];
+}
+/**
+ * @generated from protobuf message signal.FFTRequest
+ */
+export interface FFTRequest {
+    /**
+     * @generated from protobuf field: repeated signal.Complex signal = 1;
+     */
+    signal: Complex[];
+}
+/**
+ * @generated from protobuf message signal.FFTResponse
+ */
+export interface FFTResponse {
+    /**
+     * @generated from protobuf field: repeated signal.Complex result = 1;
+     */
+    result: Complex[];
+}
+/**
+ * @generated from protobuf message signal.Signal
+ */
+export interface Signal {
+    /**
+     * @generated from protobuf field: repeated signal.Complex values = 1;
+     */
+    values: Complex[];
+}
+/**
+ * @generated from protobuf message signal.AverageRequest
+ */
+export interface AverageRequest {
+    /**
+     * @generated from protobuf field: repeated signal.VectorXcd signals = 1;
+     */
+    signals: VectorXcd[]; // Lista de señales complejas
+}
+/**
+ * @generated from protobuf message signal.AverageResponse
+ */
+export interface AverageResponse {
+    /**
+     * @generated from protobuf field: repeated signal.Complex result = 1;
+     */
+    result: Complex[]; // Resultado del promedio
 }
 // @generated message type with reflection information, may provide speed optimized methods
 class Complex$Type extends MessageType<Complex> {
@@ -218,6 +289,53 @@ class Complex$Type extends MessageType<Complex> {
  * @generated MessageType for protobuf message signal.Complex
  */
 export const Complex = new Complex$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class VectorXcd$Type extends MessageType<VectorXcd> {
+    constructor() {
+        super("signal.VectorXcd", [
+            { no: 1, name: "values", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Complex }
+        ]);
+    }
+    create(value?: PartialMessage<VectorXcd>): VectorXcd {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.values = [];
+        if (value !== undefined)
+            reflectionMergePartial<VectorXcd>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: VectorXcd): VectorXcd {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated signal.Complex values */ 1:
+                    message.values.push(Complex.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: VectorXcd, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* repeated signal.Complex values = 1; */
+        for (let i = 0; i < message.values.length; i++)
+            Complex.internalBinaryWrite(message.values[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message signal.VectorXcd
+ */
+export const VectorXcd = new VectorXcd$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class MovingAverageRequest$Type extends MessageType<MovingAverageRequest> {
     constructor() {
@@ -705,53 +823,6 @@ class FastWaveletTransformHaarResponse$Type extends MessageType<FastWaveletTrans
  */
 export const FastWaveletTransformHaarResponse = new FastWaveletTransformHaarResponse$Type();
 // @generated message type with reflection information, may provide speed optimized methods
-class VectorXcd$Type extends MessageType<VectorXcd> {
-    constructor() {
-        super("signal.VectorXcd", [
-            { no: 1, name: "values", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Complex }
-        ]);
-    }
-    create(value?: PartialMessage<VectorXcd>): VectorXcd {
-        const message = globalThis.Object.create((this.messagePrototype!));
-        message.values = [];
-        if (value !== undefined)
-            reflectionMergePartial<VectorXcd>(this, message, value);
-        return message;
-    }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: VectorXcd): VectorXcd {
-        let message = target ?? this.create(), end = reader.pos + length;
-        while (reader.pos < end) {
-            let [fieldNo, wireType] = reader.tag();
-            switch (fieldNo) {
-                case /* repeated signal.Complex values */ 1:
-                    message.values.push(Complex.internalBinaryRead(reader, reader.uint32(), options));
-                    break;
-                default:
-                    let u = options.readUnknownField;
-                    if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
-                    let d = reader.skip(wireType);
-                    if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
-            }
-        }
-        return message;
-    }
-    internalBinaryWrite(message: VectorXcd, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
-        /* repeated signal.Complex values = 1; */
-        for (let i = 0; i < message.values.length; i++)
-            Complex.internalBinaryWrite(message.values[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
-        let u = options.writeUnknownFields;
-        if (u !== false)
-            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
-        return writer;
-    }
-}
-/**
- * @generated MessageType for protobuf message signal.VectorXcd
- */
-export const VectorXcd = new VectorXcd$Type();
-// @generated message type with reflection information, may provide speed optimized methods
 class FastWaveletTransformRequest$Type extends MessageType<FastWaveletTransformRequest> {
     constructor() {
         super("signal.FastWaveletTransformRequest", [
@@ -869,6 +940,351 @@ class FastWaveletTransformResponse$Type extends MessageType<FastWaveletTransform
  * @generated MessageType for protobuf message signal.FastWaveletTransformResponse
  */
 export const FastWaveletTransformResponse = new FastWaveletTransformResponse$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class FftConvolveRequest$Type extends MessageType<FftConvolveRequest> {
+    constructor() {
+        super("signal.FftConvolveRequest", [
+            { no: 1, name: "signalx", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Complex },
+            { no: 2, name: "signalh", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Complex },
+            { no: 3, name: "shift", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
+        ]);
+    }
+    create(value?: PartialMessage<FftConvolveRequest>): FftConvolveRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.signalx = [];
+        message.signalh = [];
+        message.shift = false;
+        if (value !== undefined)
+            reflectionMergePartial<FftConvolveRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: FftConvolveRequest): FftConvolveRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated signal.Complex signalx */ 1:
+                    message.signalx.push(Complex.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                case /* repeated signal.Complex signalh */ 2:
+                    message.signalh.push(Complex.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                case /* bool shift */ 3:
+                    message.shift = reader.bool();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: FftConvolveRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* repeated signal.Complex signalx = 1; */
+        for (let i = 0; i < message.signalx.length; i++)
+            Complex.internalBinaryWrite(message.signalx[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        /* repeated signal.Complex signalh = 2; */
+        for (let i = 0; i < message.signalh.length; i++)
+            Complex.internalBinaryWrite(message.signalh[i], writer.tag(2, WireType.LengthDelimited).fork(), options).join();
+        /* bool shift = 3; */
+        if (message.shift !== false)
+            writer.tag(3, WireType.Varint).bool(message.shift);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message signal.FftConvolveRequest
+ */
+export const FftConvolveRequest = new FftConvolveRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class FftConvolveResponse$Type extends MessageType<FftConvolveResponse> {
+    constructor() {
+        super("signal.FftConvolveResponse", [
+            { no: 1, name: "result", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Complex }
+        ]);
+    }
+    create(value?: PartialMessage<FftConvolveResponse>): FftConvolveResponse {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.result = [];
+        if (value !== undefined)
+            reflectionMergePartial<FftConvolveResponse>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: FftConvolveResponse): FftConvolveResponse {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated signal.Complex result */ 1:
+                    message.result.push(Complex.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: FftConvolveResponse, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* repeated signal.Complex result = 1; */
+        for (let i = 0; i < message.result.length; i++)
+            Complex.internalBinaryWrite(message.result[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message signal.FftConvolveResponse
+ */
+export const FftConvolveResponse = new FftConvolveResponse$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class FFTRequest$Type extends MessageType<FFTRequest> {
+    constructor() {
+        super("signal.FFTRequest", [
+            { no: 1, name: "signal", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Complex }
+        ]);
+    }
+    create(value?: PartialMessage<FFTRequest>): FFTRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.signal = [];
+        if (value !== undefined)
+            reflectionMergePartial<FFTRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: FFTRequest): FFTRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated signal.Complex signal */ 1:
+                    message.signal.push(Complex.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: FFTRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* repeated signal.Complex signal = 1; */
+        for (let i = 0; i < message.signal.length; i++)
+            Complex.internalBinaryWrite(message.signal[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message signal.FFTRequest
+ */
+export const FFTRequest = new FFTRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class FFTResponse$Type extends MessageType<FFTResponse> {
+    constructor() {
+        super("signal.FFTResponse", [
+            { no: 1, name: "result", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Complex }
+        ]);
+    }
+    create(value?: PartialMessage<FFTResponse>): FFTResponse {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.result = [];
+        if (value !== undefined)
+            reflectionMergePartial<FFTResponse>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: FFTResponse): FFTResponse {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated signal.Complex result */ 1:
+                    message.result.push(Complex.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: FFTResponse, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* repeated signal.Complex result = 1; */
+        for (let i = 0; i < message.result.length; i++)
+            Complex.internalBinaryWrite(message.result[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message signal.FFTResponse
+ */
+export const FFTResponse = new FFTResponse$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class Signal$Type extends MessageType<Signal> {
+    constructor() {
+        super("signal.Signal", [
+            { no: 1, name: "values", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Complex }
+        ]);
+    }
+    create(value?: PartialMessage<Signal>): Signal {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.values = [];
+        if (value !== undefined)
+            reflectionMergePartial<Signal>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: Signal): Signal {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated signal.Complex values */ 1:
+                    message.values.push(Complex.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: Signal, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* repeated signal.Complex values = 1; */
+        for (let i = 0; i < message.values.length; i++)
+            Complex.internalBinaryWrite(message.values[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message signal.Signal
+ */
+export const Signal = new Signal$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class AverageRequest$Type extends MessageType<AverageRequest> {
+    constructor() {
+        super("signal.AverageRequest", [
+            { no: 1, name: "signals", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => VectorXcd }
+        ]);
+    }
+    create(value?: PartialMessage<AverageRequest>): AverageRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.signals = [];
+        if (value !== undefined)
+            reflectionMergePartial<AverageRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: AverageRequest): AverageRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated signal.VectorXcd signals */ 1:
+                    message.signals.push(VectorXcd.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: AverageRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* repeated signal.VectorXcd signals = 1; */
+        for (let i = 0; i < message.signals.length; i++)
+            VectorXcd.internalBinaryWrite(message.signals[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message signal.AverageRequest
+ */
+export const AverageRequest = new AverageRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class AverageResponse$Type extends MessageType<AverageResponse> {
+    constructor() {
+        super("signal.AverageResponse", [
+            { no: 1, name: "result", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Complex }
+        ]);
+    }
+    create(value?: PartialMessage<AverageResponse>): AverageResponse {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.result = [];
+        if (value !== undefined)
+            reflectionMergePartial<AverageResponse>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: AverageResponse): AverageResponse {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated signal.Complex result */ 1:
+                    message.result.push(Complex.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: AverageResponse, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* repeated signal.Complex result = 1; */
+        for (let i = 0; i < message.result.length; i++)
+            Complex.internalBinaryWrite(message.result[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message signal.AverageResponse
+ */
+export const AverageResponse = new AverageResponse$Type();
 /**
  * @generated ServiceType for protobuf service signal.SignalService
  */
@@ -877,6 +1293,9 @@ export const SignalService = new ServiceType("signal.SignalService", [
     { name: "ComputeRuningSum", options: {}, I: RuningSumRequest, O: RuningSumResponse },
     { name: "ComputeFirstDifference", options: {}, I: FirstDifferenceRequest, O: FirstDifferenceResponse },
     { name: "ComputeIFFT", options: {}, I: IFFTRequest, O: IFFTResponse },
-    { name: "ComputeFastWaveletTransformHaar", options: {}, I: FastWaveletTransformHaarRequest, O: FastWaveletTransformHaarResponse },
-    { name: "ComputeFastWaveletTransform", options: {}, I: FastWaveletTransformRequest, O: FastWaveletTransformResponse }
+    { name: "ComputeFastWaveletHaar", options: {}, I: FastWaveletTransformHaarRequest, O: FastWaveletTransformHaarResponse },
+    { name: "ComputeFastWaveletTransform", options: {}, I: FastWaveletTransformRequest, O: FastWaveletTransformResponse },
+    { name: "ComputeFftConvolve", options: {}, I: FftConvolveRequest, O: FftConvolveResponse },
+    { name: "ComputeFFT", options: {}, I: FFTRequest, O: FFTResponse },
+    { name: "ComputeAverage", options: {}, I: AverageRequest, O: AverageResponse }
 ]);

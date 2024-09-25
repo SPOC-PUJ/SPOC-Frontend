@@ -1,9 +1,12 @@
 import { SignalServiceClient } from '../proto/proto-ts/signal.client';
 import { GrpcWebFetchTransport } from '@protobuf-ts/grpcweb-transport';
-import { RuningSumRequest , MovingAverageRequest, FirstDifferenceRequest, IFFTRequest, FastWaveletTransformHaarRequest, FastWaveletTransformRequest} from '../proto/proto-ts/signal';
+import { RuningSumRequest , MovingAverageRequest, FirstDifferenceRequest, IFFTRequest, FastWaveletTransformHaarRequest, FastWaveletTransformRequest,FFTRequest,FftConvolveRequest,AverageRequest} from '../proto/proto-ts/signal';
 
 const client = new SignalServiceClient(
-    new GrpcWebFetchTransport({ baseUrl: 'http://localhost:8080' })
+  new GrpcWebFetchTransport({
+      baseUrl: 'http://localhost:8080'
+      // Aquí se añaden los encabezados personalizados
+  })
 );
 
 
@@ -73,13 +76,13 @@ export const SignalService = {
           signal: signalJson,
       });
       try {
-          const { response } = await client.computeFastWaveletTransformHaar(request);
+          const { response } = await client.computeFastWaveletHaar(request);
           return response;
       } catch (error) {
           console.error('Error al realizar la solicitud gRPC:', error);
           throw error;
       }
-  },
+    },
 
     async computeFastWaveletTransform(signalJson, decLevel,WaveName){
       const request = FastWaveletTransformRequest.fromJson({
@@ -88,13 +91,54 @@ export const SignalService = {
           wave_name:WaveName,
       });
       try {
-          console.log(WaveName);
-          
           const { response } = await client.computeFastWaveletTransform(request);
           return response;
       } catch (error) {
           console.error('Error al realizar la solicitud gRPC:', error);
           throw error;
       }
+    },
+
+    async computeFFT(signalJson){
+      const request = FFTRequest.fromJson({
+          signal: signalJson,
+      });
+      try {
+          const { response } = await client.computeFFT(request);
+          return response;
+      } catch (error) {
+          console.error('Error al realizar la solicitud gRPC:', error);
+          throw error;
+      }
+    },
+
+  async computeFFT_convolve(signalJsonx,signalJsonh,shift){
+    const request = FftConvolveRequest.fromJson({
+      signalx: signalJsonx,
+      signalh: signalJsonh,
+      shift: shift,
+
+    });
+    try {
+        const { response } = await client.computeFftConvolve(request);
+        return response;
+    } catch (error) {
+        console.error('Error al realizar la solicitud gRPC:', error);
+        throw error;
+    }
+  },
+
+  async computeAverage(signalJson){
+    const request = AverageRequest.fromJson({
+      signals: signalJson,
+
+    });
+    try {
+        const { response } = await client.computeAverage(request);
+        return response;
+    } catch (error) {
+        console.error('Error al realizar la solicitud gRPC:', error);
+        throw error;
+    }
   },
   };

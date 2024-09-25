@@ -1,6 +1,7 @@
 <template>
-    <button @click="calcularFastWaveletTransform">FastWavelet Transform</button>
+    <button @click="calcularFFT">FFT</button>
 </template>
+
 
 <script>
 import { ref, computed , toRaw} from 'vue';
@@ -15,19 +16,17 @@ export default {
     const signalStore = useSignalStore()
     const signalComputed = computed(() => signalStore.signalObject);
 
-
-    const calcularFastWaveletTransform = async () => {
+    const calcularFFT = async () => {
 
       if (!signalComputed.value) {
         console.error('El objeto signalObject es null o no está inicializado.');
         return;
       }
-
       // despues se decide como trabajar esto
       // const signal = toRaw(signalStore.signalObject);
       // const signalData = [];
       // const veceigen = signal.get(0);
-      
+
       // for(let i=0; i< veceigen.size ; i++){
       //   const complexValue = veceigen.get(i);
 
@@ -36,8 +35,9 @@ export default {
 
       const signalJson = toRaw(signalStore.signalJson)
       console.log("despues de traer el json",signalJson[0]);
+      
       try {
-        const response = await SignalService.computeFastWaveletTransform(signalJson[0],3,"bior3.1");
+        const response = await SignalService.computeFFT(signalJson[0]);
         console.log(response);
         
       } catch (error) {
@@ -46,7 +46,7 @@ export default {
     };
 
     return {
-        calcularFastWaveletTransform,
+        calcularFFT,
     };
   },
 };

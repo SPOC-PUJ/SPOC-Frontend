@@ -20,28 +20,14 @@ function handleFileProcessed(values) {
 </script>
 
 <template>
-  <div class="border-dotted border-4 border-red-400">
+  <UploadFileButtonCard @fileProcessed="handleFileProcessed"/>
+  <div>
     <LoadFileCard @fileProcessed="handleFileProcessed" />
   </div>
-  <div class="border-dotted border-4 border-sky-500">
-
-    <SimpleChart/>
-    
+  <div>
     <SimpleChart v-bind:data="realValues"/> <!-- Pasar los valores reales al graficador -->
 
     <FastWaveletTransform/>
-
-  </div>
-  
-
-    
-
-  <UploadFileButtonCard @fileProcessed="handleFileProcessed"/>
-  <div class="border-dotted">
-    <SimpleChart v-bind:data="realValues"/> <!-- Pasar los valores reales al graficador -->
-    <!-- <SumComponent/> -->
-
-    <!-- <MovingAverage/> -->
   </div>
 </template>
 

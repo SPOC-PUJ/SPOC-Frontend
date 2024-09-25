@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import {ref, onMounted} from 'vue';
 import SimpleChart from "@/components/SimpleChart.vue";
 
 import AverageComponent from '@/components/AverageComponent.vue';
@@ -8,7 +8,7 @@ import MovingAverage from '@/components/MovingAverage.vue';
 
 const fileName = ref(null);
 
-import LoadFileCard from "@/components/LoadFileCard.vue";
+import UploadFileButtonCard from "@/components/UploadFileButtonCard.vue";
 
 const realValues = ref([]); // Array para almacenar los valores reales y pasarlos al graficador
 
@@ -38,7 +38,13 @@ function handleFileProcessed(values) {
 
     
 
+  <UploadFileButtonCard @fileProcessed="handleFileProcessed"/>
+  <div class="border-dotted">
+    <SimpleChart v-bind:data="realValues"/> <!-- Pasar los valores reales al graficador -->
+    <!-- <SumComponent/> -->
 
+    <!-- <MovingAverage/> -->
+  </div>
 </template>
 
 <style scoped>

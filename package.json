@@ -9,21 +9,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
-
+    "@headlessui/vue": "^1.7.22",
+    "@heroicons/vue": "^2.1.5",
     "@protobuf-ts/grpcweb-transport": "^2.9.4",
     "@protobuf-ts/plugin": "^2.9.4",
     "@protobuf-ts/runtime": "^2.9.4",
-
-    "@headlessui/vue": "^1.7.22",
-    "@heroicons/vue": "^2.1.5",
-
     "d3": "^7.9.0",
     "google-protobuf": "^3.21.4",
     "grpc-web": "^1.5.0",
     "pinia": "^2.2.2",
     "primeicons": "^7.0.0",
     "vue": "^3.4.29",
-    "vue-router": "^4.4.3"
+    "vue-router": "^4.4.3",
+    "vue3-spinner": "^0.0.17"
   },
   "devDependencies": {
     "@originjs/vite-plugin-commonjs": "^1.0.3",

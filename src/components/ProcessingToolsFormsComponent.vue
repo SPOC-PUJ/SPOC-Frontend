@@ -154,7 +154,7 @@ export default {
 
       <!-- Formulario para la Herramienta 3: First Difference -->
       <div v-if="selectedTool === 'FirstDifference'" class="mb-6">
-        <h4 class="text-lg font-semibold text-green-500 mb-4">Fast Wavelet Harr</h4>
+        <h4 class="text-lg font-semibold text-green-500 mb-4">First Difference</h4>
         <form @submit.prevent="submitTool3">
           <label class="block text-sm font-medium text-gray-700 mb-2">SOLO ESPERA SEÑAL</label>
           <input type="text" v-model="tool3Data.field1" class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm mb-4"/>
@@ -164,7 +164,7 @@ export default {
 
       <!-- Formulario para la Herramienta 4: Inverse Fast Fourier Transform -->
       <div v-if="selectedTool === 'IFFT-Tool'" class="mb-6">
-        <h4 class="text-lg font-semibold text-green-500 mb-4">Fast Wavelet Harr</h4>
+        <h4 class="text-lg font-semibold text-green-500 mb-4">Inverse Fast Fourier Transform</h4>
         <form @submit.prevent="submitTool4">
           <label class="block text-sm font-medium text-gray-700 mb-2">SOLO ESPERA SEÑAL</label>
           <input type="text" v-model="tool4Data.field1" class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm mb-4"/>
@@ -174,7 +174,7 @@ export default {
 
       <!-- Formulario para la Herramienta 5: Moving Average -->
       <div v-if="selectedTool === 'MovingAverage'" class="mb-6">
-        <h4 class="text-lg font-semibold text-green-500 mb-4">Fast Wavelet Harr</h4>
+        <h4 class="text-lg font-semibold text-green-500 mb-4">Moving Average</h4>
         <form @submit.prevent="submitTool5">
           <label class="block text-sm font-medium text-gray-700 mb-2">Window Size:</label>
           <input type="number" v-model="tool5Data.field1" class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm mb-4"/>

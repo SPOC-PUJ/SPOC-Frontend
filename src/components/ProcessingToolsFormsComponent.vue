@@ -4,6 +4,7 @@ import {useSignalStore} from '@/stores/signalStore';
 import MovingAverage from "@/components/MovingAverage.vue";
 import FastWaveletHarr from "@/components/FastWaveletHarr.vue";
 import FastWaveletTransform from "@/components/FastWaveletTransform.vue";
+import FirstDifference from "@/components/FirstDifference.vue";
 
 // Props
 const props = defineProps({
@@ -21,12 +22,6 @@ const selectedTool = ref('');
 
 // Datos para cada formulario
 
-
-
-// Tool 3: First Difference
-const tool3Data = ref({
-  field1: ''
-});
 
 // Tool 4: Inverse Fast Fourier Transform
 const tool4Data = ref({
@@ -51,15 +46,6 @@ watch(
 // Validación de datos y submit
 
 
-
-// Tool 3: First Difference
-const submitTool3 = () => {
-  if (!tool3Data.value.field1) {
-    console.error('Error: Falta llenar el campo en Tool 3');
-  } else {
-    console.log('Tool 3 Data:', tool3Data.value, 'Real Values:', props.data);
-  }
-};
 
 // Tool 4: Inverse Fast Fourier Transform
 const submitTool4 = () => {
@@ -117,14 +103,7 @@ const submitTool6 = () => {
 
     <!-- Formulario para la Herramienta 3: First Difference -->
     <div v-if="selectedTool === 'FirstDifference'" class="mb-6">
-      <h4 class="text-lg font-semibold text-green-500 mb-4">First Difference</h4>
-      <form @submit.prevent="submitTool3">
-        <label class="block text-sm font-medium text-gray-700 mb-2">SOLO ESPERA SEÑAL</label>
-        <input type="text" v-model="tool3Data.field1"
-               class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm mb-4"/>
-        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Procesar...
-        </button>
-      </form>
+      <FirstDifference/>
     </div>
 
     <!-- Formulario para la Herramienta 4: Inverse Fast Fourier Transform -->

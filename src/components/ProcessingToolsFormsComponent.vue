@@ -5,6 +5,8 @@ import MovingAverage from "@/components/MovingAverage.vue";
 import FastWaveletHarr from "@/components/FastWaveletHarr.vue";
 import FastWaveletTransform from "@/components/FastWaveletTransform.vue";
 import FirstDifference from "@/components/FirstDifference.vue";
+import IFFTComponent from "@/components/IFFTComponent.vue";
+import RunningSum from "@/components/RunningSum.vue";
 
 // Props
 const props = defineProps({
@@ -19,52 +21,6 @@ const signalStore = useSignalStore();
 
 // Reactive variables
 const selectedTool = ref('');
-
-// Datos para cada formulario
-
-
-// Tool 4: Inverse Fast Fourier Transform
-const tool4Data = ref({
-  field1: ''
-});
-
-
-// Tool 6: Running Sum
-const tool6Data = ref({
-  field1: ''
-});
-
-// TODO: Revisar si se queda o no  el revisar la señal desde el graficador
-watch(
-    () => props.data,
-    (newValues) => {
-      console.log('Valores reales actualizados:', newValues);
-    }
-);
-
-
-// Validación de datos y submit
-
-
-
-// Tool 4: Inverse Fast Fourier Transform
-const submitTool4 = () => {
-  if (!tool4Data.value.field1) {
-    console.error('Error: Falta llenar el campo en Tool 4');
-  } else {
-    console.log('Tool 4 Data:', tool4Data.value, 'Real Values:', props.data);
-  }
-};
-
-
-// Tool 6: Running Sum
-const submitTool6 = () => {
-  if (!tool6Data.value.field1) {
-    console.error('Error: Falta llenar el campo Window Size en Tool 6');
-  } else {
-    console.log('Tool 6 Data:', tool6Data.value, 'Real Values:', props.data);
-  }
-};
 </script>
 
 
@@ -108,14 +64,7 @@ const submitTool6 = () => {
 
     <!-- Formulario para la Herramienta 4: Inverse Fast Fourier Transform -->
     <div v-if="selectedTool === 'IFFT-Tool'" class="mb-6">
-      <h4 class="text-lg font-semibold text-green-500 mb-4">Inverse Fast Fourier Transform</h4>
-      <form @submit.prevent="submitTool4">
-        <label class="block text-sm font-medium text-gray-700 mb-2">SOLO ESPERA SEÑAL</label>
-        <input type="text" v-model="tool4Data.field1"
-               class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm mb-4"/>
-        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Procesar...
-        </button>
-      </form>
+      <IFFTComponent/>
     </div>
 
     <!-- Formulario para la Herramienta 5: Moving Average -->
@@ -125,14 +74,7 @@ const submitTool6 = () => {
 
     <!-- Formulario para la Herramienta 6: Running Sum -->
     <div v-if="selectedTool === 'RunningSum'" class="mb-6">
-      <h4 class="text-lg font-semibold text-green-500 mb-4">Running Sum</h4>
-      <form @submit.prevent="submitTool6">
-        <label class="block text-sm font-medium text-gray-700 mb-2">Window Size:</label>
-        <input type="number" v-model="tool6Data.field1"
-               class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm mb-4"/>
-        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Procesar...
-        </button>
-      </form>
+      <RunningSum/>
     </div>
 
   </div>

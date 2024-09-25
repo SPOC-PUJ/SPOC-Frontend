@@ -1,11 +1,17 @@
 <script>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 export default {
-  setup() {
+  props: {
+    data: {
+      type: Array,
+      required: true,
+    }
+  },
+  setup(props) {
     const selectedTool = ref('');
 
-    // Datos para cada formulario
+    // Se almacenarán las transformaciones o resultados procesados basados en los valores reales
     const tool1Data = ref({
       field1: ''
     });
@@ -31,12 +37,18 @@ export default {
       field1: ''
     });
 
+    // Observa los cambios en los valores reales (data)
+    watch(() => props.data, (newValues) => {
+      console.log("Valores reales actualizados:", newValues);
+      // Aquí puedes agregar lógica para usar los valores reales en tus herramientas.
+    });
+
     // Validación de datos y submit
     const submitTool1 = () => {
       if (!tool1Data.value.field1) {
         console.error('Error: Falta llenar el campo en Tool 1');
       } else {
-        console.log("Tool 1 Data:", tool1Data.value);
+        console.log("Tool 1 Data:", tool1Data.value, "Real Values:", props.data);
       }
     };
 
@@ -44,7 +56,7 @@ export default {
       if (!tool2Data.value.decLevel) {
         console.error('Error: Falta llenar el campo Dec Level en Tool 2');
       } else {
-        console.log("Tool 2 Data:", tool2Data.value);
+        console.log("Tool 2 Data:", tool2Data.value, "Real Values:", props.data);
       }
     };
 
@@ -52,7 +64,7 @@ export default {
       if (!tool3Data.value.field1) {
         console.error('Error: Falta llenar el campo en Tool 3');
       } else {
-        console.log("Tool 3 Data:", tool3Data.value);
+        console.log("Tool 3 Data:", tool3Data.value, "Real Values:", props.data);
       }
     };
 
@@ -60,7 +72,7 @@ export default {
       if (!tool4Data.value.field1) {
         console.error('Error: Falta llenar el campo en Tool 4');
       } else {
-        console.log("Tool 4 Data:", tool4Data.value);
+        console.log("Tool 4 Data:", tool4Data.value, "Real Values:", props.data);
       }
     };
 
@@ -68,7 +80,7 @@ export default {
       if (!tool5Data.value.field1) {
         console.error('Error: Falta llenar el campo Window Size en Tool 5');
       } else {
-        console.log("Tool 5 Data:", tool5Data.value);
+        console.log("Tool 5 Data:", tool5Data.value, "Real Values:", props.data);
       }
     };
 
@@ -76,7 +88,7 @@ export default {
       if (!tool6Data.value.field1) {
         console.error('Error: Falta llenar el campo Window Size en Tool 6');
       } else {
-        console.log("Tool 6 Data:", tool6Data.value);
+        console.log("Tool 6 Data:", tool6Data.value, "Real Values:", props.data);
       }
     };
 
@@ -98,6 +110,7 @@ export default {
   }
 };
 </script>
+
 
 <template>
     <div class="bg-white rounded-xl shadow-md p-6">

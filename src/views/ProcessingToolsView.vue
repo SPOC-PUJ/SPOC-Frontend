@@ -21,7 +21,7 @@ function handleFileProcessed(values) {
 
   <section class="bg-blue-50 px-4 py-10">
     <div class="ProcessingToolsForm justify-center w-1/2 border-green-300 border-2">
-      <ProcessingToolsFormsComponent/>
+      <ProcessingToolsFormsComponent v-bind:data="realValues"/>
     </div>
   </section>
 

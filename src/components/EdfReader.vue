@@ -44,7 +44,7 @@ const processFile = (event) => {
   }
 
   // ELIMINAR EL ASYNC
-  reader.onload = async (e) => { // La "e" es el evento de carga del archivo
+  reader.onload = async () => { // La "e" es el evento de carga del archivo
     const data = new Uint8Array(reader.result);
 
     // Crear un archivo en el sistema de archivos del módulo WebAssembly
@@ -90,9 +90,6 @@ const processFile = (event) => {
 
       realValues.push(complexValue.real()); // Solo almacenar la parte real y enviarla al graficador
     }
-
-    // ELIMINAR EL SLEEP
-    await new Promise(r => setTimeout(r, 5000));
 
     // Emitir los valores reales procesados
     emit('fileProcessed', realValues); // Emitir los valores reales para que el graficador los muestre
@@ -148,7 +145,7 @@ onMounted(() => {
       <label for="fileInputRef" class="pi pi-upload cursor-pointer inline-block px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">   Cargar Archivo</label>
     </div>
 
-    <div class="flex justify-center items-center w-[50vw] h-[50vh] fixed inset-0 m-auto" v-if="loadingStatus">
+    <div class="flex justify-center items-center w-full h-full fixed inset-0 m-auto bg-white bg-opacity-70" v-if="loadingStatus">
       <div class="transform scale-[2] flex justify-center items-center">
         <JellyfishLoader color="#3B82F6" />
         <h2 class="#3B82F6">Procesando archivo...</h2>

@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { useSignalStore } from '@/stores/signalStore';
+import MovingAverage from "@/components/MovingAverage.vue";
 
 // Props
 const props = defineProps({
@@ -38,10 +39,7 @@ const tool4Data = ref({
   field1: ''
 });
 
-// Tool 5: Moving Average
-const tool5Data = ref({
-  field1: ''
-});
+
 
 // Tool 6: Running Sum
 const tool6Data = ref({
@@ -94,14 +92,7 @@ const submitTool4 = () => {
   }
 };
 
-// Tool 5: Moving Average
-const submitTool5 = () => {
-  if (!tool5Data.value.field1) {
-    console.error('Error: Falta llenar el campo Window Size en Tool 5');
-  } else {
-    console.log('Tool 5 Data:', tool5Data.value, 'Real Values:', props.data, 'Signal Store:', signalStore.signalJson);
-  }
-};
+
 
 // Tool 6: Running Sum
 const submitTool6 = () => {
@@ -189,12 +180,7 @@ const submitTool6 = () => {
 
       <!-- Formulario para la Herramienta 5: Moving Average -->
       <div v-if="selectedTool === 'MovingAverage'" class="mb-6">
-        <h4 class="text-lg font-semibold text-green-500 mb-4">Moving Average</h4>
-        <form @submit.prevent="submitTool5">
-          <label class="block text-sm font-medium text-gray-700 mb-2">Window Size:</label>
-          <input type="number" v-model="tool5Data.field1" class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm mb-4"/>
-          <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Procesar...</button>
-        </form>
+        <MovingAverage />
       </div>
 
       <!-- Formulario para la Herramienta 6: Running Sum -->

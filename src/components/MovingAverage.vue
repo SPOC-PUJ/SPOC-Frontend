@@ -8,6 +8,24 @@ import { SignalService } from '@/services/signalService';
 const signalStore = useSignalStore();
 const signalComputed = computed(() => signalStore.signalObject);
 
+
+// Tool 5: Moving Average
+const tool5Data = ref({
+  field1: ''
+});
+
+// Tool 5: Moving Average
+const submitTool5 = () => {
+  if (!tool5Data.value.field1) {
+    console.error('Error: Falta llenar el campo Window Size en Tool 5');
+  } else {
+    console.log('Tool 5 Data:', tool5Data.value, 'Signal Store:', signalStore.signalJson);
+
+    calcularPromedioMovil()
+  }
+};
+
+
 const calcularPromedioMovil = async () => {
   if (!signalComputed.value) {
     console.error('El objeto signalObject es null o no está inicializado.');
@@ -38,5 +56,10 @@ const calcularPromedioMovil = async () => {
 
 
 <template>
-    <button @click="calcularPromedioMovil">EL PROMEDIO</button>
+    <h4 class="text-lg font-semibold text-green-500 mb-4">Moving Average</h4>
+    <form @submit.prevent="submitTool5">
+      <label class="block text-sm font-medium text-gray-700 mb-2">Window Size:</label>
+      <input type="number" v-model="tool5Data.field1" class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm mb-4"/>
+      <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Procesar...</button>
+    </form>
 </template>

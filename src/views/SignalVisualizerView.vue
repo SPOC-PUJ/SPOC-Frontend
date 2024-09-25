@@ -21,14 +21,10 @@ function handleFileProcessed(values) {
 
 <template>
   <UploadFileButtonCard @fileProcessed="handleFileProcessed"/>
-  <div>
-    <LoadFileCard @fileProcessed="handleFileProcessed" />
+  <div class="flex justify-center">
+    <SimpleChart v-bind:data="realValues" class="h-[80vh] w-full"/> <!-- Pasar los valores reales al graficador -->
   </div>
-  <div>
-    <SimpleChart v-bind:data="realValues"/> <!-- Pasar los valores reales al graficador -->
-
-    <FastWaveletTransform/>
-  </div>
+  <!-- <FastWaveletTransform/> TODO: Revisar y eliminar -->
 </template>
 
 <style scoped>

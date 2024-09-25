@@ -29,7 +29,8 @@ onMounted(() => {
   // Paso #1: Crear el contenedor del gráfico
   const margin = {top: 50, right: 20, bottom: 50, left: 70}; // Márgenes del gráfico
   const width = chartContainer.value.clientWidth - margin.left - margin.right; // Ancho dinámico del gráfico
-  const height = 1000 - margin.top - margin.bottom; // Alto del gráfico TODO hacerlo dinaámico
+  const height = chartContainer.value.clientHeight - margin.top - margin.bottom; // Alto dinámico del gráfico
+  // const height = 1000 - margin.top - margin.bottom; // Alto del gráfico TODO hacerlo dinaámico
 
   // Paso #2: Crear las escalas para los ejes X e Y (esto es para definir el rango de valores que se mostrarán en el gráfico)
   const x = d3.scaleLinear().range([0, width]); // Escala para el eje X, en este caso se mostrarán valores lineales de 0 a width (width es el ancho del gráfico)

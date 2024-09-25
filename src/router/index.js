@@ -5,6 +5,7 @@ import FunctionalitiesView from "@/views/FunctionalitiesView.vue";
 import NotFoundView from "@/views/NotFoundView.vue";
 import FunctionalityView from "@/views/FunctionalityView.vue";
 import SignalVisualizerView from "@/views/SignalVisualizerView.vue";
+import ProcessingToolsView from "@/views/ProcessingToolsView.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,6 +30,11 @@ const router = createRouter({
             path: "/signal-visualizer",
             name: "signal-visualizer",
             component: SignalVisualizerView,
+        },
+        {
+            path: "/processing-tools",
+            name: "processing-tools",
+            component: ProcessingToolsView,
         },
         {
             path: "/:catchAll(.*)",

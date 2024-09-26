@@ -27,13 +27,22 @@ export interface Complex {
     imag: number;
 }
 /**
+ * @generated from protobuf message signal.SignalGRPC
+ */
+export interface SignalGRPC {
+    /**
+     * @generated from protobuf field: repeated signal.Complex values = 1;
+     */
+    values: Complex[];
+}
+/**
  * @generated from protobuf message signal.MovingAverageRequest
  */
 export interface MovingAverageRequest {
     /**
-     * @generated from protobuf field: repeated signal.Complex signal = 1;
+     * @generated from protobuf field: signal.SignalGRPC signal = 1;
      */
-    signal: Complex[];
+    signal?: SignalGRPC;
     /**
      * @generated from protobuf field: int32 window_size = 2;
      */
@@ -53,9 +62,9 @@ export interface MovingAverageResponse {
  */
 export interface RuningSumRequest {
     /**
-     * @generated from protobuf field: repeated signal.Complex signal = 1;
+     * @generated from protobuf field: signal.SignalGRPC signal = 1;
      */
-    signal: Complex[];
+    signal?: SignalGRPC;
 }
 /**
  * @generated from protobuf message signal.RuningSumResponse
@@ -71,9 +80,9 @@ export interface RuningSumResponse {
  */
 export interface FirstDifferenceRequest {
     /**
-     * @generated from protobuf field: repeated signal.Complex signal = 1;
+     * @generated from protobuf field: signal.SignalGRPC signal = 1;
      */
-    signal: Complex[];
+    signal?: SignalGRPC;
 }
 /**
  * @generated from protobuf message signal.FirstDifferenceResponse
@@ -89,9 +98,9 @@ export interface FirstDifferenceResponse {
  */
 export interface IFFTRequest {
     /**
-     * @generated from protobuf field: repeated signal.Complex signal = 1;
+     * @generated from protobuf field: signal.SignalGRPC signal = 1;
      */
-    signal: Complex[];
+    signal?: SignalGRPC;
 }
 /**
  * @generated from protobuf message signal.IFFTResponse
@@ -107,9 +116,9 @@ export interface IFFTResponse {
  */
 export interface FastWaveletTransformHaarRequest {
     /**
-     * @generated from protobuf field: repeated signal.Complex signal = 1;
+     * @generated from protobuf field: signal.SignalGRPC signal = 1;
      */
-    signal: Complex[];
+    signal?: SignalGRPC;
 }
 /**
  * @generated from protobuf message signal.FastWaveletTransformHaarResponse
@@ -219,16 +228,62 @@ class Complex$Type extends MessageType<Complex> {
  */
 export const Complex = new Complex$Type();
 // @generated message type with reflection information, may provide speed optimized methods
+class SignalGRPC$Type extends MessageType<SignalGRPC> {
+    constructor() {
+        super("signal.SignalGRPC", [
+            { no: 1, name: "values", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Complex }
+        ]);
+    }
+    create(value?: PartialMessage<SignalGRPC>): SignalGRPC {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.values = [];
+        if (value !== undefined)
+            reflectionMergePartial<SignalGRPC>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: SignalGRPC): SignalGRPC {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated signal.Complex values */ 1:
+                    message.values.push(Complex.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: SignalGRPC, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* repeated signal.Complex values = 1; */
+        for (let i = 0; i < message.values.length; i++)
+            Complex.internalBinaryWrite(message.values[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message signal.SignalGRPC
+ */
+export const SignalGRPC = new SignalGRPC$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class MovingAverageRequest$Type extends MessageType<MovingAverageRequest> {
     constructor() {
         super("signal.MovingAverageRequest", [
-            { no: 1, name: "signal", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Complex },
+            { no: 1, name: "signal", kind: "message", T: () => SignalGRPC },
             { no: 2, name: "window_size", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
         ]);
     }
     create(value?: PartialMessage<MovingAverageRequest>): MovingAverageRequest {
         const message = globalThis.Object.create((this.messagePrototype!));
-        message.signal = [];
         message.windowSize = 0;
         if (value !== undefined)
             reflectionMergePartial<MovingAverageRequest>(this, message, value);
@@ -239,8 +294,8 @@ class MovingAverageRequest$Type extends MessageType<MovingAverageRequest> {
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
-                case /* repeated signal.Complex signal */ 1:
-                    message.signal.push(Complex.internalBinaryRead(reader, reader.uint32(), options));
+                case /* signal.SignalGRPC signal */ 1:
+                    message.signal = SignalGRPC.internalBinaryRead(reader, reader.uint32(), options, message.signal);
                     break;
                 case /* int32 window_size */ 2:
                     message.windowSize = reader.int32();
@@ -257,9 +312,9 @@ class MovingAverageRequest$Type extends MessageType<MovingAverageRequest> {
         return message;
     }
     internalBinaryWrite(message: MovingAverageRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
-        /* repeated signal.Complex signal = 1; */
-        for (let i = 0; i < message.signal.length; i++)
-            Complex.internalBinaryWrite(message.signal[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        /* signal.SignalGRPC signal = 1; */
+        if (message.signal)
+            SignalGRPC.internalBinaryWrite(message.signal, writer.tag(1, WireType.LengthDelimited).fork(), options).join();
         /* int32 window_size = 2; */
         if (message.windowSize !== 0)
             writer.tag(2, WireType.Varint).int32(message.windowSize);
@@ -324,12 +379,11 @@ export const MovingAverageResponse = new MovingAverageResponse$Type();
 class RuningSumRequest$Type extends MessageType<RuningSumRequest> {
     constructor() {
         super("signal.RuningSumRequest", [
-            { no: 1, name: "signal", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Complex }
+            { no: 1, name: "signal", kind: "message", T: () => SignalGRPC }
         ]);
     }
     create(value?: PartialMessage<RuningSumRequest>): RuningSumRequest {
         const message = globalThis.Object.create((this.messagePrototype!));
-        message.signal = [];
         if (value !== undefined)
             reflectionMergePartial<RuningSumRequest>(this, message, value);
         return message;
@@ -339,8 +393,8 @@ class RuningSumRequest$Type extends MessageType<RuningSumRequest> {
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
-                case /* repeated signal.Complex signal */ 1:
-                    message.signal.push(Complex.internalBinaryRead(reader, reader.uint32(), options));
+                case /* signal.SignalGRPC signal */ 1:
+                    message.signal = SignalGRPC.internalBinaryRead(reader, reader.uint32(), options, message.signal);
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -354,9 +408,9 @@ class RuningSumRequest$Type extends MessageType<RuningSumRequest> {
         return message;
     }
     internalBinaryWrite(message: RuningSumRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
-        /* repeated signal.Complex signal = 1; */
-        for (let i = 0; i < message.signal.length; i++)
-            Complex.internalBinaryWrite(message.signal[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        /* signal.SignalGRPC signal = 1; */
+        if (message.signal)
+            SignalGRPC.internalBinaryWrite(message.signal, writer.tag(1, WireType.LengthDelimited).fork(), options).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -418,12 +472,11 @@ export const RuningSumResponse = new RuningSumResponse$Type();
 class FirstDifferenceRequest$Type extends MessageType<FirstDifferenceRequest> {
     constructor() {
         super("signal.FirstDifferenceRequest", [
-            { no: 1, name: "signal", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Complex }
+            { no: 1, name: "signal", kind: "message", T: () => SignalGRPC }
         ]);
     }
     create(value?: PartialMessage<FirstDifferenceRequest>): FirstDifferenceRequest {
         const message = globalThis.Object.create((this.messagePrototype!));
-        message.signal = [];
         if (value !== undefined)
             reflectionMergePartial<FirstDifferenceRequest>(this, message, value);
         return message;
@@ -433,8 +486,8 @@ class FirstDifferenceRequest$Type extends MessageType<FirstDifferenceRequest> {
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
-                case /* repeated signal.Complex signal */ 1:
-                    message.signal.push(Complex.internalBinaryRead(reader, reader.uint32(), options));
+                case /* signal.SignalGRPC signal */ 1:
+                    message.signal = SignalGRPC.internalBinaryRead(reader, reader.uint32(), options, message.signal);
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -448,9 +501,9 @@ class FirstDifferenceRequest$Type extends MessageType<FirstDifferenceRequest> {
         return message;
     }
     internalBinaryWrite(message: FirstDifferenceRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
-        /* repeated signal.Complex signal = 1; */
-        for (let i = 0; i < message.signal.length; i++)
-            Complex.internalBinaryWrite(message.signal[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        /* signal.SignalGRPC signal = 1; */
+        if (message.signal)
+            SignalGRPC.internalBinaryWrite(message.signal, writer.tag(1, WireType.LengthDelimited).fork(), options).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -512,12 +565,11 @@ export const FirstDifferenceResponse = new FirstDifferenceResponse$Type();
 class IFFTRequest$Type extends MessageType<IFFTRequest> {
     constructor() {
         super("signal.IFFTRequest", [
-            { no: 1, name: "signal", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Complex }
+            { no: 1, name: "signal", kind: "message", T: () => SignalGRPC }
         ]);
     }
     create(value?: PartialMessage<IFFTRequest>): IFFTRequest {
         const message = globalThis.Object.create((this.messagePrototype!));
-        message.signal = [];
         if (value !== undefined)
             reflectionMergePartial<IFFTRequest>(this, message, value);
         return message;
@@ -527,8 +579,8 @@ class IFFTRequest$Type extends MessageType<IFFTRequest> {
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
-                case /* repeated signal.Complex signal */ 1:
-                    message.signal.push(Complex.internalBinaryRead(reader, reader.uint32(), options));
+                case /* signal.SignalGRPC signal */ 1:
+                    message.signal = SignalGRPC.internalBinaryRead(reader, reader.uint32(), options, message.signal);
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -542,9 +594,9 @@ class IFFTRequest$Type extends MessageType<IFFTRequest> {
         return message;
     }
     internalBinaryWrite(message: IFFTRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
-        /* repeated signal.Complex signal = 1; */
-        for (let i = 0; i < message.signal.length; i++)
-            Complex.internalBinaryWrite(message.signal[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        /* signal.SignalGRPC signal = 1; */
+        if (message.signal)
+            SignalGRPC.internalBinaryWrite(message.signal, writer.tag(1, WireType.LengthDelimited).fork(), options).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -606,12 +658,11 @@ export const IFFTResponse = new IFFTResponse$Type();
 class FastWaveletTransformHaarRequest$Type extends MessageType<FastWaveletTransformHaarRequest> {
     constructor() {
         super("signal.FastWaveletTransformHaarRequest", [
-            { no: 1, name: "signal", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Complex }
+            { no: 1, name: "signal", kind: "message", T: () => SignalGRPC }
         ]);
     }
     create(value?: PartialMessage<FastWaveletTransformHaarRequest>): FastWaveletTransformHaarRequest {
         const message = globalThis.Object.create((this.messagePrototype!));
-        message.signal = [];
         if (value !== undefined)
             reflectionMergePartial<FastWaveletTransformHaarRequest>(this, message, value);
         return message;
@@ -621,8 +672,8 @@ class FastWaveletTransformHaarRequest$Type extends MessageType<FastWaveletTransf
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
-                case /* repeated signal.Complex signal */ 1:
-                    message.signal.push(Complex.internalBinaryRead(reader, reader.uint32(), options));
+                case /* signal.SignalGRPC signal */ 1:
+                    message.signal = SignalGRPC.internalBinaryRead(reader, reader.uint32(), options, message.signal);
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -636,9 +687,9 @@ class FastWaveletTransformHaarRequest$Type extends MessageType<FastWaveletTransf
         return message;
     }
     internalBinaryWrite(message: FastWaveletTransformHaarRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
-        /* repeated signal.Complex signal = 1; */
-        for (let i = 0; i < message.signal.length; i++)
-            Complex.internalBinaryWrite(message.signal[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        /* signal.SignalGRPC signal = 1; */
+        if (message.signal)
+            SignalGRPC.internalBinaryWrite(message.signal, writer.tag(1, WireType.LengthDelimited).fork(), options).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -877,6 +928,6 @@ export const SignalService = new ServiceType("signal.SignalService", [
     { name: "ComputeRuningSum", options: {}, I: RuningSumRequest, O: RuningSumResponse },
     { name: "ComputeFirstDifference", options: {}, I: FirstDifferenceRequest, O: FirstDifferenceResponse },
     { name: "ComputeIFFT", options: {}, I: IFFTRequest, O: IFFTResponse },
-    { name: "ComputeFastWaveletTransformHaar", options: {}, I: FastWaveletTransformHaarRequest, O: FastWaveletTransformHaarResponse },
+    { name: "ComputeFastWaveletHaar", options: {}, I: FastWaveletTransformHaarRequest, O: FastWaveletTransformHaarResponse },
     { name: "ComputeFastWaveletTransform", options: {}, I: FastWaveletTransformRequest, O: FastWaveletTransformResponse }
 ]);

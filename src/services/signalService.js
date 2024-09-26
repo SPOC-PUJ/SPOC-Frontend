@@ -73,7 +73,7 @@ export const SignalService = {
           signal: signalJson,
       });
       try {
-          const { response } = await client.computeFastWaveletTransformHaar(request);
+          const { response } = await client.computeFastWaveletHaar(request);
           return response;
       } catch (error) {
           console.error('Error al realizar la solicitud gRPC:', error);

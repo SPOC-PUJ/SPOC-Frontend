@@ -42,9 +42,9 @@ export interface ISignalServiceClient {
      */
     computeIFFT(input: IFFTRequest, options?: RpcOptions): UnaryCall<IFFTRequest, IFFTResponse>;
     /**
-     * @generated from protobuf rpc: ComputeFastWaveletTransformHaar(signal.FastWaveletTransformHaarRequest) returns (signal.FastWaveletTransformHaarResponse);
+     * @generated from protobuf rpc: ComputeFastWaveletHaar(signal.FastWaveletTransformHaarRequest) returns (signal.FastWaveletTransformHaarResponse);
      */
-    computeFastWaveletTransformHaar(input: FastWaveletTransformHaarRequest, options?: RpcOptions): UnaryCall<FastWaveletTransformHaarRequest, FastWaveletTransformHaarResponse>;
+    computeFastWaveletHaar(input: FastWaveletTransformHaarRequest, options?: RpcOptions): UnaryCall<FastWaveletTransformHaarRequest, FastWaveletTransformHaarResponse>;
     /**
      * @generated from protobuf rpc: ComputeFastWaveletTransform(signal.FastWaveletTransformRequest) returns (signal.FastWaveletTransformResponse);
      */
@@ -90,9 +90,9 @@ export class SignalServiceClient implements ISignalServiceClient, ServiceInfo {
         return stackIntercept<IFFTRequest, IFFTResponse>("unary", this._transport, method, opt, input);
     }
     /**
-     * @generated from protobuf rpc: ComputeFastWaveletTransformHaar(signal.FastWaveletTransformHaarRequest) returns (signal.FastWaveletTransformHaarResponse);
+     * @generated from protobuf rpc: ComputeFastWaveletHaar(signal.FastWaveletTransformHaarRequest) returns (signal.FastWaveletTransformHaarResponse);
      */
-    computeFastWaveletTransformHaar(input: FastWaveletTransformHaarRequest, options?: RpcOptions): UnaryCall<FastWaveletTransformHaarRequest, FastWaveletTransformHaarResponse> {
+    computeFastWaveletHaar(input: FastWaveletTransformHaarRequest, options?: RpcOptions): UnaryCall<FastWaveletTransformHaarRequest, FastWaveletTransformHaarResponse> {
         const method = this.methods[4], opt = this._transport.mergeOptions(options);
         return stackIntercept<FastWaveletTransformHaarRequest, FastWaveletTransformHaarResponse>("unary", this._transport, method, opt, input);
     }

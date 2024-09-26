@@ -2,7 +2,7 @@
 import {ref, onMounted} from 'vue';
 import SimpleChart from "@/components/SimpleChart.vue";
 
-import FastWaveletHarr from '@/components/FastWaveletHarr.vue';
+import AverageComponent from '@/components/AverageComponent.vue';
 
 
 const fileName = ref(null);
@@ -25,7 +25,7 @@ function handleFileProcessed(values) {
     <SimpleChart v-bind:data="realValues" class="h-[80vh] w-full"/> <!-- Pasar los valores reales al graficador -->
   </div>
   
-  <FastWaveletHarr/>
+  <AverageComponent/>
 </template>
 
 <style scoped>

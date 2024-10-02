@@ -3,17 +3,14 @@ import SimpleChartControls from './SimpleChartControls.vue';
 
 import * as d3 from 'd3';
 import { ref, onMounted, watch } from 'vue';
+import { useSignalStore } from '@/stores/signalStore'; // Importa el store de señales
+
+// Obtener la instancia del store
+const signalStore = useSignalStore();
 
 const chartContainer = ref(null);
 const zoomYEnabled = ref(false); // Estado del checkbox para habilitar/deshabilitar el zoom en Y
 const lineWidth = ref(1); // Estado para el grosor de la línea
-
-const props = defineProps({
-  data: {
-    type: Array,
-    default: () => []
-  }
-});
 
 // Función que se llama cuando el checkbox de "Habilitar Zoom en Y" cambia de estado
 function handleZoomYToggle(isZoomYEnabled) {
@@ -30,7 +27,6 @@ onMounted(() => {
   const margin = {top: 50, right: 20, bottom: 50, left: 70}; // Márgenes del gráfico
   const width = chartContainer.value.clientWidth - margin.left - margin.right; // Ancho dinámico del gráfico
   const height = chartContainer.value.clientHeight - margin.top - margin.bottom; // Alto dinámico del gráfico
-  // const height = 1000 - margin.top - margin.bottom; // Alto del gráfico TODO hacerlo dinaámico
 
   // Paso #2: Crear las escalas para los ejes X e Y (esto es para definir el rango de valores que se mostrarán en el gráfico)
   const x = d3.scaleLinear().range([0, width]); // Escala para el eje X, en este caso se mostrarán valores lineales de 0 a width (width es el ancho del gráfico)
@@ -60,7 +56,6 @@ onMounted(() => {
 
   // Paso #6: Crear el comportamiento de zoom
   const zoom = d3.zoom() // Crear un comportamiento de zoom y pan para el gráfico
-      // .scaleExtent([0.5, 10]) // Limitar el nivel de zoom (TODO AJUSTAR PARÁMETRO PARA QUE NO SE VEA TAN LEJOS)
       .translateExtent([[-width, -height], [width * 2, height * 2]]) // Limitar el área de pan
       .extent([[0, 0], [width, height]]) // Limitar el área de zoom
       .on('zoom', zoomed); // Añadir un evento de zoom al comportamiento
@@ -73,40 +68,43 @@ onMounted(() => {
 
   let yAxisGroup = svg.append('g');
 
-  // Observar los cambios en la propiedad `data`
-  watch(() => props.data, (newData) => {
-    if (newData.length > 0) {
-      // Paso #7: Crear el dataset a partir de los datos proporcionados
-      const dataset = newData.map((value, index) => ({
-        punto: index + 1,
-        value
-      }));
+  // Observar los cambios en `signalStore.signalJson`
+  watch(() => signalStore.signalJson, (newSignalJson) => {
+    if (newSignalJson && newSignalJson.length > 0) {
+      const firstSignal = newSignalJson[0]; // Tomar la primera señal
+      if (firstSignal && firstSignal.length > 0) {
+        // Paso #7: Crear el dataset a partir de los datos proporcionados
+        const dataset = firstSignal.map((dupla, index) => ({
+          punto: index + 1,
+          value: dupla.real // Usar la parte real de la dupla
+        }));
 
-      // Paso #8: Definir los dominios de las escalas X e Y
-      x.domain(d3.extent(dataset, d => d.punto)); // Escala en X basada en el índice de los datos
-      y.domain([d3.min(dataset, d => d.value) * 1.1, d3.max(dataset, d => d.value) * 1.1]); // Escala en Y basada en el valor de los datos
+        // Paso #8: Definir los dominios de las escalas X e Y
+        x.domain(d3.extent(dataset, d => d.punto)); // Escala en X basada en el índice de los datos
+        y.domain([d3.min(dataset, d => d.value) * 1.1, d3.max(dataset, d => d.value) * 1.1]); // Escala en Y basada en el valor de los datos
 
-      // Paso #9: Crear la línea del gráfico
-      const line = d3.line()
-          .x(d => x(d.punto))
-          .y(d => y(d.value));
+        // Paso #9: Crear la línea del gráfico
+        const line = d3.line()
+            .x(d => x(d.punto))
+            .y(d => y(d.value));
 
-      // Limpiar el gráfico antes de redibujar
-      lineGroup.selectAll('path').remove();
+        // Limpiar el gráfico antes de redibujar
+        lineGroup.selectAll('path').remove();
 
-      // Paso #10: Dibujar la línea del gráfico
-      lineGroup.append('path')
-          .datum(dataset)
-          .attr('fill', 'none')
-          .attr('stroke', 'steelblue')
-          .attr('stroke-width', lineWidth.value) // Usar el grosor de la línea dinámico
-          .attr('d', line);
+        // Paso #10: Dibujar la línea del gráfico
+        lineGroup.append('path')
+            .datum(dataset)
+            .attr('fill', 'none')
+            .attr('stroke', 'steelblue')
+            .attr('stroke-width', lineWidth.value) // Usar el grosor de la línea dinámico
+            .attr('d', line);
 
-      // Paso #11: Dibujar los ejes X e Y
-      xAxisGroup.call(d3.axisBottom(x).ticks(20).tickFormat(d3.format('d'))); // Eje X
-      yAxisGroup.call(d3.axisLeft(y)
-          .ticks((d3.max(dataset, d => d.value) - d3.min(dataset, d => d.value)) / 1000) // Eje Y con formato de k (miles)
-          .tickFormat(d => `${(d / 1000).toFixed(1)}k`)); // Formato de los números del eje Y
+        // Paso #11: Dibujar los ejes X e Y
+        xAxisGroup.call(d3.axisBottom(x).ticks(20).tickFormat(d3.format('d'))); // Eje X
+        yAxisGroup.call(d3.axisLeft(y)
+            .ticks((d3.max(dataset, d => d.value) - d3.min(dataset, d => d.value)) / 1000) // Eje Y con formato de k (miles)
+            .tickFormat(d => `${(d / 1000).toFixed(1)}k`)); // Formato de los números del eje Y
+      }
     }
   }, {immediate: true});
 
@@ -143,7 +141,7 @@ onMounted(() => {
         .attr("stroke", "#e0e0e0")
         .attr("stroke-width", 1);
 
-    // Añadir gridlines verticales (para el eje X)
+    // Añadir gridlines horizontales (para el eje Y)
     svg.selectAll(".yGrid")
         .data(newY.ticks((d3.max(newY.domain()) - d3.min(newY.domain())) / 1000)) // Basado en la nueva escala Y
         .join(
@@ -178,11 +176,10 @@ onMounted(() => {
     <!-- Componente de control como Zoom en Y, slider de grosor y TODO, más -->
     <SimpleChartControls
         @toggle-zoom-y="handleZoomYToggle"
-        @update-line-width="handleLineWidthUpdate" />
+        @update-line-width="handleLineWidthUpdate"/>
 
   </div>
 </template>
-
 
 <style scoped>
 </style>

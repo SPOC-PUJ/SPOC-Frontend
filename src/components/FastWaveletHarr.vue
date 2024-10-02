@@ -18,7 +18,7 @@ const submitTool1 = () => {
   }
   else
   {
-    console.log('Fast Wavelet Harr:', signalStore.signalJson);
+    console.log('Fast Wavelet Harr:', signalStore.signalJson, signalStore.signalSelected);
 
     calcularFastWaveletHarr();
   }
@@ -32,13 +32,15 @@ const calcularFastWaveletHarr = async () => {
     return;
   }
 
+  // Obtener el índice de la señal seleccionada
+  const selectedIndex = signalStore.signalSelected;
+
   // Obtener el objeto raw desde el store
   const signalJson = toRaw(signalStore.signalJson);
-  console.log('después de traer el json', signalJson[0]);
 
   try {
     // Llamada al servicio gRPC para el cálculo de Fast Wavelet Harr
-    const response = await SignalService.computeFastWaveletHarr(signalJson[0]);
+    const response = await SignalService.computeFastWaveletHarr(signalJson[selectedIndex]);
     console.log(response);
   } catch (error) {
     console.error('Error al realizar la solicitud gRPC:', error);

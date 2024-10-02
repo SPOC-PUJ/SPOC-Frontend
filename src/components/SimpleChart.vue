@@ -1,5 +1,5 @@
 <script setup>
-import SimpleChartControls from './SimpleChartControls.vue'; // Importar el nuevo componente
+import SimpleChartControls from './SimpleChartControls.vue';
 
 import * as d3 from 'd3';
 import { ref, onMounted, watch } from 'vue';

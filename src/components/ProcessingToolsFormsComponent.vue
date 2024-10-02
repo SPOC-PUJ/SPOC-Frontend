@@ -1,6 +1,5 @@
 <script setup>
-import {ref, watch} from 'vue';
-import {useSignalStore} from '@/stores/signalStore';
+import { ref } from 'vue';
 import MovingAverage from "@/components/MovingAverage.vue";
 import FastWaveletHarr from "@/components/FastWaveletHarr.vue";
 import FastWaveletTransform from "@/components/FastWaveletTransform.vue";
@@ -8,16 +7,6 @@ import FirstDifference from "@/components/FirstDifference.vue";
 import IFFTComponent from "@/components/IFFTComponent.vue";
 import RunningSum from "@/components/RunningSum.vue";
 
-// Props
-const props = defineProps({
-  data: {
-    type: Array,
-    required: true
-  }
-});
-
-// Acceso al store de señales
-const signalStore = useSignalStore();
 
 // Reactive variables
 const selectedTool = ref('');

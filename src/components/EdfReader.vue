@@ -103,7 +103,7 @@ const processFile = (event) => {
         var complexValue = vectorEigen.get(j);
         complexArray.push(Complex.create({ real: complexValue.real(), imag: complexValue.imag() }));
       }
-      signalData.push(complexArray); // Añadir el array de complejos al array principal
+      signalData.push({ values: complexArray }); // Aquí añadimos el array de complejos bajo "values" // Añadir el array de complejos al array principal
     }
     signalStore.setSignalJson(signalData);
 

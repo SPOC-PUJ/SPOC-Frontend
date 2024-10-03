@@ -4,6 +4,12 @@
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { SignalService } from "./signal";
+import type { FftConvolveResponse } from "./signal";
+import type { FftConvolveRequest } from "./signal";
+import type { AverageResponse } from "./signal";
+import type { AverageRequest } from "./signal";
+import type { FFTResponse } from "./signal";
+import type { FFTRequest } from "./signal";
 import type { FastWaveletTransformResponse } from "./signal";
 import type { FastWaveletTransformRequest } from "./signal";
 import type { FastWaveletTransformHaarResponse } from "./signal";
@@ -42,13 +48,25 @@ export interface ISignalServiceClient {
      */
     computeIFFT(input: IFFTRequest, options?: RpcOptions): UnaryCall<IFFTRequest, IFFTResponse>;
     /**
-     * @generated from protobuf rpc: ComputeFastWaveletTransformHaar(signal.FastWaveletTransformHaarRequest) returns (signal.FastWaveletTransformHaarResponse);
+     * @generated from protobuf rpc: ComputeFastWaveletHaar(signal.FastWaveletTransformHaarRequest) returns (signal.FastWaveletTransformHaarResponse);
      */
-    computeFastWaveletTransformHaar(input: FastWaveletTransformHaarRequest, options?: RpcOptions): UnaryCall<FastWaveletTransformHaarRequest, FastWaveletTransformHaarResponse>;
+    computeFastWaveletHaar(input: FastWaveletTransformHaarRequest, options?: RpcOptions): UnaryCall<FastWaveletTransformHaarRequest, FastWaveletTransformHaarResponse>;
     /**
      * @generated from protobuf rpc: ComputeFastWaveletTransform(signal.FastWaveletTransformRequest) returns (signal.FastWaveletTransformResponse);
      */
     computeFastWaveletTransform(input: FastWaveletTransformRequest, options?: RpcOptions): UnaryCall<FastWaveletTransformRequest, FastWaveletTransformResponse>;
+    /**
+     * @generated from protobuf rpc: ComputeFFT(signal.FFTRequest) returns (signal.FFTResponse);
+     */
+    computeFFT(input: FFTRequest, options?: RpcOptions): UnaryCall<FFTRequest, FFTResponse>;
+    /**
+     * @generated from protobuf rpc: ComputeAverage(signal.AverageRequest) returns (signal.AverageResponse);
+     */
+    computeAverage(input: AverageRequest, options?: RpcOptions): UnaryCall<AverageRequest, AverageResponse>;
+    /**
+     * @generated from protobuf rpc: ComputeFftConvolve(signal.FftConvolveRequest) returns (signal.FftConvolveResponse);
+     */
+    computeFftConvolve(input: FftConvolveRequest, options?: RpcOptions): UnaryCall<FftConvolveRequest, FftConvolveResponse>;
 }
 /**
  * The signal service definition.
@@ -90,9 +108,9 @@ export class SignalServiceClient implements ISignalServiceClient, ServiceInfo {
         return stackIntercept<IFFTRequest, IFFTResponse>("unary", this._transport, method, opt, input);
     }
     /**
-     * @generated from protobuf rpc: ComputeFastWaveletTransformHaar(signal.FastWaveletTransformHaarRequest) returns (signal.FastWaveletTransformHaarResponse);
+     * @generated from protobuf rpc: ComputeFastWaveletHaar(signal.FastWaveletTransformHaarRequest) returns (signal.FastWaveletTransformHaarResponse);
      */
-    computeFastWaveletTransformHaar(input: FastWaveletTransformHaarRequest, options?: RpcOptions): UnaryCall<FastWaveletTransformHaarRequest, FastWaveletTransformHaarResponse> {
+    computeFastWaveletHaar(input: FastWaveletTransformHaarRequest, options?: RpcOptions): UnaryCall<FastWaveletTransformHaarRequest, FastWaveletTransformHaarResponse> {
         const method = this.methods[4], opt = this._transport.mergeOptions(options);
         return stackIntercept<FastWaveletTransformHaarRequest, FastWaveletTransformHaarResponse>("unary", this._transport, method, opt, input);
     }
@@ -102,5 +120,26 @@ export class SignalServiceClient implements ISignalServiceClient, ServiceInfo {
     computeFastWaveletTransform(input: FastWaveletTransformRequest, options?: RpcOptions): UnaryCall<FastWaveletTransformRequest, FastWaveletTransformResponse> {
         const method = this.methods[5], opt = this._transport.mergeOptions(options);
         return stackIntercept<FastWaveletTransformRequest, FastWaveletTransformResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: ComputeFFT(signal.FFTRequest) returns (signal.FFTResponse);
+     */
+    computeFFT(input: FFTRequest, options?: RpcOptions): UnaryCall<FFTRequest, FFTResponse> {
+        const method = this.methods[6], opt = this._transport.mergeOptions(options);
+        return stackIntercept<FFTRequest, FFTResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: ComputeAverage(signal.AverageRequest) returns (signal.AverageResponse);
+     */
+    computeAverage(input: AverageRequest, options?: RpcOptions): UnaryCall<AverageRequest, AverageResponse> {
+        const method = this.methods[7], opt = this._transport.mergeOptions(options);
+        return stackIntercept<AverageRequest, AverageResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: ComputeFftConvolve(signal.FftConvolveRequest) returns (signal.FftConvolveResponse);
+     */
+    computeFftConvolve(input: FftConvolveRequest, options?: RpcOptions): UnaryCall<FftConvolveRequest, FftConvolveResponse> {
+        const method = this.methods[8], opt = this._transport.mergeOptions(options);
+        return stackIntercept<FftConvolveRequest, FftConvolveResponse>("unary", this._transport, method, opt, input);
     }
 }

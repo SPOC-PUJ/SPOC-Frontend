@@ -8,9 +8,12 @@ message Complex {
     double imag = 2;
 }
 
+message SignalGRPC {
+    repeated Complex values = 1;
+}
 
 message MovingAverageRequest {
-    repeated Complex signal = 1; 
+    SignalGRPC signal = 1; 
     int32 window_size = 2;       
 }
 
@@ -20,7 +23,7 @@ message MovingAverageResponse {
 }
 
 message RuningSumRequest {
-    repeated Complex signal = 1;      
+    SignalGRPC signal = 1;      
 }
 
 message RuningSumResponse {
@@ -28,7 +31,7 @@ message RuningSumResponse {
 }
 
 message FirstDifferenceRequest {
-    repeated Complex signal = 1;      
+    SignalGRPC signal = 1;      
 }
 
 
@@ -37,7 +40,7 @@ message FirstDifferenceResponse {
 }
 
 message IFFTRequest {
-    repeated Complex signal = 1;      
+    SignalGRPC signal = 1;      
 }
 
 
@@ -46,7 +49,7 @@ message IFFTResponse {
 }
 
 message FastWaveletTransformHaarRequest {
-    repeated Complex signal = 1;      
+    SignalGRPC signal = 1;      
 }
 
 
@@ -59,7 +62,7 @@ message VectorXcd {
     repeated Complex values = 1;
 }
 message FastWaveletTransformRequest {
-    repeated Complex signal = 1;   
+    SignalGRPC signal = 1;   
     int32 dec_level = 2;
     string wave_name = 3;   
 }
@@ -70,12 +73,41 @@ message FastWaveletTransformResponse   {
     repeated VectorXcd details = 2;
 }
 
+message FFTRequest {
+    SignalGRPC signal = 1;      
+}
+
+message FFTResponse {
+    repeated Complex result = 1; 
+}
+
+message AverageRequest {
+    repeated VectorXcd signals = 1 ; // Lista de señales complejas
+}
+
+message AverageResponse {
+    repeated Complex result = 1;  // Resultado del promedio
+}
+
+message FftConvolveRequest {
+    SignalGRPC signalx = 1;   
+    SignalGRPC signalh = 2;
+    bool shift = 3;  
+}
+
+message FftConvolveResponse {
+    repeated Complex result = 1; 
+}
+
 // The signal service definition.
 service SignalService {
     rpc ComputeMovingAverage (MovingAverageRequest) returns (MovingAverageResponse);
     rpc ComputeRuningSum (RuningSumRequest) returns (RuningSumResponse);
     rpc ComputeFirstDifference (FirstDifferenceRequest) returns (FirstDifferenceResponse);
     rpc ComputeIFFT (IFFTRequest) returns (IFFTResponse);
-    rpc ComputeFastWaveletTransformHaar (FastWaveletTransformHaarRequest) returns (FastWaveletTransformHaarResponse);
+    rpc ComputeFastWaveletHaar (FastWaveletTransformHaarRequest) returns (FastWaveletTransformHaarResponse);
     rpc ComputeFastWaveletTransform  (FastWaveletTransformRequest) returns (FastWaveletTransformResponse);
+    rpc ComputeFFT (FFTRequest) returns (FFTResponse);
+    rpc ComputeAverage (AverageRequest) returns (AverageResponse);
+    rpc ComputeFftConvolve (FftConvolveRequest) returns (FftConvolveResponse);
 }

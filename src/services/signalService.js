@@ -1,6 +1,6 @@
 import { SignalServiceClient } from '../proto/proto-ts/signal.client';
 import { GrpcWebFetchTransport } from '@protobuf-ts/grpcweb-transport';
-import { RuningSumRequest , MovingAverageRequest, FirstDifferenceRequest, IFFTRequest, FastWaveletTransformHaarRequest, FastWaveletTransformRequest} from '../proto/proto-ts/signal';
+import { RuningSumRequest , MovingAverageRequest, FirstDifferenceRequest, IFFTRequest, FastWaveletTransformHaarRequest, FastWaveletTransformRequest,FFTRequest,AverageRequest,FftConvolveRequest} from '../proto/proto-ts/signal';
 
 const client = new SignalServiceClient(
     new GrpcWebFetchTransport({ baseUrl: 'http://localhost:8080' })
@@ -73,7 +73,7 @@ export const SignalService = {
           signal: signalJson,
       });
       try {
-          const { response } = await client.computeFastWaveletTransformHaar(request);
+          const { response } = await client.computeFastWaveletHaar(request);
           return response;
       } catch (error) {
           console.error('Error al realizar la solicitud gRPC:', error);
@@ -97,4 +97,48 @@ export const SignalService = {
           throw error;
       }
   },
+
+    async computeFFT(signalJson){
+      const request = FFTRequest.fromJson({
+          signal: signalJson,
+      });
+      try {
+          const { response } = await client.computeFFT(request);
+          return response;
+      } catch (error) {
+          console.error('Error al realizar la solicitud gRPC:', error);
+          throw error;
+      }
+    },
+
+    async computeFFT_convolve(signalJsonx,signalJsonh,shift){
+      const request = FftConvolveRequest.fromJson({
+        signalx: signalJsonx,
+        signalh: signalJsonh,
+        shift: shift,
+  
+      });
+      try {
+          const { response } = await client.computeFftConvolve(request);
+          return response;
+      } catch (error) {
+          console.error('Error al realizar la solicitud gRPC:', error);
+          throw error;
+      }
+    },
+  
+
+    async computeAverage(signalJson){
+      const request = AverageRequest.fromJson({
+        signals: signalJson,
+  
+      });
+      try {
+          const { response } = await client.computeAverage(request);
+          return response;
+      } catch (error) {
+          console.error('Error al realizar la solicitud gRPC:', error);
+          throw error;
+      }
+    },
   };

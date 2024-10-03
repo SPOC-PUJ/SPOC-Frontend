@@ -38,6 +38,13 @@ const calcularFastWaveletHarr = async () => {
   // Obtener el objeto raw desde el store
   const signalJson = toRaw(signalStore.signalJson);
 
+
+  console.log('Signal JSON:', signalJson);
+  console.log('Selected Index:', selectedIndex);
+  console.log('Signal:', signalJson[selectedIndex]);
+
+  console.log('Singal Numbers:', signalJson[selectedIndex].values);
+
   try {
     // Llamada al servicio gRPC para el cálculo de Fast Wavelet Harr
     const response = await SignalService.computeFastWaveletHarr(signalJson[selectedIndex]);

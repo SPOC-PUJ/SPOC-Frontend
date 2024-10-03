@@ -12,9 +12,6 @@ const chartContainer = ref(null);
 const zoomYEnabled = ref(false); // Estado del checkbox para habilitar/deshabilitar el zoom en Y
 const lineWidth = ref(1); // Estado para el grosor de la línea
 
-// Eliminar la variable local signalSelected y utilizar la del store
-// const signalSelected = ref(0); // Estado de la señal seleccionada (eliminado)
-
 // Función que se llama cuando el checkbox de "Habilitar Zoom en Y" cambia de estado
 function handleZoomYToggle(isZoomYEnabled) {
   zoomYEnabled.value = isZoomYEnabled; // Actualiza el estado de zoom en Y
@@ -24,12 +21,6 @@ function handleZoomYToggle(isZoomYEnabled) {
 function handleLineWidthUpdate(newLineWidth) {
   lineWidth.value = newLineWidth; // Actualiza el grosor de la línea
 }
-
-// Función que se llama cuando la señal seleccionada cambia
-// Ya no es necesaria porque usamos signalStore.signalSelected directamente
-// function handleSignalSelectedUpdate(newSignalSelected) {
-//   signalSelected.value = newSignalSelected; // Actualiza la señal seleccionada
-// }
 
 onMounted(() => {
   // Paso #1: Crear el contenedor del gráfico
@@ -47,15 +38,15 @@ onMounted(() => {
       .append('svg') // Añade un elemento SVG al contenedor
       .attr('width', width + margin.left + margin.right) // Añade el ancho del gráfico
       .attr('height', height + margin.top + margin.bottom) // Añade el alto del gráfico
-      .append('g') // Añade un elemento g (grupo) al SVG (estos grupos es donde se añadirán los elementos del gráfico)
-      .attr('transform', `translate(${margin.left}, ${margin.top})`); // Añade un desplazamiento al grupo para que no se superpongan los ejes
+      .append('g') // Añade un elemento g (grupo) al SVG
+      .attr('transform', `translate(${margin.left}, ${margin.top})`); // Añade un desplazamiento al grupo
 
   // Paso #4: Definir clipping para el gráfico (evitar que la línea salga del área visible)
   const clip = svg
       .append('defs')
       .append('svg:clipPath') // Añadir un clipPath al SVG
       .attr('id', 'clip') // Asignar un ID al clipPath
-      .append('svg:rect') // Añadir un rectángulo al clipPath (esto es para definir el área visible del gráfico)
+      .append('svg:rect') // Añadir un rectángulo al clipPath
       .attr('width', width) // Ancho del rectángulo
       .attr('height', height) // Alto del rectángulo
       .attr('x', 0) // Posición X del rectángulo
@@ -85,8 +76,10 @@ onMounted(() => {
       [() => signalStore.signalJson, () => signalStore.signalSelected],
       ([newSignalJson, newSignalSelected]) => {
         if (newSignalJson && newSignalJson.length > 0) {
-          const selectedSignal = newSignalJson[newSignalSelected]; // Tomar la señal seleccionada
-          if (selectedSignal && selectedSignal.length > 0) {
+          const selectedSignalData = newSignalJson[newSignalSelected]; // Tomar la señal seleccionada
+          if (selectedSignalData && selectedSignalData.values && selectedSignalData.values.length > 0) {
+            const selectedSignal = selectedSignalData.values; // Acceder a los valores de la señal seleccionada
+
             // Paso #7: Crear el dataset a partir de los datos proporcionados
             const dataset = selectedSignal.map((dupla, index) => ({
               punto: index + 1,

@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   grpcserver:
-    image: ghcr.io/spoc-puj/grpc_image_arm64:latest
+    image: grpc_image_arm64
     container_name: grpcserver
     ports:
       - "5001:5000"

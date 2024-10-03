@@ -3,7 +3,8 @@ import { defineStore } from 'pinia';
 export const useSignalStore = defineStore('signal',{
     state: ()=>({
         signalObject:null,
-        signalJson:null
+        signalJson:[],
+        signalSelected: 0,
     }),
     actions:{
         setSignalObject(obj){
@@ -12,5 +13,8 @@ export const useSignalStore = defineStore('signal',{
         setSignalJson(objJson){
             this.signalJson = objJson;
         },
+        setSignalSelected(index){
+            this.signalSelected = index;
+        }
     },
 });

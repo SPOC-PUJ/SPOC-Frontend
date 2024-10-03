@@ -2,14 +2,14 @@ version: '3.8'
 
 services:
   grpcserver:
-    image: ghcr.io/spoc-puj/abf_reader:50051-latest
+    image: ghcr.io/spoc-puj/grpc_image_arm64:latest
     container_name: grpcserver
     ports:
-      - "5000:50051" # Exponer el puerto 5000 del contenedor en el puerto 5000 del host
+      - "5001:5000"
     networks:
       - grpc_network
-    stdin_open: true # Mantener el stdin abierto para la interacción
-    tty: true # Asignar un pseudo-TTY
+    stdin_open: true   # Habilitar entrada interactiva
+    tty: true          # Asignar terminal al contenedor
 
   envoy:
     image: envoy-proxy

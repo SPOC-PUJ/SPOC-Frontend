@@ -2,13 +2,14 @@ version: '3.8'
 
 services:
   grpcserver:
-    image: ghcr.io/spoc-puj/fast_wavelet_transform:5000-latest
+    image: ghcr.io/spoc-puj/grpc_image_arm64:latest
     container_name: grpcserver
     ports:
-      - "5000:5000" # Exponer el puerto 5000 del contenedor en el puerto 5000 del host
+      - "5001:5000"
     networks:
       - grpc_network
-
+    stdin_open: true   # Habilitar entrada interactiva
+    tty: true          # Asignar terminal al contenedor
 
   envoy:
     image: envoy-proxy
@@ -16,7 +17,7 @@ services:
     ports:
       - "8080:8080" # Exponer el puerto 8080 del contenedor en el puerto 8080 del host
     volumes:
-      - ../envoy.yaml:/etc/envoy/envoy.yaml # Montar el archivo de configuración de Envoy
+      - ./envoy.yaml:/etc/envoy/envoy.yaml # Montar el archivo de configuración de Envoy
     networks:
       - grpc_network
     depends_on:

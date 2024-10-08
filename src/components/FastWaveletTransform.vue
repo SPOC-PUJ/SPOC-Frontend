@@ -48,6 +48,9 @@ const calcularFastWaveletTransform = async () => {
     // Llamada al servicio gRPC para el cálculo de Fast Wavelet Transform
     const response = await SignalService.computeFastWaveletTransform(signalJson[0], 3, 'db1');
     console.log(response);
+
+    // Abrir otra ventana (nueva tab), el componente de esta nueva tab es ServiceResponseView.vue
+    window.open('/response-results/FastWaveletTransform', '_blank');
   } catch (error) {
     console.error('Error al realizar la solicitud gRPC:', error);
   }
@@ -69,8 +72,9 @@ const calcularFastWaveletTransform = async () => {
             class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm mb-4">
       <option value="db1">Daubechies 1 (db1)</option>
       <option value="db2">Daubechies 2 (db2)</option>
-      <option value="coif1">Coiflet 1 (coif1)</option>
-      <option value="sym2">Symlet 2 (sym2)</option>
+      <option value="db3">Daubechies 3 (db3)</option>
+      <option value="db4">Daubechies 4 (db4)</option>
+      <option value="bior3.1">Biorthogonal 3.1</option>
     </select>
 
     <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Submit Tool 2

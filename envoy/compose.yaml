@@ -5,7 +5,7 @@ services:
     image: grpc_image_arm64
     container_name: grpcserver
     ports:
-      - "5001:5000"
+      - "5001:5001"
     networks:
       - grpc_network
     stdin_open: true   # Habilitar entrada interactiva

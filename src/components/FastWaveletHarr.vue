@@ -49,6 +49,9 @@ const calcularFastWaveletHarr = async () => {
     // Llamada al servicio gRPC para el cálculo de Fast Wavelet Harr
     const response = await SignalService.computeFastWaveletHarr(signalJson[selectedIndex]);
     console.log(response);
+
+    // Abrir otra ventana (nueva tab), el componente de esta nueva tab es ServiceResponseView.vue
+    window.open('/response-results/FastWaveletHaar', '_blank');
   } catch (error) {
     console.error('Error al realizar la solicitud gRPC:', error);
   }

@@ -1,5 +1,5 @@
 <script setup>
-console.log('Fast Wavelet Transform Response');
+
 </script>
 
 <template>
@@ -9,5 +9,4 @@ console.log('Fast Wavelet Transform Response');
 </template>
 
 <style scoped>
-
 </style>

@@ -1,6 +1,5 @@
 <script setup>
 import {ref, computed, toRaw} from 'vue';
-import {Complex} from '../proto/proto-ts/signal';
 import {useSignalStore} from '@/stores/signalStore';
 import {SignalService} from '@/services/signalService';
 
@@ -10,8 +9,7 @@ const signalStore = useSignalStore();
 // Computed property para acceder a signalObject
 const signalComputed = computed(() => signalStore.signalObject);
 
-
-// Tool 2: Fast Wavelet Transform
+// Tool 2: Fast Wavelet Transform data
 const tool2Data = ref({
   decLevel: '',
   waveName: 'db1' // valor por defecto
@@ -40,14 +38,24 @@ const calcularFastWaveletTransform = async () => {
     return;
   }
 
+  // Obtener el índice de la señal seleccionada
+  const selectedIndex = signalStore.signalSelected;
+
   // Obtener el objeto raw desde el store
   const signalJson = toRaw(signalStore.signalJson);
-  console.log('después de traer el json', signalJson[0]);
+
+  console.log('Signal JSON:', signalJson);
+  console.log('Selected Index:', selectedIndex);
+  console.log('Signal:', signalJson[selectedIndex]);
+  console.log('Signal Numbers:', signalJson[selectedIndex].values);
 
   try {
     // Llamada al servicio gRPC para el cálculo de Fast Wavelet Transform
-    const response = await SignalService.computeFastWaveletTransform(signalJson[0], 3, 'db1');
-    console.log(response);
+    const response = await SignalService.computeFastWaveletTransform(signalJson[selectedIndex], tool2Data.value.decLevel, tool2Data.value.waveName);
+    console.log('Raw: ', response);
+
+    // Guardar y mostrar con u console.log la respuesta en el responseStore
+
 
     // Abrir otra ventana (nueva tab), el componente de esta nueva tab es ServiceResponseView.vue
     window.open('/response-results/FastWaveletTransform', '_blank');
@@ -56,7 +64,6 @@ const calcularFastWaveletTransform = async () => {
   }
 };
 </script>
-
 
 <template>
   <h4 class="text-lg font-semibold text-green-500 mb-4">Fast Wavelet Transform</h4>

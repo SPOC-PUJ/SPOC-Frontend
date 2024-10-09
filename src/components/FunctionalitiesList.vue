@@ -5,7 +5,7 @@ import { RouterLink } from "vue-router";
 
 import Funcionality from "@/components/Funcionality.vue";
 
-// Se importa el archivo JSON con las funcionalidades de SPOC.
+// Se importa el archivo JSON con las funcionalidades de SPOK.
 import FuncionalitiesItems from "@/Funcionalities.json"
 
 // Se almacenan las funcionalidades en la variable reactiva.
@@ -26,7 +26,7 @@ defineProps({
   <section class="bg-blue-50 px-4 py-10">
     <div class="container-xl lg:container m-auto">
       <h2 class="text-3xl font-bold text-green-500 mb-6 text-center">
-        Funcionalidades de SPOC
+        Funcionalidades de SPOK
       </h2>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">

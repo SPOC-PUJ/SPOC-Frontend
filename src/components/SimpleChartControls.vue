@@ -1,8 +1,11 @@
 <script setup>
 import { ref } from 'vue';
+import { useSignalStore } from '@/stores/signalStore'; // Importa el store de señales
 
 const emit = defineEmits(['toggle-zoom-y', 'update-line-width']); // Definir eventos emitidos
 const lineWidth = ref(1); // Estado del grosor de la línea
+
+const signalStore = useSignalStore(); // Obtener la instancia del store
 
 function toggleZoomY(event) {
   emit('toggle-zoom-y', event.target.checked); // Emitir el estado del checkbox
@@ -11,6 +14,13 @@ function toggleZoomY(event) {
 function updateLineWidth() {
   emit('update-line-width', lineWidth.value); // Emitir el valor del slider (grosor de la línea)
 }
+
+function updateSignalSelected(event) {
+  const selectedIndex = parseInt(event.target.value);
+  signalStore.signalSelected = selectedIndex; // Actualizar el índice seleccionado en el store
+}
+
+
 </script>
 
 <template>
@@ -38,6 +48,18 @@ function updateLineWidth() {
           @input="updateLineWidth"
           class="w-48 h-2 bg-green-200 rounded-lg appearance-none cursor-pointer"
       />
+    </div>
+
+    <!-- Selector de señal -->
+    <div class="flex items-center space-x-2">
+      <label for="signalSelect" class="font-semibold text-black">
+        Seleccionar señal:
+      </label>
+      <select id="signalSelect" v-model="signalStore.signalSelected" @change="updateSignalSelected" class="form-select">
+        <option v-for="(signal, index) in signalStore.signalJson" :key="index" :value="index">
+          Señal {{ index }}
+        </option>
+      </select>
     </div>
   </div>
 </template>

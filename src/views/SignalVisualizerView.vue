@@ -2,9 +2,6 @@
 import {ref, onMounted} from 'vue';
 import SimpleChart from "@/components/SimpleChart.vue";
 
-import AverageComponent from '@/components/AverageComponent.vue';
-
-
 const fileName = ref(null);
 
 import UploadFileButtonCard from "@/components/UploadFileButtonCard.vue";
@@ -24,8 +21,6 @@ function handleFileProcessed(values) {
   <div class="flex justify-center">
     <SimpleChart v-bind:data="realValues" class="h-[80vh] w-full"/> <!-- Pasar los valores reales al graficador -->
   </div>
-  
-  <AverageComponent/>
 </template>
 
 <style scoped>

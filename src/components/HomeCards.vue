@@ -45,7 +45,7 @@ import Card from "@/components/Card.vue";
         <Card cardBackground="bg-[#F2E74B]">
           <h2 class="text-2xl font-bold text-[#010D00]">Código Abierto y Colaborativo</h2>
           <p class="mt-2 mb-4 text-[#735620]">
-            SPOC es un proyecto OpenSource, impulsado por la colaboración de una comunidad global. Contribuye, adapta y mejora la plataforma según tus necesidades específicas.
+            SPOK es un proyecto OpenSource, impulsado por la colaboración de una comunidad global. Contribuye, adapta y mejora la plataforma según tus necesidades específicas.
           </p>
           <RouterLink to="/documentation" class="inline-block bg-[#F2B441] text-[#010D00] rounded-lg px-4 py-2 hover:bg-[#735620] hover:text-white">
             Ir a la Documentación

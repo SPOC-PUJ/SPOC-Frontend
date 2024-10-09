@@ -17,9 +17,9 @@ const isActiveLink = (routePath) => {
         >
           <!-- Logo -->
           <RouterLink class="flex flex-shrink-0 items-center mr-4" to="/">
-            <img class="h-10 w-auto" v-bind:src="logo" alt="SPOC - Signal Processing on Cloud" />
+            <img class="h-10 w-auto" v-bind:src="logo" alt="SPOK - Signal Processing on Cloud" />
             <span class="hidden md:block text-[#F2E74B] text-2xl font-bold ml-2">
-              SPOC - Signal Processing on Cloud
+              SPOK - Signal Processing on Kubernetes
             </span>
           </RouterLink>
           <div class="md:ml-auto">

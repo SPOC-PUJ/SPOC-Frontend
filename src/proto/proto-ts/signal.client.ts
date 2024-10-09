@@ -4,6 +4,8 @@
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { SignalService } from "./signal";
+import type { CWTResponse } from "./signal";
+import type { CWTRequest } from "./signal";
 import type { FftConvolveResponse } from "./signal";
 import type { FftConvolveRequest } from "./signal";
 import type { AverageResponse } from "./signal";
@@ -67,6 +69,10 @@ export interface ISignalServiceClient {
      * @generated from protobuf rpc: ComputeFftConvolve(signal.FftConvolveRequest) returns (signal.FftConvolveResponse);
      */
     computeFftConvolve(input: FftConvolveRequest, options?: RpcOptions): UnaryCall<FftConvolveRequest, FftConvolveResponse>;
+    /**
+     * @generated from protobuf rpc: ComputeCWT(signal.CWTRequest) returns (signal.CWTResponse);
+     */
+    computeCWT(input: CWTRequest, options?: RpcOptions): UnaryCall<CWTRequest, CWTResponse>;
 }
 /**
  * The signal service definition.
@@ -141,5 +147,12 @@ export class SignalServiceClient implements ISignalServiceClient, ServiceInfo {
     computeFftConvolve(input: FftConvolveRequest, options?: RpcOptions): UnaryCall<FftConvolveRequest, FftConvolveResponse> {
         const method = this.methods[8], opt = this._transport.mergeOptions(options);
         return stackIntercept<FftConvolveRequest, FftConvolveResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: ComputeCWT(signal.CWTRequest) returns (signal.CWTResponse);
+     */
+    computeCWT(input: CWTRequest, options?: RpcOptions): UnaryCall<CWTRequest, CWTResponse> {
+        const method = this.methods[9], opt = this._transport.mergeOptions(options);
+        return stackIntercept<CWTRequest, CWTResponse>("unary", this._transport, method, opt, input);
     }
 }

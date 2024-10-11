@@ -61,9 +61,10 @@ const calcularFastWaveletTransform = async () => {
 
   // Validar que decLevel es un número entero que esté entre 1 y log2(n)
   if (!Number.isInteger(decLevel) || decLevel < 1 || decLevel > maxDecLevel) {
-    console.error(
-        'Error: Dec Level debe estar entre 1 y log2(n) = ${maxDecLevel}. Valor proporcionado: ${decLevel}'
-    );
+    console.error('Error: Dec Level debe estar entre 1 y log2(n) = ${maxDecLevel}. Valor proporcionado: ${decLevel}');
+
+
+
     return;
   }
 

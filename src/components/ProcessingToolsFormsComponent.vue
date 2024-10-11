@@ -15,9 +15,9 @@ const selectedTool = ref('');
 
 <template>
   <div class="bg-white rounded-xl shadow-md p-6">
-    <div class="mb-6">
-      <h3 class="text-xl font-bold">Processing Tools</h3>
-      <p class="text-gray-600">Select a tool and fill out the corresponding form.</p>
+    <div class="mb-6 text-center">
+      <h3 class="text-xl font-bold">Herramientas de Procesamiento</h3>
+      <p class="text-gray-600">Seleccione una de las herraientas para poder introducir los paramentros necesarios.</p>
     </div>
 
     <div class="mb-5">

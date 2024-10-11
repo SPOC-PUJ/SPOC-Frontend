@@ -52,10 +52,10 @@ const calcularFastWaveletTransform = async () => {
   try {
     // Llamada al servicio gRPC para el cálculo de Fast Wavelet Transform
     const response = await SignalService.computeFastWaveletTransform(signalJson[selectedIndex], tool2Data.value.decLevel, tool2Data.value.waveName);
-    console.log('Raw: ', response);
+    console.log('Raw Response: ', response);
 
-    // Guardar y mostrar con u console.log la respuesta en el responseStore
-
+    // Guardar lo que eso respondió en el store
+     // localStorage.setItem('signalResponse', JSON.stringify(response));
 
     // Abrir otra ventana (nueva tab), el componente de esta nueva tab es ServiceResponseView.vue
     window.open('/response-results/FastWaveletTransform', '_blank');

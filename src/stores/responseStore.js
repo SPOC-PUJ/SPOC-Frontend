@@ -2,14 +2,11 @@ import { defineStore } from 'pinia';
 
 export const useResponseStore = defineStore('responseStore', {
     state: () => ({
-        response: null,
+        signalResponse: null,
     }),
     actions: {
-        setResponse(response) {
-            this.response = response;
+        setSignalResponse(response) {
+            this.signalResponse = response;
         },
-        clearStore() {
-            this.response = null;
-        }
     },
 });

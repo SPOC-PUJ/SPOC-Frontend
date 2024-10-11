@@ -21,7 +21,7 @@ const selectedTool = ref('');
     </div>
 
     <div class="mb-5">
-      <label for="toolSelect" class="block text-sm font-medium text-gray-700 mb-2">Select a tool:</label>
+      <label for="toolSelect" class="block text-sm font-medium text-gray-700 mb-2">Seleccione una herraienta:</label>
       <select id="toolSelect" v-model="selectedTool"
               class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm">
         <option value="" disabled>Select a tool</option>

@@ -1,8 +1,8 @@
 <script setup>
-import {ref, computed, toRaw} from 'vue';
-import {useSignalStore} from '@/stores/signalStore';
-import {SignalService} from '@/services/signalService';
-import {openDB} from "idb";
+import { ref, computed, toRaw } from 'vue';
+import { useSignalStore } from '@/stores/signalStore';
+import { SignalService } from '@/services/signalService';
+import { openDB } from 'idb';
 
 // Obtener la instancia del store
 const signalStore = useSignalStore();
@@ -24,7 +24,7 @@ const submitTool2 = () => {
   }
   else
   {
-    console.log('Fast Wavelet Transform:', tool2Data.value, "Signal:", signalStore.signalJson);
+    console.log('Fast Wavelet Transform:', tool2Data.value, 'Signal:', signalStore.signalJson);
 
     // Llamar a la función para calcular Fast Wavelet Transform
     calcularFastWaveletTransform();
@@ -50,9 +50,26 @@ const calcularFastWaveletTransform = async () => {
   console.log('Signal:', signalJson[selectedIndex]);
   console.log('Signal Numbers:', signalJson[selectedIndex].values);
 
+  // Obtener la longitud de la señal
+  const n = signalJson[selectedIndex].values.length;
+
+  // Convertir decLevel a número
+  const decLevel = Number(tool2Data.value.decLevel);
+
+  // Calcular log2(n)
+  const maxDecLevel = Math.floor(Math.log2(n));
+
+  // Validar que decLevel es un número entero que esté entre 1 y log2(n)
+  if (!Number.isInteger(decLevel) || decLevel < 1 || decLevel > maxDecLevel) {
+    console.error(
+        'Error: Dec Level debe estar entre 1 y log2(n) = ${maxDecLevel}. Valor proporcionado: ${decLevel}'
+    );
+    return;
+  }
+
   try {
     // Llamada al servicio gRPC para el cálculo de Fast Wavelet Transform
-    const response = await SignalService.computeFastWaveletTransform(signalJson[selectedIndex], tool2Data.value.decLevel, tool2Data.value.waveName);
+    const response = await SignalService.computeFastWaveletTransform(signalJson[selectedIndex], decLevel, tool2Data.value.waveName);
     console.log('Raw Response: ', response);
 
     // Guardar la respuesta en la base de datos.

@@ -2,6 +2,7 @@
 import {ref, computed, toRaw} from 'vue';
 import {useSignalStore} from '@/stores/signalStore';
 import {SignalService} from '@/services/signalService';
+import {openDB} from "idb";
 
 // Obtener la instancia del store
 const signalStore = useSignalStore();
@@ -54,8 +55,13 @@ const calcularFastWaveletTransform = async () => {
     const response = await SignalService.computeFastWaveletTransform(signalJson[selectedIndex], tool2Data.value.decLevel, tool2Data.value.waveName);
     console.log('Raw Response: ', response);
 
-    // Guardar lo que eso respondió en el store
-     // localStorage.setItem('signalResponse', JSON.stringify(response));
+    // Guardar la respuesta en la base de datos.
+    const db = await openDB('response-database', 1, {
+      upgrade(db) {
+        db.createObjectStore('responses');
+      },
+    });
+    await db.put('responses', response, 'signalResponse');
 
     // Abrir otra ventana (nueva tab), el componente de esta nueva tab es ServiceResponseView.vue
     window.open('/response-results/FastWaveletTransform', '_blank');

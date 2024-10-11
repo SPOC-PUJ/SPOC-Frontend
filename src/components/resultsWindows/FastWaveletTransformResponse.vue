@@ -1,26 +1,26 @@
 <script setup>
 import { onMounted } from 'vue';
+import { openDB } from 'idb';
 import { useResponseStore } from '@/stores/responseStore.js';
 
-console.log('Fast Wavelet Transform Response Component mounted.');
-
-// Obtain the response store instance
 const responseStore = useResponseStore();
 
-onMounted(() => {
-  // Retrieve the response from localStorage
-  const storedResponse = localStorage.getItem('signalResponse');
-  if (storedResponse) {
-    const response = JSON.parse(storedResponse);
-    // Store it in the response store
+onMounted(async () => {
+  const db = await openDB('response-database', 1);
+  const response = await db.get('responses', 'signalResponse');
+
+  // Una vez cargada la página, revisar si hay una respuesta almacenada en IndexedDB
+  if (response)
+  {
     responseStore.setSignalResponse(response);
-    // Remove it from localStorage
-    localStorage.removeItem('signalResponse');
-  } else {
-    console.error('No signalResponse found in localStorage');
+    // Borrar los datos de la respuesta almacenada en IndexedDB para evitar duplicados.
+    await db.delete('responses', 'signalResponse');
+  }
+  else
+  {
+    console.error('No signalResponse found in IndexedDB');
   }
 
-  // Print the store contents
   console.log('Signal Response:', responseStore.signalResponse);
 });
 </script>
@@ -28,11 +28,5 @@ onMounted(() => {
 <template>
   <div>
     <h1>Fast Wavelet Transform Response Component</h1>
-    <!-- Display your response data here -->
-    <pre>{{ responseStore.signalResponse }}</pre>
   </div>
 </template>
-
-<style scoped>
-
-</style>

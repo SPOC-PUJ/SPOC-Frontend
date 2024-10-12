@@ -24,24 +24,10 @@ function handleFileProcessed(values) {
       <ProcessingToolsFormsComponent v-bind:data="realValues"/>
     </div>
   </section>
-
-
-  <!-- Components to add
-
-  <FastWaveletHarr/>
-  <FastWaveletTransform/>
-  <FirstDifference/>
-  <IFFTComponent/>
-  <MovingAverage/>
-  <RuningSum/>
-
-  -->
 </template>
 
 <style scoped>
 .ProcessingToolsForm {
-
   margin-top: 6rem;
 }
-
 </style>

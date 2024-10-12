@@ -266,6 +266,40 @@ onMounted(() => {
             .tickFormat((d) => `${(d / 1000).toFixed(1)}k`)
     );
 
+    // Añadir gridlines verticales (para el eje X)
+    svg
+        .selectAll('.xGrid')
+        .data(newX.ticks(20)) // Basado en la nueva escala X
+        .join(
+            (enter) => enter.append('line').attr('class', 'xGrid'),
+            (update) => update,
+            (exit) => exit.remove()
+        )
+        .attr('x1', (d) => newX(d))
+        .attr('x2', (d) => newX(d))
+        .attr('y1', 0)
+        .attr('y2', height)
+        .attr('stroke', '#e0e0e0')
+        .attr('stroke-width', 1);
+
+    // Añadir gridlines horizontales (para el eje Y)
+    svg
+        .selectAll('.yGrid')
+        .data(
+            newY.ticks((d3.max(newY.domain()) - d3.min(newY.domain())) / 1000)
+        ) // Basado en la nueva escala Y
+        .join(
+            (enter) => enter.append('line').attr('class', 'yGrid'),
+            (update) => update,
+            (exit) => exit.remove()
+        )
+        .attr('x1', 0)
+        .attr('x2', width)
+        .attr('y1', (d) => newY(d))
+        .attr('y2', (d) => newY(d))
+        .attr('stroke', '#e0e0e0')
+        .attr('stroke-width', 1);
+
     // Redibujar la línea del gráfico con la nueva escala X y Y (si está habilitado)
     const line = d3
         .line()

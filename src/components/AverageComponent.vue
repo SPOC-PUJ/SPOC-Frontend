@@ -1,53 +1,77 @@
-<template>
-    <button @click="calcularAverage">Average</button>
-</template>
-
-
-<script>
-import { ref, computed , toRaw} from 'vue';
-import { Complex } from '../proto/proto-ts/signal'; 
-import {useSignalStore} from "@/stores/signalStore";
+<script setup>
+import { ref, computed, toRaw } from 'vue';
+import { useSignalStore } from "@/stores/signalStore";
 import { SignalService } from '@/services/signalService';
 
+// Store de señales
+const signalStore = useSignalStore();
+const selectedSignals = ref([]);  // Aquí se almacenan las señales seleccionadas
 
-export default {
-  setup() {
-  
-    const signalStore = useSignalStore()
-    const signalComputed = computed(() => signalStore.signalObject);
+// Obtenemos el arreglo signalJson
+const signalJson = computed(() => toRaw(signalStore.signalJson));
 
-    const calcularAverage = async () => {
+// Función para calcular el promedio de las señales seleccionadas
+const calcularAverage = async () => {
+  if (!signalStore.signalObject) {
+    console.error('El objeto signalObject es null o no está inicializado.');
+    return;
+  }
 
-      if (!signalComputed.value) {
-        console.error('El objeto signalObject es null o no está inicializado.');
-        return;
-      }
-      // despues se decide como trabajar esto
-      // const signal = toRaw(signalStore.signalObject);
-      // const signalData = [];
-      // const veceigen = signal.get(0);
+  // Construir el selectedSignalJson con solo las señales seleccionadas
+  const selectedSignalJson = selectedSignals.value.map(index => signalJson.value[index]);
+  console.log('Selected Signals:', selectedSignalJson);
 
-      // for(let i=0; i< veceigen.size ; i++){
-      //   const complexValue = veceigen.get(i);
-
-      //   signalData.push(Complex.create({ real:complexValue.real() , imag: complexValue.imag() }));
-      // }
-
-      const signalJson = toRaw(signalStore.signalJson)
-      console.log("despues de traer el json",signalJson);
-      
-      try {
-        const response = await SignalService.computeAverage(signalJson);
-        console.log(response);
-        
-      } catch (error) {
-        console.error('Error al realizar la solicitud gRPC:', error);
-      }
-    };
-
-    return {
-        calcularAverage,
-    };
-  },
+  try {
+    const response = await SignalService.computeAverage(selectedSignalJson);
+    console.log(response);
+  } catch (error) {
+    console.error('Error al realizar la solicitud gRPC:', error);
+  }
 };
+
+// Función para manejar el envío del formulario
+const submitForm = () => {
+  calcularAverage();
+};
+
+// Función para verificar si una opción está seleccionada
+const isSelected = (index) => selectedSignals.value.includes(index);
 </script>
+
+<template>
+  <h4 class="text-lg font-semibold text-green-500 mb-4">Calcular Average</h4>
+
+  <form @submit.prevent="submitForm">
+    <label class="block text-sm font-medium text-gray-700 mb-2">Selecciona las señales:</label>
+
+    <!-- Estilizar checkboxes con Tailwind y recuadro -->
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div
+          v-for="(signal, index) in signalJson"
+          :key="index"
+          @click="selectedSignals.includes(index) ? selectedSignals.splice(selectedSignals.indexOf(index), 1) : selectedSignals.push(index)"
+          :class="isSelected(index) ? 'border-green-500 bg-green-100' : 'border-gray-300 bg-white'"
+          class="p-4 rounded-lg border cursor-pointer transition-colors duration-300"
+      >
+        <input
+            type="checkbox"
+            :value="index"
+            v-model="selectedSignals"
+            class="hidden"
+        />
+        <label class="text-gray-700">Opción {{ index + 1 }}</label>
+      </div>
+    </div>
+
+    <button
+        type="submit"
+        class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+    >
+      Calcular Average
+    </button>
+  </form>
+</template>
+
+<style scoped>
+/* Aquí puedes agregar estilos adicionales si los necesitas */
+</style>

@@ -6,6 +6,7 @@ import FastWaveletTransform from "@/components/FastWaveletTransform.vue";
 import FirstDifference from "@/components/FirstDifference.vue";
 import IFFTComponent from "@/components/IFFTComponent.vue";
 import RunningSum from "@/components/RunningSum.vue";
+import AverageComponent from "@/components/AverageComponent.vue";
 
 
 // Reactive variables
@@ -27,6 +28,7 @@ const selectedTool = ref('');
         <option value="" disabled>Select a tool</option>
         <option value="FastWaveletHarr">Fast Wavelet Harr</option>
         <option value="FastWaveletTransform">Fast Wavelet Transform</option>
+        <option value="SignalAverage">Signal Average</option>
         <option value="FirstDifference">First Difference</option>
         <option value="IFFT-Tool">Inverse Fast Fourier Transform</option>
         <option value="MovingAverage">Moving Average</option>
@@ -45,6 +47,10 @@ const selectedTool = ref('');
       <FastWaveletTransform/>
     </div>
 
+    <!-- Formulario para la Herramienta 3: Signal Average -->
+    <div v-if="selectedTool === 'SignalAverage'" class="mb-6">
+      <AverageComponent/>
+    </div>
 
     <!-- Formulario para la Herramienta 3: First Difference -->
     <div v-if="selectedTool === 'FirstDifference'" class="mb-6">
@@ -65,7 +71,6 @@ const selectedTool = ref('');
     <div v-if="selectedTool === 'RunningSum'" class="mb-6">
       <RunningSum/>
     </div>
-
   </div>
 </template>
 

@@ -148,6 +148,46 @@ const dataset = computed(() => {
       }
       break;
 
+    case "usingSingleSignalForFFT":
+      console.log('Usando datos de una sola señal para FFT');
+
+      if (responseStore.signalResponse) {
+        const initialData = toRaw(responseStore.signalResponse);
+        data = initialData.result;
+
+        console.log('Initial Data:', initialData);
+        console.log('Data (primeros 10 elementos sin sumar):', data.slice(0, 10));
+
+        // Transformar data al formato esperado
+        if (Array.isArray(data) && data.length > 0) {
+          if (typeof data[0] === 'number') {
+            data = data.map((value, index) => ({
+              punto: index + 1,
+              value: value,
+            }));
+          } else if (typeof data[0] === 'object' && data[0].hasOwnProperty('real') && data[0].hasOwnProperty('imag')) {
+            // Imprimir los primeros 10 valores con la suma de real e imag
+            const summedData = data.map((item, index) => ({
+              punto: index + 1,
+              value: item.real + item.imag, // Sumar la parte real e imaginaria
+            }));
+
+            console.log('Data (primeros 10 elementos después de sumar real e imag):', summedData.slice(0, 10));
+
+            // Reemplazar data por la suma
+            data = summedData;
+          } else {
+            console.error('Los elementos de data no están en un formato reconocido.');
+          }
+        } else {
+          console.error('Data no es un arreglo o está vacío.');
+        }
+      } else {
+        console.error('No hay datos de FFT disponibles en responseStore');
+      }
+      break;
+
+
     default:
       console.log('Usando datos de signalStore');
       if (signalStore.signalJson && signalStore.signalJson.length > 0) {

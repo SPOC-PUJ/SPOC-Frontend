@@ -115,8 +115,8 @@ const dataset = computed(() => {
       }
       break;
 
-    case 'usingMovingAverage':
-      console.log('Usando datos de Moving Average');
+    case 'usingSingleSignal':
+      console.log('Usando datos de una sola señal');
 
       if (responseStore.signalResponse) {
         const initialData = toRaw(responseStore.signalResponse);

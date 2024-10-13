@@ -26,12 +26,12 @@ const selectedTool = ref('');
       <select id="toolSelect" v-model="selectedTool"
               class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm">
         <option value="" disabled>Select a tool</option>
-        <option value="FastWaveletHarr">Fast Wavelet Harr</option>
-        <option value="FastWaveletTransform">Fast Wavelet Transform</option>
-        <option value="SignalAverage">Signal Average</option>
+        <option value="FastWaveletHarr">Fast Wavelet Harr (DONE)</option>
+        <option value="FastWaveletTransform">Fast Wavelet Transform (DONE)</option>
+        <option value="MovingAverage">Moving Average (DONE)</option>
+        <option value="SignalAverage">Signal Average (DONE)</option> <!-- TODO: Terminar de implementar y borrar los "done".-->
         <option value="FirstDifference">First Difference</option>
         <option value="IFFT-Tool">Inverse Fast Fourier Transform</option>
-        <option value="MovingAverage">Moving Average</option>
         <option value="RunningSum">Running Sum</option>
       </select>
     </div>

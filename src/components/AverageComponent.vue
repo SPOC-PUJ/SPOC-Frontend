@@ -3,8 +3,8 @@ import { ref, computed, toRaw } from 'vue';
 import { useSignalStore } from "@/stores/signalStore";
 import { SignalService } from '@/services/signalService';
 import ProcessingToolsDangerModal from "@/components/dangerModals/ProcessingToolsDangerModal.vue";
-import {JellyfishLoader} from "vue3-spinner";
-import {openDB} from "idb";
+import { JellyfishLoader } from "vue3-spinner";
+import { openDB } from "idb";
 
 // Store de señales
 const signalStore = useSignalStore();
@@ -26,6 +26,7 @@ const calcularAverage = async () => {
   if (selectedSignals.value.length === 0) {
     modalMessage.value = 'Debe seleccionar al menos una señal para calcular el promedio.';
     showModal.value = true;
+    loadingStatus.value = false;
     return;
   }
 
@@ -57,6 +58,7 @@ const calcularAverage = async () => {
     modalMessage.value = 'Error al realizar la solicitud gRPC.';
     console.error(modalMessage.value, error);
     showModal.value = true;
+    loadingStatus.value = false;
   }
 };
 
@@ -75,6 +77,11 @@ const handleModalConfirm = () => {
 
 // Función para verificar si una opción está seleccionada
 const isSelected = (index) => selectedSignals.value.includes(index);
+
+// Función para seleccionar todas las señales
+const selectAllSignals = () => {
+  selectedSignals.value = signalJson.value.map((_, index) => index); // Seleccionar todos los índices
+};
 </script>
 
 <template>
@@ -101,6 +108,11 @@ const isSelected = (index) => selectedSignals.value.includes(index);
         <label class="text-gray-700">Señal #{{ index + 1 }}</label>
       </div>
     </div>
+
+    <!-- Botón para seleccionar todas las señales -->
+    <button type="button" @click="selectAllSignals" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 mr-4">
+      Seleccionar todas las señales
+    </button>
 
     <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
       Calcular Average

@@ -2,6 +2,7 @@
 import { ref, computed, toRaw } from 'vue';
 import { useSignalStore } from "@/stores/signalStore";
 import { SignalService } from '@/services/signalService';
+import ProcessingToolsDangerModal from "@/components/dangerModals/ProcessingToolsDangerModal.vue";
 
 // Store de señales
 const signalStore = useSignalStore();
@@ -10,10 +11,16 @@ const selectedSignals = ref([]);  // Aquí se almacenan las señales seleccionad
 // Obtenemos el arreglo signalJson
 const signalJson = computed(() => toRaw(signalStore.signalJson));
 
+// Variables para el modal
+const showModal = ref(false);
+const modalMessage = ref('');
+
 // Función para calcular el promedio de las señales seleccionadas
 const calcularAverage = async () => {
-  if (!signalStore.signalObject) {
-    console.error('El objeto signalObject es null o no está inicializado.');
+  // Verificar si hay señales seleccionadas
+  if (selectedSignals.value.length === 0) {
+    modalMessage.value = 'Debe seleccionar al menos una señal para calcular el promedio.';
+    showModal.value = true;
     return;
   }
 
@@ -23,15 +30,23 @@ const calcularAverage = async () => {
 
   try {
     const response = await SignalService.computeAverage(selectedSignalJson);
-    console.log(response);
+    console.log('Respuesta del servidor:', response);
   } catch (error) {
     console.error('Error al realizar la solicitud gRPC:', error);
+    modalMessage.value = 'Error al realizar la solicitud gRPC.';
+    console.error(modalMessage.value, error);
+    showModal.value = true;
   }
 };
 
 // Función para manejar el envío del formulario
 const submitForm = () => {
   calcularAverage();
+};
+
+// Función para manejar la confirmación del modal
+const handleModalConfirm = () => {
+  showModal.value = false;
 };
 
 // Función para verificar si una opción está seleccionada
@@ -70,6 +85,14 @@ const isSelected = (index) => selectedSignals.value.includes(index);
       Calcular Average
     </button>
   </form>
+
+  <!-- Modal para mostrar advertencias -->
+  <ProcessingToolsDangerModal
+      v-if="showModal"
+      :message="modalMessage"
+      @close="showModal = false"
+      @confirm="handleModalConfirm"
+  />
 </template>
 
 <style scoped>

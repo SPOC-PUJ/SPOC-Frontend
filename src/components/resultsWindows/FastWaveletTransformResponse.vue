@@ -4,6 +4,7 @@ import { openDB } from 'idb';
 import { useResponseStore } from '@/stores/responseStore.js';
 import { JellyfishLoader } from 'vue3-spinner';
 import SimpleChart from '@/components/SimpleChart.vue';
+import WaveletChartControls from "@/components/WaveletChartControls.vue";
 
 // Estado de carga inicial (Jellyfish Loader) como ref para que sea reactivo
 const loadingStatus = ref(true);
@@ -47,15 +48,16 @@ onMounted(async () => {
 
     <!-- Mostrar los gráficos una vez que loadingStatus es false -->
     <div v-else>
+      <WaveletChartControls />
       <h1>Aproximaciones</h1>
       <!-- SimpleChart usando datos de Fast Wavelet Approximations -->
       <div class="flex justify-center">
-        <SimpleChart dataSource="useFastWaveletApproximations" class="h-[80vh] w-full" />
+        <SimpleChart dataSource="useFastWaveletApproximations" class="h-[40vh] w-full" />
       </div>
 
       <h1>Detalles</h1>
       <!-- SimpleChart usando datos de Fast Wavelet Details -->
-      <SimpleChart dataSource="useFastWaveletDetails" class="h-[80vh] w-full"/>
+      <SimpleChart dataSource="useFastWaveletDetails" class="h-[40vh] w-full"/>
     </div>
   </div>
 </template>

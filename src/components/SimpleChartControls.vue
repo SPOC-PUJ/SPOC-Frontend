@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { useRoute } from 'vue-router';
 import { useSignalStore } from '@/stores/signalStore'; // Importa el store de señales
 
 const emit = defineEmits(['toggle-zoom-y', 'update-line-width']); // Definir eventos emitidos
@@ -20,6 +21,12 @@ function updateSignalSelected(event) {
   signalStore.signalSelected = selectedIndex; // Actualizar el índice seleccionado en el store
 }
 
+const route = useRoute();
+
+const showSignalSelector = computed(() => {
+  console.log('Route:', route);
+  return !route.path.includes('/response-results/FastWaveletTransform');
+});
 
 </script>
 
@@ -29,7 +36,7 @@ function updateSignalSelected(event) {
     <!-- Habilitar zoom en Y -->
     <div class="flex items-center space-x-2">
       <label class="font-semibold text-black">
-        <input type="checkbox" @change="toggleZoomY" class="mr-2 text-green-500 focus:ring-green-400" />
+        <input type="checkbox" @change="toggleZoomY" class="mr-2 text-green-500 focus:ring-green-400"/>
         Habilitar zoom en Y
       </label>
     </div>
@@ -51,7 +58,7 @@ function updateSignalSelected(event) {
     </div>
 
     <!-- Selector de señal -->
-    <div class="flex items-center space-x-2">
+    <div class="flex items-center space-x-2" v-if="showSignalSelector">
       <label for="signalSelect" class="font-semibold text-black">
         Seleccionar señal:
       </label>
@@ -65,7 +72,7 @@ function updateSignalSelected(event) {
 </template>
 
 <style scoped>
-input[type="range"]::-webkit-slider-thumb {
+input[type='range']::-webkit-slider-thumb {
   appearance: none;
   height: 12px;
   width: 12px;
@@ -74,7 +81,7 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
 }
 
-input[type="range"]::-moz-range-thumb {
+input[type='range']::-moz-range-thumb {
   appearance: none;
   height: 12px;
   width: 12px;

@@ -49,7 +49,7 @@ const dataset = computed(() => {
   switch (dataSource) {
     case 'useFastWaveletApproximations':
       console.log(`Usando datos de Fast Wavelet Approximations, índice ${index}`);
-
+      index = responseStore.fastFourierTransformDecLevelIndex;
       if (
           responseStore.signalResponse &&
           responseStore.signalResponse.approximations &&
@@ -83,6 +83,7 @@ const dataset = computed(() => {
 
     case 'useFastWaveletDetails':
       console.log(`Usando datos de Fast Wavelet Details, índice ${index}`);
+      index = responseStore.fastFourierTransformDecLevelIndex;
       if (
           responseStore.signalResponse &&
           responseStore.signalResponse.details &&

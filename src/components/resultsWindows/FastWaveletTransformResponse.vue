@@ -36,10 +36,7 @@ onMounted(async () => {
 <template>
   <div class="bg-blue-50 px-4 py-10">
     <!-- Mostrar el loader si loadingStatus es true -->
-    <div
-        class="flex justify-center items-center w-full h-full fixed inset-0 m-auto bg-white bg-opacity-70"
-        v-if="loadingStatus"
-    >
+    <div class="flex justify-center items-center w-full h-full fixed inset-0 m-auto bg-white bg-opacity-70" v-if="loadingStatus">
       <div class="transform scale-[2] flex flex-col justify-center items-center">
         <JellyfishLoader color="#3B82F6" />
         <h2 class="text-blue-600 mt-4">Procesando respuesta...</h2>

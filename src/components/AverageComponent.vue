@@ -3,6 +3,8 @@ import { ref, computed, toRaw } from 'vue';
 import { useSignalStore } from "@/stores/signalStore";
 import { SignalService } from '@/services/signalService';
 import ProcessingToolsDangerModal from "@/components/dangerModals/ProcessingToolsDangerModal.vue";
+import {JellyfishLoader} from "vue3-spinner";
+import {openDB} from "idb";
 
 // Store de señales
 const signalStore = useSignalStore();
@@ -14,6 +16,9 @@ const signalJson = computed(() => toRaw(signalStore.signalJson));
 // Variables para el modal
 const showModal = ref(false);
 const modalMessage = ref('');
+
+// Variable para el estado de carga
+const loadingStatus = ref(false);
 
 // Función para calcular el promedio de las señales seleccionadas
 const calcularAverage = async () => {
@@ -29,8 +34,24 @@ const calcularAverage = async () => {
   console.log('Selected Signals:', selectedSignalJson);
 
   try {
+    console.log('Enviando solicitud gRPC para calcular el promedio...');
+
     const response = await SignalService.computeAverage(selectedSignalJson);
     console.log('Respuesta del servidor:', response);
+
+    // Guardar la respuesta en la base de datos.
+    const db = await openDB('response-database', 1, {
+      upgrade(db) {
+        db.createObjectStore('responses');
+      },
+    });
+    await db.put('responses', response, 'signalResponse');
+
+    // Cambiar el estado de carga
+    loadingStatus.value = false;
+
+    // Abrir otra ventana (nueva tab), el componente de esta nueva tab es ServiceResponseView.vue
+    window.open('/response-results/SignalAverage', '_blank');
   } catch (error) {
     console.error('Error al realizar la solicitud gRPC:', error);
     modalMessage.value = 'Error al realizar la solicitud gRPC.';
@@ -41,6 +62,9 @@ const calcularAverage = async () => {
 
 // Función para manejar el envío del formulario
 const submitForm = () => {
+  // Cambiar el estado de carga
+  loadingStatus.value = true;
+
   calcularAverage();
 };
 
@@ -74,14 +98,11 @@ const isSelected = (index) => selectedSignals.value.includes(index);
             v-model="selectedSignals"
             class="hidden"
         />
-        <label class="text-gray-700">Opción {{ index + 1 }}</label>
+        <label class="text-gray-700">Señal #{{ index + 1 }}</label>
       </div>
     </div>
 
-    <button
-        type="submit"
-        class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
-    >
+    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
       Calcular Average
     </button>
   </form>
@@ -93,8 +114,16 @@ const isSelected = (index) => selectedSignals.value.includes(index);
       @close="showModal = false"
       @confirm="handleModalConfirm"
   />
+
+  <!-- Mostrar el loader si loadingStatus es true -->
+  <div class="flex justify-center items-center w-full h-full fixed inset-0 m-auto bg-white bg-opacity-70" v-if="loadingStatus">
+    <div class="transform scale-[2] flex flex-col justify-center items-center">
+      <JellyfishLoader color="#3B82F6" />
+      <h2 class="text-blue-600 mt-4">Procesando respuesta...</h2>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-/* Aquí puedes agregar estilos adicionales si los necesitas */
+
 </style>

@@ -169,7 +169,7 @@ const dataset = computed(() => {
             // Imprimir los primeros 10 valores con la suma de real e imag
             const summedData = data.map((item, index) => ({
               punto: index + 1,
-              value: item.real + item.imag, // Sumar la parte real e imaginaria
+              value: Math.abs(item.real + item.imag), // Sumar la parte real e imaginaria y obtener el valor absoluto
             }));
 
             console.log('Data (primeros 10 elementos después de sumar real e imag):', summedData.slice(0, 10));
@@ -302,7 +302,7 @@ onMounted(() => {
           yAxisGroup.call(
               d3
                   .axisLeft(y)
-                  .ticks((d3.max(rawDataset, (d) => d.value) - d3.min(rawDataset, (d) => d.value)) / 1000)
+                  .ticks(10) // Ajustar el número de ticks para evitar que se peguen
                   .tickFormat((d) => d >= 1000 ? `${(d / 1000).toFixed(1)}k` : d)
           );
         } else {
@@ -330,7 +330,7 @@ onMounted(() => {
     yAxisGroup.call(
         d3
             .axisLeft(newY)
-            .ticks((d3.max(newY.domain()) - d3.min(newY.domain())) / 1000)
+            .ticks(10) // Ajustar el número de ticks para evitar que se peguen
             .tickFormat((d) => d >= 1000 ? `${(d / 1000).toFixed(1)}k` : d)
     );
 
@@ -355,7 +355,7 @@ onMounted(() => {
     svg
         .selectAll('.yGrid')
         .data(
-            newY.ticks((d3.max(newY.domain()) - d3.min(newY.domain())) / 1000)
+            newY.ticks(10) // Ajustar el número de ticks para evitar que se peguen
         ) // Basado en la nueva escala Y
         .join(
             (enter) => enter.append('line').attr('class', 'yGrid'),

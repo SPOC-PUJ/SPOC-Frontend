@@ -21,12 +21,14 @@ function updateSignalSelected(event) {
   signalStore.signalSelected = selectedIndex; // Actualizar el índice seleccionado en el store
 }
 
-const route = useRoute();
+const routeLastSegment = (window.location.pathname).substring((window.location.pathname).lastIndexOf('/') + 1);
+console.log('Last Segment of the URL:', routeLastSegment);
 
-const showSignalSelector = computed(() => {
-  console.log('Route:', route);
-  return !route.path.includes('/response-results/FastWaveletTransform');
-});
+let showSignalSelector = true;
+
+if (routeLastSegment === 'FastWaveletTransform' || routeLastSegment === 'MovingAverage') {
+  showSignalSelector = false;
+}
 
 </script>
 

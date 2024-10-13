@@ -34,6 +34,22 @@ const calcularAverage = async () => {
   const selectedSignalJson = selectedSignals.value.map(index => signalJson.value[index]);
   console.log('Selected Signals:', selectedSignalJson);
 
+
+  // Verificar si todas las señales tienen el mismo tamaño.
+  const signalSizes = selectedSignalJson.map(signal => signal.values.length); // Obtenemos los tamaños de las señales
+  const allSameSize = signalSizes.every(size => size === signalSizes[0]); // Verificamos si todas tienen el mismo tamaño
+
+  if (!allSameSize) {
+    // Si las señales no tienen el mismo tamaño, mostramos el modal con el mensaje adecuado
+    const sizeDetails = selectedSignalJson
+        .map((signal, index) => `Señal #${selectedSignals.value[index] + 1}: ${signal.values.length} elementos.`)
+        .join(' - ');
+    modalMessage.value = `No todas las señales tienen el mismo tamaño. Detalles:\n${sizeDetails}`;
+    showModal.value = true;
+    loadingStatus.value = false;
+    return;
+  }
+
   try {
     console.log('Enviando solicitud gRPC para calcular el promedio...');
 
@@ -130,7 +146,7 @@ const selectAllSignals = () => {
   <!-- Mostrar el loader si loadingStatus es true -->
   <div class="flex justify-center items-center w-full h-full fixed inset-0 m-auto bg-white bg-opacity-70" v-if="loadingStatus">
     <div class="transform scale-[2] flex flex-col justify-center items-center">
-      <JellyfishLoader color="#3B82F6" />
+      <JellyfishLoader color="#3B82F6"/>
       <h2 class="text-blue-600 mt-4">Procesando respuesta...</h2>
     </div>
   </div>

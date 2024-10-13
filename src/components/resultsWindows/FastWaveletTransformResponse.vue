@@ -34,7 +34,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
+  <div class="bg-blue-50 px-4 py-10">
     <!-- Mostrar el loader si loadingStatus es true -->
     <div
         class="flex justify-center items-center w-full h-full fixed inset-0 m-auto bg-white bg-opacity-70"
@@ -49,15 +49,24 @@ onMounted(async () => {
     <!-- Mostrar los gráficos una vez que loadingStatus es false -->
     <div v-else>
       <WaveletChartControls />
-      <h1>Aproximaciones</h1>
-      <!-- SimpleChart usando datos de Fast Wavelet Approximations -->
-      <div class="flex justify-center">
-        <SimpleChart dataSource="useFastWaveletApproximations" class="h-[40vh] w-full" />
+
+      <!-- Caja para Aproximaciones -->
+      <div class="bg-white rounded-xl shadow-md relative mt-4 pb-16">
+        <div class="p-4">
+          <h3 class="text-xl font-bold">Aproximaciones</h3>
+          <div class="flex justify-center">
+            <SimpleChart dataSource="useFastWaveletApproximations" class="h-[40vh] w-full" />
+          </div>
+        </div>
       </div>
 
-      <h1>Detalles</h1>
-      <!-- SimpleChart usando datos de Fast Wavelet Details -->
-      <SimpleChart dataSource="useFastWaveletDetails" class="h-[40vh] w-full"/>
+      <!-- Caja para Detalles -->
+      <div class="bg-white rounded-xl shadow-md relative mt-4 pb-16">
+        <div class="p-4">
+          <h3 class="text-xl font-bold">Detalles</h3>
+          <SimpleChart dataSource="useFastWaveletDetails" class="h-[40vh] w-full"/>
+        </div>
+      </div>
     </div>
   </div>
 </template>

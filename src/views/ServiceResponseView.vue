@@ -51,17 +51,8 @@ switch (lastSegment) {
 </script>
 
 <template>
-  <div class="bg-white rounded-xl shadow-md p-6">
-    <div class="mb-6">
-      <h3 class="text-xl font-bold">Service Response</h3>
-      <p class="text-gray-600">This is the response from the service.</p>
-    </div>
-
-    <FastWaveletHaarResponse v-if="selectedTool === 'FastWaveletHaarResponse'"></FastWaveletHaarResponse>
-    <FastWaveletTransformResponse v-if="selectedTool === 'FastWaveletTransformResponse'"></FastWaveletTransformResponse>
-  </div>
-
-
+  <FastWaveletHaarResponse v-if="selectedTool === 'FastWaveletHaarResponse'"></FastWaveletHaarResponse>
+  <FastWaveletTransformResponse v-if="selectedTool === 'FastWaveletTransformResponse'"></FastWaveletTransformResponse>
 </template>
 
 <style scoped>

@@ -30,8 +30,8 @@ const selectedTool = ref('');
         <option value="FastWaveletTransform">Fast Wavelet Transform (DONE)</option>
         <option value="MovingAverage">Moving Average (DONE)</option>
         <option value="SignalAverage">Signal Average (DONE)</option> <!-- TODO: Terminar de implementar y borrar los "done".-->
-        <option value="FirstDifference">First Difference</option>
-        <option value="IFFT-Tool">Inverse Fast Fourier Transform</option>
+        <option value="FirstDifference">First Difference (DONE)</option>
+        <option value="IFFT-Tool">Inverse Fast Fourier Transform (DONE)</option>
         <option value="RunningSum">Running Sum</option>
       </select>
     </div>

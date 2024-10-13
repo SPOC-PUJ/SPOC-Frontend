@@ -4,6 +4,7 @@ import FastWaveletTransformResponse from "@/components/resultsWindows/FastWavele
 import MovingAverageResponse from "@/components/resultsWindows/MovingAverageResponse.vue";
 import SignalAverageResponse from "@/components/resultsWindows/SignalAverageResponse.vue";
 import FirstDifferenceResponse from "@/components/resultsWindows/FirstDifferenceResponse.vue";
+import IFFTResponse from "@/components/resultsWindows/IFFTResponse.vue";
 
 console.log('ServiceResponseView.vue');
 
@@ -39,7 +40,7 @@ switch (lastSegment) {
 
   case 'IFFT-Tool':
     console.log('Inverse Fast Fourier Transform');
-    // TODO
+    selectedTool = "IFFTResponse";
     break;
 
   case 'MovingAverage':
@@ -64,6 +65,7 @@ switch (lastSegment) {
   <MovingAverageResponse v-if="selectedTool === 'MovingAverageResponse'"></MovingAverageResponse>
   <SignalAverageResponse v-if="selectedTool === 'SignalAverageResponse'"></SignalAverageResponse>
   <FirstDifferenceResponse v-if="selectedTool === 'FirstDifferenceResponse'"></FirstDifferenceResponse>
+  <IFFTResponse v-if="selectedTool === 'IFFTResponse'"></IFFTResponse>
 </template>
 
 <style scoped>

@@ -1,6 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref } from 'vue';
 import { useSignalStore } from '@/stores/signalStore'; // Importa el store de señales
 
 const emit = defineEmits(['toggle-zoom-y', 'update-line-width']); // Definir eventos emitidos
@@ -26,7 +25,7 @@ console.log('Last Segment of the URL:', routeLastSegment);
 
 let showSignalSelector = true;
 
-if (routeLastSegment === 'FastWaveletTransform' || routeLastSegment === 'MovingAverage' || routeLastSegment === 'SignalAverage' || routeLastSegment === 'FirstDifference')
+if (routeLastSegment === 'FastWaveletTransform' || routeLastSegment === 'MovingAverage' || routeLastSegment === 'SignalAverage' || routeLastSegment === 'FirstDifference' || routeLastSegment === 'IFFT-Tool')
 {
   showSignalSelector = false;
 }

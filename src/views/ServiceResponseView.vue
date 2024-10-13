@@ -1,6 +1,7 @@
 <script setup>
 import FastWaveletHaarResponse from "@/components/resultsWindows/FastWaveletHaarResponse.vue";
 import FastWaveletTransformResponse from "@/components/resultsWindows/FastWaveletTransformResponse.vue";
+import MovingAverageResponse from "@/components/resultsWindows/MovingAverageResponse.vue";
 
 console.log('ServiceResponseView.vue');
 
@@ -36,7 +37,7 @@ switch (lastSegment) {
 
   case 'MovingAverage':
     console.log('Moving Average');
-    // TODO
+    selectedTool = "MovingAverageResponse";
     break;
   case 'RunningSum':
     console.log('Running Sum');
@@ -53,6 +54,7 @@ switch (lastSegment) {
 <template>
   <FastWaveletHaarResponse v-if="selectedTool === 'FastWaveletHaarResponse'"></FastWaveletHaarResponse>
   <FastWaveletTransformResponse v-if="selectedTool === 'FastWaveletTransformResponse'"></FastWaveletTransformResponse>
+  <MovingAverageResponse v-if="selectedTool === 'MovingAverageResponse'"></MovingAverageResponse>
 </template>
 
 <style scoped>

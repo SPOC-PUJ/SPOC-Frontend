@@ -3,6 +3,7 @@ import { ref, computed, toRaw } from 'vue';
 import { Complex } from '../proto/proto-ts/signal';
 import { useSignalStore } from '@/stores/signalStore';
 import { SignalService } from '@/services/signalService';
+import {openDB} from "idb";
 
 // Accede a la store
 const signalStore = useSignalStore();
@@ -19,7 +20,7 @@ const submitTool5 = () => {
   if (!tool5Data.value.field1) {
     console.error('Error: Falta llenar el campo Window Size en Tool 5');
   } else {
-    console.log('Tool 5 Data:', tool5Data.value, 'Signal Store:', signalStore.signalJson);
+    console.log('Tool 5 Data:', tool5Data.value, 'Signal Store:', signalStore.signalJson, 'Signal Selected:', signalStore.signalSelected);
 
     calcularPromedioMovil()
   }
@@ -32,22 +33,26 @@ const calcularPromedioMovil = async () => {
     return;
   }
 
-  // Comentario original, en caso de que se requiera más adelante.
-  // const signal = toRaw(signalStore.signalObject);
-  // const signalData = [];
-  // const veceigen = signal.get(0);
+  // Obtener el índice de la señal seleccionada
+  const selectedIndex = signalStore.signalSelected;
 
-  // for(let i = 0; i < veceigen.size; i++) {
-  //   const complexValue = veceigen.get(i);
-  //   signalData.push(Complex.create({ real: complexValue.real(), imag: complexValue.imag() }));
-  // }
-
+  // Obtener el objeto raw desde el store
   const signalJson = toRaw(signalStore.signalJson);
-  console.log("Después de traer el JSON", signalJson[0]);
 
   try {
-    const response = await SignalService.computeMovingAverage(signalJson[0], 10);
-    console.log(response);
+    const response = await SignalService.computeMovingAverage(signalJson[selectedIndex], parseInt(tool5Data.value.field1));
+    console.log('Raw Response (Moving Average): ', response);
+
+    // Guardar la respuesta en la base de datos.
+    const db = await openDB('response-database', 1, {
+      upgrade(db) {
+        db.createObjectStore('responses');
+      },
+    });
+    await db.put('responses', response, 'signalResponse');
+
+    // Abrir otra ventana (nueva tab), el componente de esta nueva tab es ServiceResponseView.vue
+    window.open('/response-results/MovingAverage', '_blank');
   } catch (error) {
     console.error('Error al realizar la solicitud gRPC:', error);
   }

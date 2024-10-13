@@ -3,6 +3,7 @@ import FastWaveletHaarResponse from "@/components/resultsWindows/FastWaveletHaar
 import FastWaveletTransformResponse from "@/components/resultsWindows/FastWaveletTransformResponse.vue";
 import MovingAverageResponse from "@/components/resultsWindows/MovingAverageResponse.vue";
 import SignalAverageResponse from "@/components/resultsWindows/SignalAverageResponse.vue";
+import FirstDifferenceResponse from "@/components/resultsWindows/FirstDifferenceResponse.vue";
 
 console.log('ServiceResponseView.vue');
 
@@ -33,7 +34,7 @@ switch (lastSegment) {
 
   case 'FirstDifference':
     console.log('First Difference');
-    // TODO
+    selectedTool = "FirstDifferenceResponse";
     break;
 
   case 'IFFT-Tool':
@@ -62,7 +63,7 @@ switch (lastSegment) {
   <FastWaveletTransformResponse v-if="selectedTool === 'FastWaveletTransformResponse'"></FastWaveletTransformResponse>
   <MovingAverageResponse v-if="selectedTool === 'MovingAverageResponse'"></MovingAverageResponse>
   <SignalAverageResponse v-if="selectedTool === 'SignalAverageResponse'"></SignalAverageResponse>
-
+  <FirstDifferenceResponse v-if="selectedTool === 'FirstDifferenceResponse'"></FirstDifferenceResponse>
 </template>
 
 <style scoped>

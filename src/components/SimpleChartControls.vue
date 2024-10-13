@@ -26,7 +26,8 @@ console.log('Last Segment of the URL:', routeLastSegment);
 
 let showSignalSelector = true;
 
-if (routeLastSegment === 'FastWaveletTransform' || routeLastSegment === 'MovingAverage' || routeLastSegment === 'SignalAverage') {
+if (routeLastSegment === 'FastWaveletTransform' || routeLastSegment === 'MovingAverage' || routeLastSegment === 'SignalAverage' || routeLastSegment === 'FirstDifference')
+{
   showSignalSelector = false;
 }
 

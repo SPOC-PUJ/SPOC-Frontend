@@ -12,7 +12,7 @@ console.log('Loading Response Status: ', loadingStatus.value);
 const responseStore = useResponseStore();
 
 onMounted(async () => {
-  console.log('InverseFast Fourier Transform Response');
+  console.log('Fast Fourier Transform Response');
   const db = await openDB('response-database', 1);
   const response = await db.get('responses', 'signalResponse');
 
@@ -46,7 +46,7 @@ onMounted(async () => {
       <!-- Caja para Moving Average -->
       <div class="bg-white rounded-xl shadow-md relative mt-4 pb-16">
         <div class="p-4">
-          <h3 class="text-xl font-bold">Inverse Fast Fourier Transform</h3>
+          <h3 class="text-xl font-bold">Fast Fourier Transform</h3>
           <SimpleChart dataSource="usingSingleSignal" class="h-[80vh] w-full"/>
         </div>
       </div>

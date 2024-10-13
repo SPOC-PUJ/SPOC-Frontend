@@ -5,6 +5,8 @@ import MovingAverageResponse from "@/components/resultsWindows/MovingAverageResp
 import SignalAverageResponse from "@/components/resultsWindows/SignalAverageResponse.vue";
 import FirstDifferenceResponse from "@/components/resultsWindows/FirstDifferenceResponse.vue";
 import IFFTResponse from "@/components/resultsWindows/IFFTResponse.vue";
+import FFTComponent from "@/components/FFTComponent.vue";
+import FFTResponse from "@/components/resultsWindows/FFTResponse.vue";
 
 console.log('ServiceResponseView.vue');
 
@@ -28,6 +30,11 @@ switch (lastSegment) {
     selectedTool = "FastWaveletTransformResponse";
     break;
 
+  case 'MovingAverage':
+    console.log('Moving Average');
+    selectedTool = "MovingAverageResponse";
+    break;
+
   case 'SignalAverage':
     console.log('Signal Average');
     selectedTool = "SignalAverageResponse";
@@ -43,10 +50,11 @@ switch (lastSegment) {
     selectedTool = "IFFTResponse";
     break;
 
-  case 'MovingAverage':
-    console.log('Moving Average');
-    selectedTool = "MovingAverageResponse";
+  case 'FFT-Tool':
+    console.log('Fast Fourier Transform');
+    selectedTool = "FFTResponse";
     break;
+
   case 'RunningSum':
     console.log('Running Sum');
     // TODO
@@ -66,6 +74,7 @@ switch (lastSegment) {
   <SignalAverageResponse v-if="selectedTool === 'SignalAverageResponse'"></SignalAverageResponse>
   <FirstDifferenceResponse v-if="selectedTool === 'FirstDifferenceResponse'"></FirstDifferenceResponse>
   <IFFTResponse v-if="selectedTool === 'IFFTResponse'"></IFFTResponse>
+  <FFTResponse v-if="selectedTool === 'FFTResponse'"></FFTResponse>
 </template>
 
 <style scoped>

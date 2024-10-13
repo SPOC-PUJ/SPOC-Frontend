@@ -187,7 +187,6 @@ const dataset = computed(() => {
       }
       break;
 
-
     default:
       console.log('Usando datos de signalStore');
       if (signalStore.signalJson && signalStore.signalJson.length > 0) {
@@ -264,7 +263,6 @@ onMounted(() => {
 
   // Grupos de ejes X e Y
   xAxisGroup = svg.append('g').attr('transform', `translate(0, ${height})`);
-
   yAxisGroup = svg.append('g');
 
   // Observar cambios en el dataset
@@ -299,17 +297,13 @@ onMounted(() => {
 
           // Dibujar los ejes
           xAxisGroup.call(
-              d3.axisBottom(x).ticks(20).tickFormat(d3.format('d'))
+              d3.axisBottom(x).ticks(20).tickFormat((d) => d >= 1000 ? `${(d / 1000).toFixed(1)}k` : d)
           );
           yAxisGroup.call(
               d3
                   .axisLeft(y)
-                  .ticks(
-                      (d3.max(rawDataset, (d) => d.value) -
-                          d3.min(rawDataset, (d) => d.value)) /
-                      1000
-                  )
-                  .tickFormat((d) => `${(d / 1000).toFixed(1)}k`)
+                  .ticks((d3.max(rawDataset, (d) => d.value) - d3.min(rawDataset, (d) => d.value)) / 1000)
+                  .tickFormat((d) => d >= 1000 ? `${(d / 1000).toFixed(1)}k` : d)
           );
         } else {
           console.error('El dataset está vacío o es inválido');
@@ -330,14 +324,14 @@ onMounted(() => {
 
     // Actualizar los ejes con las nuevas escalas
     xAxisGroup.call(
-        d3.axisBottom(newX).ticks(20).tickFormat(d3.format('d'))
+        d3.axisBottom(newX).ticks(20).tickFormat((d) => d >= 1000 ? `${(d / 1000).toFixed(1)}k` : d)
     );
 
     yAxisGroup.call(
         d3
             .axisLeft(newY)
             .ticks((d3.max(newY.domain()) - d3.min(newY.domain())) / 1000)
-            .tickFormat((d) => `${(d / 1000).toFixed(1)}k`)
+            .tickFormat((d) => d >= 1000 ? `${(d / 1000).toFixed(1)}k` : d)
     );
 
     // Añadir gridlines verticales (para el eje X)
@@ -354,7 +348,8 @@ onMounted(() => {
         .attr('y1', 0)
         .attr('y2', height)
         .attr('stroke', '#e0e0e0')
-        .attr('stroke-width', 1);
+        .attr('stroke-width', 1)
+        .attr('opacity', 0.7); // Gridlines por detrás de la línea
 
     // Añadir gridlines horizontales (para el eje Y)
     svg
@@ -372,7 +367,8 @@ onMounted(() => {
         .attr('y1', (d) => newY(d))
         .attr('y2', (d) => newY(d))
         .attr('stroke', '#e0e0e0')
-        .attr('stroke-width', 1);
+        .attr('stroke-width', 1)
+        .attr('opacity', 0.7); // Gridlines por detrás de la línea
 
     // Redibujar la línea del gráfico con la nueva escala X y Y (si está habilitado)
     const line = d3

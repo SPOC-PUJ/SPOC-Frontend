@@ -148,6 +148,40 @@ const dataset = computed(() => {
       }
       break;
 
+
+    case 'usingSingleSignalForIFFT':
+      console.log('Usando datos de una sola señal');
+
+      if (responseStore.signalResponse) {
+        const initialData = toRaw(responseStore.signalResponse);
+        data = initialData.result;
+
+        console.log('Initial Data:', initialData);
+        console.log('Data:', data);
+
+        // Transformar data al formato esperado
+        if (Array.isArray(data) && data.length > 0) {
+          if (typeof data[0] === 'number') {
+            data = data.map((value, index) => ({
+              punto: index + 1,
+              value: value,
+            }));
+          } else if (typeof data[0] === 'object' && data[0].hasOwnProperty('real')) {
+            data = data.map((item, index) => ({
+              punto: index + 1,
+              value: Math.abs(item.real),
+            }));
+          } else {
+            console.error('Los elementos de data no están en un formato reconocido.');
+          }
+        } else {
+          console.error('Data no es un arreglo o está vacío.');
+        }
+      } else {
+        console.error('No hay datos de Moving Average disponibles en responseStore');
+      }
+      break;
+
     case "usingSingleSignalForFFT":
       console.log('Usando datos de una sola señal para FFT');
 

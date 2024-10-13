@@ -297,13 +297,13 @@ onMounted(() => {
 
           // Dibujar los ejes
           xAxisGroup.call(
-              d3.axisBottom(x).ticks(20).tickFormat((d) => d >= 1000 ? `${(d / 1000).toFixed(1)}k` : d)
+              d3.axisBottom(x).ticks(20).tickFormat((d) => d >= 1000 || d <= -1000 ? `${(d / 1000).toFixed(1)}k` : d)
           );
           yAxisGroup.call(
               d3
                   .axisLeft(y)
                   .ticks(10) // Ajustar el número de ticks para evitar que se peguen
-                  .tickFormat((d) => d >= 1000 ? `${(d / 1000).toFixed(1)}k` : d)
+                  .tickFormat((d) => d >= 1000 || d <= -1000 ? `${(d / 1000).toFixed(1)}k` : d)
           );
         } else {
           console.error('El dataset está vacío o es inválido');
@@ -324,14 +324,14 @@ onMounted(() => {
 
     // Actualizar los ejes con las nuevas escalas
     xAxisGroup.call(
-        d3.axisBottom(newX).ticks(20).tickFormat((d) => d >= 1000 ? `${(d / 1000).toFixed(1)}k` : d)
+        d3.axisBottom(newX).ticks(20).tickFormat((d) => d >= 1000 || d <= -1000 ? `${(d / 1000).toFixed(1)}k` : d)
     );
 
     yAxisGroup.call(
         d3
             .axisLeft(newY)
             .ticks(10) // Ajustar el número de ticks para evitar que se peguen
-            .tickFormat((d) => d >= 1000 ? `${(d / 1000).toFixed(1)}k` : d)
+            .tickFormat((d) => d >= 1000 || d <= -1000 ? `${(d / 1000).toFixed(1)}k` : d)
     );
 
     // Añadir gridlines verticales (para el eje X)

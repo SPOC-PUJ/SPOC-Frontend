@@ -1,12 +1,21 @@
 <script setup>
+import { ref, onMounted, watch, computed, defineProps, toRaw } from 'vue';
+import { useSignalStore } from '@/stores/signalStore';
+import { useResponseStore } from '@/stores/responseStore';
 import SimpleChartControls from './SimpleChartControls.vue';
-
 import * as d3 from 'd3';
-import { ref, onMounted, watch, computed } from 'vue';
-import { useSignalStore } from '@/stores/signalStore'; // Importa el store de señales
 
-// Obtener la instancia del store
+// Definir las props
+const props = defineProps({
+  dataSource: {
+    type: String,
+    default: '',
+  },
+});
+
+// Obtener las instancias de los stores
 const signalStore = useSignalStore();
+const responseStore = useResponseStore();
 
 const chartContainer = ref(null);
 const zoomYEnabled = ref(false); // Estado del checkbox para habilitar/deshabilitar el zoom en Y
@@ -22,18 +31,238 @@ function handleLineWidthUpdate(newLineWidth) {
   lineWidth.value = newLineWidth; // Actualiza el grosor de la línea
 }
 
+// Variables para D3
+let x, y, svg, lineGroup, xAxisGroup, yAxisGroup;
+
+// Computed property para el dataset
+const dataset = computed(() => {
+  let data = [];
+  let index = 0;
+  let dataSource = props.dataSource;
+
+  if (dataSource.includes('_')) {
+    const parts = dataSource.split('_');
+    dataSource = parts[0];
+    index = parseInt(parts[1], 10) || 0;
+  }
+
+  switch (dataSource) {
+    case 'useFastWaveletApproximations':
+      console.log(`Usando datos de Fast Wavelet Approximations, índice ${index}`);
+      index = responseStore.fastFourierTransformDecLevelIndex;
+      if (
+          responseStore.signalResponse &&
+          responseStore.signalResponse.approximations &&
+          responseStore.signalResponse.approximations.length > index
+      ) {
+        const initialData = toRaw(responseStore.signalResponse.approximations[index]);
+        data = initialData.values;
+
+        // Transformar data al formato esperado
+        if (Array.isArray(data) && data.length > 0) {
+          if (typeof data[0] === 'number') {
+            data = data.map((value, index) => ({
+              punto: index + 1,
+              value: value,
+            }));
+          } else if (typeof data[0] === 'object' && data[0].hasOwnProperty('real')) {
+            data = data.map((item, index) => ({
+              punto: index + 1,
+              value: item.real,
+            }));
+          } else {
+            console.error('Los elementos de data no están en un formato reconocido.');
+          }
+        } else {
+          console.error('Data no es un arreglo o está vacío.');
+        }
+      } else {
+        console.error('No hay datos de aproximaciones disponibles en responseStore');
+      }
+      break;
+
+    case 'useFastWaveletDetails':
+      console.log(`Usando datos de Fast Wavelet Details, índice ${index}`);
+      index = responseStore.fastFourierTransformDecLevelIndex;
+      if (
+          responseStore.signalResponse &&
+          responseStore.signalResponse.details &&
+          responseStore.signalResponse.details.length > index
+      ) {
+        const initialData = toRaw(responseStore.signalResponse.details[index]);
+        data = initialData.values;
+
+        // Transformar data al formato esperado
+        if (Array.isArray(data) && data.length > 0) {
+          if (typeof data[0] === 'number') {
+            data = data.map((value, index) => ({
+              punto: index + 1,
+              value: value,
+            }));
+          } else if (typeof data[0] === 'object' && data[0].hasOwnProperty('real')) {
+            data = data.map((item, index) => ({
+              punto: index + 1,
+              value: item.real,
+            }));
+          } else {
+            console.error('Los elementos de data no están en un formato reconocido.');
+          }
+        } else {
+          console.error('Data no es un arreglo o está vacío.');
+        }
+      } else {
+        console.error('No hay datos de detalles disponibles en responseStore');
+      }
+      break;
+
+    case 'usingSingleSignal':
+      console.log('Usando datos de una sola señal');
+
+      if (responseStore.signalResponse) {
+        const initialData = toRaw(responseStore.signalResponse);
+        data = initialData.result;
+
+        console.log('Initial Data:', initialData);
+        console.log('Data:', data);
+
+        // Transformar data al formato esperado
+        if (Array.isArray(data) && data.length > 0) {
+          if (typeof data[0] === 'number') {
+            data = data.map((value, index) => ({
+              punto: index + 1,
+              value: value,
+            }));
+          } else if (typeof data[0] === 'object' && data[0].hasOwnProperty('real')) {
+            data = data.map((item, index) => ({
+              punto: index + 1,
+              value: item.real,
+            }));
+          } else {
+            console.error('Los elementos de data no están en un formato reconocido.');
+          }
+        } else {
+          console.error('Data no es un arreglo o está vacío.');
+        }
+      } else {
+        console.error('No hay datos de Moving Average disponibles en responseStore');
+      }
+      break;
+
+
+    case 'usingSingleSignalForIFFT':
+      console.log('Usando datos de una sola señal');
+
+      if (responseStore.signalResponse) {
+        const initialData = toRaw(responseStore.signalResponse);
+        data = initialData.result;
+
+        console.log('Initial Data:', initialData);
+        console.log('Data:', data);
+
+        // Transformar data al formato esperado
+        if (Array.isArray(data) && data.length > 0) {
+          if (typeof data[0] === 'number') {
+            data = data.map((value, index) => ({
+              punto: index + 1,
+              value: value,
+            }));
+          } else if (typeof data[0] === 'object' && data[0].hasOwnProperty('real')) {
+            data = data.map((item, index) => ({
+              punto: index + 1,
+              value: Math.abs(item.real),
+            }));
+          } else {
+            console.error('Los elementos de data no están en un formato reconocido.');
+          }
+        } else {
+          console.error('Data no es un arreglo o está vacío.');
+        }
+      } else {
+        console.error('No hay datos de Moving Average disponibles en responseStore');
+      }
+      break;
+
+    case "usingSingleSignalForFFT":
+      console.log('Usando datos de una sola señal para FFT');
+
+      if (responseStore.signalResponse) {
+        const initialData = toRaw(responseStore.signalResponse);
+        data = initialData.result;
+
+        console.log('Initial Data:', initialData);
+        console.log('Data (primeros 10 elementos sin sumar):', data.slice(0, 10));
+
+        // Transformar data al formato esperado
+        if (Array.isArray(data) && data.length > 0) {
+          if (typeof data[0] === 'number') {
+            data = data.map((value, index) => ({
+              punto: index + 1,
+              value: value,
+            }));
+          } else if (typeof data[0] === 'object' && data[0].hasOwnProperty('real') && data[0].hasOwnProperty('imag')) {
+            // Imprimir los primeros 10 valores con la suma de real e imag
+            const summedData = data.map((item, index) => ({
+              punto: index + 1,
+              value: Math.abs(item.real + item.imag), // Sumar la parte real e imaginaria y obtener el valor absoluto
+            }));
+
+            console.log('Data (primeros 10 elementos después de sumar real e imag):', summedData.slice(0, 10));
+
+            // Reemplazar data por la suma
+            data = summedData;
+          } else {
+            console.error('Los elementos de data no están en un formato reconocido.');
+          }
+        } else {
+          console.error('Data no es un arreglo o está vacío.');
+        }
+      } else {
+        console.error('No hay datos de FFT disponibles en responseStore');
+      }
+      break;
+
+    default:
+      console.log('Usando datos de signalStore');
+      if (signalStore.signalJson && signalStore.signalJson.length > 0) {
+        const selectedSignalData = signalStore.signalJson[signalStore.signalSelected];
+        if (
+            selectedSignalData &&
+            selectedSignalData.values &&
+            selectedSignalData.values.length > 0
+        ) {
+          const selectedSignal = selectedSignalData.values;
+          data = selectedSignal.map((dupla, index) => ({
+            punto: index + 1,
+            value: dupla.real, // Usar la parte real de la dupla
+          }));
+        } else {
+          console.error('No hay datos de señal válidos disponibles');
+        }
+      } else {
+        console.error('No hay datos disponibles en signalStore');
+      }
+      break;
+  }
+
+  console.log('Dataset procesado:', data);
+
+  return data;
+});
+
 onMounted(() => {
   // Paso #1: Crear el contenedor del gráfico
   const margin = { top: 50, right: 20, bottom: 50, left: 70 }; // Márgenes del gráfico
-  const width = chartContainer.value.clientWidth - margin.left - margin.right; // Ancho dinámico del gráfico
-  const height = chartContainer.value.clientHeight - margin.top - margin.bottom; // Alto dinámico del gráfico
+  const width =
+      chartContainer.value.clientWidth - margin.left - margin.right; // Ancho dinámico del gráfico
+  const height =
+      chartContainer.value.clientHeight - margin.top - margin.bottom; // Alto dinámico del gráfico
 
   // Paso #2: Crear las escalas para los ejes X e Y
-  const x = d3.scaleLinear().range([0, width]); // Escala para el eje X
-  const y = d3.scaleLinear().range([height, 0]); // Escala para el eje Y
+  x = d3.scaleLinear().range([0, width]); // Escala para el eje X
+  y = d3.scaleLinear().range([height, 0]); // Escala para el eje Y
 
   // Paso #3: Crear el contenedor SVG para el gráfico
-  const svg = d3 // La variable svg es el contenedor principal del gráfico
+  svg = d3 // La variable svg es el contenedor principal del gráfico
       .select(chartContainer.value) // Selecciona el contenedor del gráfico
       .append('svg') // Añade un elemento SVG al contenedor
       .attr('width', width + margin.left + margin.right) // Añade el ancho del gráfico
@@ -53,7 +282,7 @@ onMounted(() => {
       .attr('y', 0); // Posición Y del rectángulo
 
   // Paso #5: Añadir el grupo de la línea con clipping al SVG
-  const lineGroup = svg
+  lineGroup = svg
       .append('g') // Añadir un grupo al SVG
       .attr('clip-path', 'url(#clip)'); // Añadir el clipPath al grupo
 
@@ -67,65 +296,51 @@ onMounted(() => {
   d3.select(chartContainer.value).select('svg').call(zoom); // Añadir comportamiento de zoom y pan al SVG del gráfico
 
   // Grupos de ejes X e Y
-  let xAxisGroup = svg.append('g').attr('transform', `translate(0, ${height})`);
+  xAxisGroup = svg.append('g').attr('transform', `translate(0, ${height})`);
+  yAxisGroup = svg.append('g');
 
-  let yAxisGroup = svg.append('g');
-
-  // Observar los cambios en `signalStore.signalJson` y `signalStore.signalSelected`
+  // Observar cambios en el dataset
   watch(
-      [() => signalStore.signalJson, () => signalStore.signalSelected],
-      ([newSignalJson, newSignalSelected]) => {
-        if (newSignalJson && newSignalJson.length > 0) {
-          const selectedSignalData = newSignalJson[newSignalSelected]; // Tomar la señal seleccionada
-          if (selectedSignalData && selectedSignalData.values && selectedSignalData.values.length > 0) {
-            const selectedSignal = selectedSignalData.values; // Acceder a los valores de la señal seleccionada
+      () => dataset.value,
+      (newDataset) => {
+        if (newDataset && newDataset.length > 0) {
+          const rawDataset = toRaw(newDataset);
 
-            // Paso #7: Crear el dataset a partir de los datos proporcionados
-            const dataset = selectedSignal.map((dupla, index) => ({
-              punto: index + 1,
-              value: dupla.real, // Usar la parte real de la dupla
-            }));
+          x.domain(d3.extent(rawDataset, (d) => d.punto));
+          y.domain([
+            d3.min(rawDataset, (d) => d.value) * 1.1,
+            d3.max(rawDataset, (d) => d.value) * 1.1,
+          ]);
 
-            // Paso #8: Definir los dominios de las escalas X e Y
-            x.domain(d3.extent(dataset, (d) => d.punto)); // Escala en X basada en el índice de los datos
-            y.domain([
-              d3.min(dataset, (d) => d.value) * 1.1,
-              d3.max(dataset, (d) => d.value) * 1.1,
-            ]); // Escala en Y basada en el valor de los datos
+          const line = d3
+              .line()
+              .x((d) => x(d.punto))
+              .y((d) => y(d.value));
 
-            // Paso #9: Crear la línea del gráfico
-            const line = d3
-                .line()
-                .x((d) => x(d.punto))
-                .y((d) => y(d.value));
+          // Limpiar el gráfico antes de redibujar
+          lineGroup.selectAll('path').remove();
 
-            // Limpiar el gráfico antes de redibujar
-            lineGroup.selectAll('path').remove();
+          // Dibujar la línea del gráfico
+          lineGroup
+              .append('path')
+              .datum(rawDataset)
+              .attr('fill', 'none')
+              .attr('stroke', 'steelblue')
+              .attr('stroke-width', lineWidth.value)
+              .attr('d', line);
 
-            // Paso #10: Dibujar la línea del gráfico
-            lineGroup
-                .append('path')
-                .datum(dataset)
-                .attr('fill', 'none')
-                .attr('stroke', 'steelblue')
-                .attr('stroke-width', lineWidth.value) // Usar el grosor de la línea dinámico
-                .attr('d', line);
-
-            // Paso #11: Dibujar los ejes X e Y
-            xAxisGroup.call(
-                d3.axisBottom(x).ticks(20).tickFormat(d3.format('d'))
-            ); // Eje X
-            yAxisGroup.call(
-                d3
-                    .axisLeft(y)
-                    .ticks(
-                        (d3.max(dataset, (d) => d.value) -
-                            d3.min(dataset, (d) => d.value)) /
-                        1000
-                    ) // Eje Y con formato de k (miles)
-                    .tickFormat((d) => `${(d / 1000).toFixed(1)}k`)
-            ); // Formato de los números del eje Y
-          }
+          // Dibujar los ejes
+          xAxisGroup.call(
+              d3.axisBottom(x).ticks(20).tickFormat((d) => d >= 1000 || d <= -1000 ? `${(d / 1000).toFixed(1)}k` : d)
+          );
+          yAxisGroup.call(
+              d3
+                  .axisLeft(y)
+                  .ticks(10) // Ajustar el número de ticks para evitar que se peguen
+                  .tickFormat((d) => d >= 1000 || d <= -1000 ? `${(d / 1000).toFixed(1)}k` : d)
+          );
+        } else {
+          console.error('El dataset está vacío o es inválido');
         }
       },
       { immediate: true }
@@ -141,15 +356,16 @@ onMounted(() => {
     // Condicionalmente reescalar la escala Y solo si el checkbox está marcado
     const newY = zoomYEnabled.value ? transform.rescaleY(y) : y;
 
-    // Paso #13: Actualizar los ejes con las nuevas escalas
-    xAxisGroup.call(d3.axisBottom(newX).ticks(20).tickFormat(d3.format('d')));
+    // Actualizar los ejes con las nuevas escalas
+    xAxisGroup.call(
+        d3.axisBottom(newX).ticks(20).tickFormat((d) => d >= 1000 || d <= -1000 ? `${(d / 1000).toFixed(1)}k` : d)
+    );
 
-    // Actualizar el eje Y solo si zoom en Y está habilitado, si no, mantener la escala Y fija
     yAxisGroup.call(
         d3
             .axisLeft(newY)
-            .ticks((d3.max(newY.domain()) - d3.min(newY.domain())) / 1000)
-            .tickFormat((d) => `${(d / 1000).toFixed(1)}k`)
+            .ticks(10) // Ajustar el número de ticks para evitar que se peguen
+            .tickFormat((d) => d >= 1000 || d <= -1000 ? `${(d / 1000).toFixed(1)}k` : d)
     );
 
     // Añadir gridlines verticales (para el eje X)
@@ -166,13 +382,14 @@ onMounted(() => {
         .attr('y1', 0)
         .attr('y2', height)
         .attr('stroke', '#e0e0e0')
-        .attr('stroke-width', 1);
+        .attr('stroke-width', 1)
+        .attr('opacity', 0.7); // Gridlines por detrás de la línea
 
     // Añadir gridlines horizontales (para el eje Y)
     svg
         .selectAll('.yGrid')
         .data(
-            newY.ticks((d3.max(newY.domain()) - d3.min(newY.domain())) / 1000)
+            newY.ticks(10) // Ajustar el número de ticks para evitar que se peguen
         ) // Basado en la nueva escala Y
         .join(
             (enter) => enter.append('line').attr('class', 'yGrid'),
@@ -184,7 +401,8 @@ onMounted(() => {
         .attr('y1', (d) => newY(d))
         .attr('y2', (d) => newY(d))
         .attr('stroke', '#e0e0e0')
-        .attr('stroke-width', 1);
+        .attr('stroke-width', 1)
+        .attr('opacity', 0.7); // Gridlines por detrás de la línea
 
     // Redibujar la línea del gráfico con la nueva escala X y Y (si está habilitado)
     const line = d3
@@ -195,7 +413,7 @@ onMounted(() => {
     lineGroup
         .selectAll('path')
         .attr('d', line)
-        .attr('stroke-width', lineWidth.value); // Actualizar el grosor de la línea durante el zoom
+        .attr('stroke-width', lineWidth.value);
   }
 });
 </script>
@@ -211,6 +429,3 @@ onMounted(() => {
     />
   </div>
 </template>
-
-<style scoped>
-</style>

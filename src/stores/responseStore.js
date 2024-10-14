@@ -1,30 +1,16 @@
 import { defineStore } from 'pinia';
 
-export const useDataStore = defineStore('dataStore', {
+export const useResponseStore = defineStore('responseStore', {
     state: () => ({
-        approximations: [],
-        details: [],
-        response: null, // Añadir una propiedad para almacenar la respuesta
+        signalResponse: null,
+        fastFourierTransformDecLevelIndex: 0,
     }),
     actions: {
-        setApproximations(data) {
-            this.approximations = data;
+        setSignalResponse(response) {
+            this.signalResponse = response;
         },
-        setDetails(data) {
-            this.details = data;
+        setDecLevelIndex(index) {
+            this.fastFourierTransformDecLevelIndex = index;
         },
-        setResponse(response) {
-            this.response = response;
-        },
-        clearStore() {
-            this.approximations = [];
-            this.details = [];
-            this.response = null;
-        }
-    },
-    getters: {
-        getApproximations: (state) => state.approximations,
-        getDetails: (state) => state.details,
-        getResponse: (state) => state.response, 
     },
 });

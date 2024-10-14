@@ -1,10 +1,9 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { openDB } from 'idb';
-import { useResponseStore } from '@/stores/responseStore.js';
-import { JellyfishLoader } from 'vue3-spinner';
+import {ref, onMounted} from 'vue';
+import {openDB} from 'idb';
+import {useResponseStore} from '@/stores/responseStore.js';
+import {JellyfishLoader} from 'vue3-spinner';
 import SimpleChart from '@/components/SimpleChart.vue';
-import WaveletChartControls from "@/components/WaveletChartControls.vue";
 
 // Estado de carga inicial (Jellyfish Loader) como ref para que sea reactivo
 const loadingStatus = ref(true);
@@ -13,6 +12,7 @@ console.log('Loading Response Status: ', loadingStatus.value);
 const responseStore = useResponseStore();
 
 onMounted(async () => {
+  console.log('InverseFast Fourier Transform Response');
   const db = await openDB('response-database', 1);
   const response = await db.get('responses', 'signalResponse');
 
@@ -24,8 +24,6 @@ onMounted(async () => {
   } else {
     console.error('No signalResponse found in IndexedDB');
   }
-
-  console.log('Signal Response:', responseStore.signalResponse);
 
   // Desactivar el estado de carga
   loadingStatus.value = false;
@@ -45,23 +43,11 @@ onMounted(async () => {
 
     <!-- Mostrar los gráficos una vez que loadingStatus es false -->
     <div v-else>
-      <WaveletChartControls />
-
-      <!-- Caja para Aproximaciones -->
+      <!-- Caja para Moving Average -->
       <div class="bg-white rounded-xl shadow-md relative mt-4 pb-16">
         <div class="p-4">
-          <h3 class="text-xl font-bold">Aproximaciones</h3>
-          <div class="flex justify-center">
-            <SimpleChart dataSource="useFastWaveletApproximations" class="h-[40vh] w-full" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Caja para Detalles -->
-      <div class="bg-white rounded-xl shadow-md relative mt-4 pb-16">
-        <div class="p-4">
-          <h3 class="text-xl font-bold">Detalles</h3>
-          <SimpleChart dataSource="useFastWaveletDetails" class="h-[40vh] w-full"/>
+          <h3 class="text-xl font-bold">Inverse Fast Fourier Transform</h3>
+          <SimpleChart dataSource="usingSingleSignalForIFFT" class="h-[80vh] w-full"/>
         </div>
       </div>
     </div>

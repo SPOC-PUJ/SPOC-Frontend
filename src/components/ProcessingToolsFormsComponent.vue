@@ -6,6 +6,8 @@ import FastWaveletTransform from "@/components/FastWaveletTransform.vue";
 import FirstDifference from "@/components/FirstDifference.vue";
 import IFFTComponent from "@/components/IFFTComponent.vue";
 import RunningSum from "@/components/RunningSum.vue";
+import AverageComponent from "@/components/AverageComponent.vue";
+import FFTComponent from "@/components/FFTComponent.vue";
 
 
 // Reactive variables
@@ -15,21 +17,23 @@ const selectedTool = ref('');
 
 <template>
   <div class="bg-white rounded-xl shadow-md p-6">
-    <div class="mb-6">
-      <h3 class="text-xl font-bold">Processing Tools</h3>
-      <p class="text-gray-600">Select a tool and fill out the corresponding form.</p>
+    <div class="mb-6 text-center">
+      <h3 class="text-xl font-bold">Herramientas de Procesamiento</h3>
+      <p class="text-gray-600">Seleccione una de las herraientas para poder introducir los paramentros necesarios.</p>
     </div>
 
     <div class="mb-5">
-      <label for="toolSelect" class="block text-sm font-medium text-gray-700 mb-2">Select a tool:</label>
+      <label for="toolSelect" class="block text-sm font-medium text-gray-700 mb-2">Seleccione una herraienta:</label>
       <select id="toolSelect" v-model="selectedTool"
               class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm">
         <option value="" disabled>Select a tool</option>
-        <option value="FastWaveletHarr">Fast Wavelet Harr</option>
-        <option value="FastWaveletTransform">Fast Wavelet Transform</option>
-        <option value="FirstDifference">First Difference</option>
-        <option value="IFFT-Tool">Inverse Fast Fourier Transform</option>
-        <option value="MovingAverage">Moving Average</option>
+        <option value="FastWaveletHarr">Fast Wavelet Harr (DONE)</option>
+        <option value="FastWaveletTransform">Fast Wavelet Transform (DONE)</option>
+        <option value="MovingAverage">Moving Average (DONE)</option>
+        <option value="SignalAverage">Signal Average (DONE)</option> <!-- TODO: Terminar de implementar y borrar los "done".-->
+        <option value="FirstDifference">First Difference (DONE)</option>
+        <option value="IFFT-Tool">Inverse Fast Fourier Transform (DONE)</option>
+        <option value="FFT-Tool">Fast Fourier Transform (REVISAR)</option>
         <option value="RunningSum">Running Sum</option>
       </select>
     </div>
@@ -45,6 +49,15 @@ const selectedTool = ref('');
       <FastWaveletTransform/>
     </div>
 
+    <!-- Formulario para la Herramienta 5: Moving Average -->
+    <div v-if="selectedTool === 'MovingAverage'" class="mb-6">
+      <MovingAverage/>
+    </div>
+
+    <!-- Formulario para la Herramienta 3: Signal Average -->
+    <div v-if="selectedTool === 'SignalAverage'" class="mb-6">
+      <AverageComponent/>
+    </div>
 
     <!-- Formulario para la Herramienta 3: First Difference -->
     <div v-if="selectedTool === 'FirstDifference'" class="mb-6">
@@ -56,16 +69,15 @@ const selectedTool = ref('');
       <IFFTComponent/>
     </div>
 
-    <!-- Formulario para la Herramienta 5: Moving Average -->
-    <div v-if="selectedTool === 'MovingAverage'" class="mb-6">
-      <MovingAverage/>
+    <!-- Formulario para la Herramienta 7: Fast Fourier Transform -->
+    <div v-if="selectedTool === 'FFT-Tool'" class="mb-6">
+      <FFTComponent/>
     </div>
 
     <!-- Formulario para la Herramienta 6: Running Sum -->
     <div v-if="selectedTool === 'RunningSum'" class="mb-6">
       <RunningSum/>
     </div>
-
   </div>
 </template>
 

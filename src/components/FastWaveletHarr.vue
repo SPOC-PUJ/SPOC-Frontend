@@ -1,6 +1,5 @@
 <script setup>
-import {ref, computed, toRaw} from 'vue';
-import {Complex} from '../proto/proto-ts/signal';
+import {computed, toRaw} from 'vue';
 import {useSignalStore} from '@/stores/signalStore';
 import {SignalService} from '@/services/signalService';
 

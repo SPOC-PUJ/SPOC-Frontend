@@ -20,28 +20,14 @@ function handleFileProcessed(values) {
   </div>
 
   <section class="bg-blue-50 px-4 py-10">
-    <div class="ProcessingToolsForm justify-center w-1/2 border-green-300 border-2">
+    <div class="ProcessingToolsForm justify-center border-green-300 border-2">
       <ProcessingToolsFormsComponent v-bind:data="realValues"/>
     </div>
   </section>
-
-
-  <!-- Components to add
-
-  <FastWaveletHarr/>
-  <FastWaveletTransform/>
-  <FirstDifference/>
-  <IFFTComponent/>
-  <MovingAverage/>
-  <RuningSum/>
-
-  -->
 </template>
 
 <style scoped>
 .ProcessingToolsForm {
-
   margin-top: 6rem;
 }
-
 </style>

@@ -1,10 +1,9 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { openDB } from 'idb';
-import { useResponseStore } from '@/stores/responseStore.js';
-import { JellyfishLoader } from 'vue3-spinner';
+import {ref, onMounted} from 'vue';
+import {openDB} from 'idb';
+import {useResponseStore} from '@/stores/responseStore.js';
+import {JellyfishLoader} from 'vue3-spinner';
 import SimpleChart from '@/components/SimpleChart.vue';
-import WaveletChartControls from "@/components/WaveletChartControls.vue";
 
 // Estado de carga inicial (Jellyfish Loader) como ref para que sea reactivo
 const loadingStatus = ref(true);
@@ -13,6 +12,7 @@ console.log('Loading Response Status: ', loadingStatus.value);
 const responseStore = useResponseStore();
 
 onMounted(async () => {
+  console.log('First Difference Response');
   const db = await openDB('response-database', 1);
   const response = await db.get('responses', 'signalResponse');
 
@@ -25,8 +25,6 @@ onMounted(async () => {
     console.error('No signalResponse found in IndexedDB');
   }
 
-  console.log('Signal Response:', responseStore.signalResponse);
-
   // Desactivar el estado de carga
   loadingStatus.value = false;
   console.log('Loading Response Status: ', loadingStatus.value);
@@ -36,32 +34,21 @@ onMounted(async () => {
 <template>
   <div class="bg-blue-50 px-4 py-10">
     <!-- Mostrar el loader si loadingStatus es true -->
-    <div class="flex justify-center items-center w-full h-full fixed inset-0 m-auto bg-white bg-opacity-70" v-if="loadingStatus">
+    <div class="flex justify-center items-center w-full h-full fixed inset-0 m-auto bg-white bg-opacity-70"
+         v-if="loadingStatus">
       <div class="transform scale-[2] flex flex-col justify-center items-center">
-        <JellyfishLoader color="#3B82F6" />
+        <JellyfishLoader color="#3B82F6"/>
         <h2 class="text-blue-600 mt-4">Procesando respuesta...</h2>
       </div>
     </div>
 
     <!-- Mostrar los gráficos una vez que loadingStatus es false -->
     <div v-else>
-      <WaveletChartControls />
-
-      <!-- Caja para Aproximaciones -->
+      <!-- Caja para Moving Average -->
       <div class="bg-white rounded-xl shadow-md relative mt-4 pb-16">
         <div class="p-4">
-          <h3 class="text-xl font-bold">Aproximaciones</h3>
-          <div class="flex justify-center">
-            <SimpleChart dataSource="useFastWaveletApproximations" class="h-[40vh] w-full" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Caja para Detalles -->
-      <div class="bg-white rounded-xl shadow-md relative mt-4 pb-16">
-        <div class="p-4">
-          <h3 class="text-xl font-bold">Detalles</h3>
-          <SimpleChart dataSource="useFastWaveletDetails" class="h-[40vh] w-full"/>
+          <h3 class="text-xl font-bold">First Difference</h3>
+          <SimpleChart dataSource="usingSingleSignal" class="h-[80vh] w-full"/>
         </div>
       </div>
     </div>

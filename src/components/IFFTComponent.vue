@@ -1,56 +1,119 @@
 <script setup>
-import {ref, computed, toRaw} from 'vue';
-import {Complex} from '../proto/proto-ts/signal';
+import {computed, ref, toRaw} from 'vue';
 import {useSignalStore} from '@/stores/signalStore';
 import {SignalService} from '@/services/signalService';
+import { JellyfishLoader } from "vue3-spinner";
+import ProcessingToolsDangerModal from "@/components/dangerModals/ProcessingToolsDangerModal.vue";
+import {openDB} from "idb";
 
 // Obtener la instancia del store
 const signalStore = useSignalStore();
-
-// Computed property para acceder a signalObject
 const signalComputed = computed(() => signalStore.signalObject);
 
-// Tool 4: Inverse Fast Fourier Transform
+// Variables para el modal
+const showModal = ref(false);
+const modalMessage = ref('');
+
+// Variable para el estado de carga
+const loadingStatus = ref(false);
+
+// Tool 4: Inverse Fast Fourier Transform (IFFT)
 const submitTool4 = () => {
+  loadingStatus.value = true;
+
   if (!signalStore.signalJson)
   {
-    console.error('El objeto signalObject es null o no está inicializado.');
+    modalMessage.value = 'El objeto signalObject es null o no está inicializado.';
+    console.error("Error: ", modalMessage.value);
+    loadingStatus.value = false;
+    showModal.value = true;
   }
   else
   {
     console.log('IFFT Tool:', signalStore.signalJson);
 
     // Llamar a la función para calcular IFFT
-    CalcularIFFT();
+    calcularIFFT();
   }
 };
 
 // Función para calcular IFFT
-const CalcularIFFT = async () => {
+const calcularIFFT = async () =>
+{
   // Verificar si signalObject está inicializado
-  if (!signalComputed.value) {
-    console.error('El objeto signalObject es null o no está inicializado.');
+  if (!signalComputed.value)
+  {
+    modalMessage.value = 'El objeto signalObject es null o no está inicializado.';
+    console.error("Error: ", modalMessage.value);
+    loadingStatus.value = false;
+    showModal.value = true;
     return;
   }
+
+  // Obtener el índice de la señal seleccionada
+  const selectedIndex = signalStore.signalSelected;
 
   // Obtener el objeto raw desde el store
   const signalJson = toRaw(signalStore.signalJson);
 
-  try {
+  try
+  {
+    console.log('Enviando solicitud gRPC para calcular IFFT...');
+    console.log('Signal JSON:', signalJson[selectedIndex], 'Selected Index:', selectedIndex);
+
     // Llamada al servicio gRPC para el cálculo de IFFT
-    const response = await SignalService.computeIFFT(signalJson[0]);
-    console.log(response);
-  } catch (error) {
-    console.error('Error al realizar la solicitud gRPC:', error);
+    const response = await SignalService.computeIFFT(signalJson[selectedIndex]);
+    console.log('Raw Response (IFFT): ', response);
+
+    // Guardar la respuesta en la base de datos.
+    const db = await openDB('response-database', 1, {
+      upgrade(db) {
+        db.createObjectStore('responses');
+      },
+    });
+    await db.put('responses', response, 'signalResponse');
+
+    // Cambiar el estado de carga
+    loadingStatus.value = false;
+
+    // Abrir otra ventana (nueva tab) para ver los resultados de IFFT
+    window.open('/response-results/IFFT-Tool', '_blank');
   }
+  catch (error)
+  {
+    console.error('Error al realizar la solicitud gRPC:', error);
+    modalMessage.value = 'Error al realizar la solicitud gRPC.';
+    showModal.value = true;
+    loadingStatus.value = false;
+  }
+};
+
+// Manejar la confirmación del modal
+const handleModalConfirm = () => {
+  showModal.value = false;
 };
 </script>
 
-
 <template>
-  <h4 class="text-lg font-semibold text-green-500 mb-4">Inverse Fast Fourier Transform</h4>
+  <h4 class="text-lg font-semibold text-green-500 mb-4">Inverse Fast Fourier Transform (IFFT)</h4>
   <form @submit.prevent="submitTool4">
-    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Procesar...
-    </button>
+    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Procesar...</button>
   </form>
+
+  <!-- Modal para mostrar advertencias -->
+  <ProcessingToolsDangerModal
+      v-if="showModal"
+      :message="modalMessage"
+      @close="showModal = false"
+      @confirm="handleModalConfirm"
+  />
+
+  <!-- Mostrar el loader si loadingStatus es true -->
+  <div class="flex justify-center items-center w-full h-full fixed inset-0 m-auto bg-white bg-opacity-70"
+       v-if="loadingStatus">
+    <div class="transform scale-[2] flex flex-col justify-center items-center">
+      <JellyfishLoader color="#3B82F6"/>
+      <h2 class="text-blue-600 mt-4">Procesando respuesta...</h2>
+    </div>
+  </div>
 </template>

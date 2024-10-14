@@ -1,6 +1,12 @@
 <script setup>
 import FastWaveletHaarResponse from "@/components/resultsWindows/FastWaveletHaarResponse.vue";
 import FastWaveletTransformResponse from "@/components/resultsWindows/FastWaveletTransformResponse.vue";
+import MovingAverageResponse from "@/components/resultsWindows/MovingAverageResponse.vue";
+import SignalAverageResponse from "@/components/resultsWindows/SignalAverageResponse.vue";
+import FirstDifferenceResponse from "@/components/resultsWindows/FirstDifferenceResponse.vue";
+import IFFTResponse from "@/components/resultsWindows/IFFTResponse.vue";
+import FFTComponent from "@/components/FFTComponent.vue";
+import FFTResponse from "@/components/resultsWindows/FFTResponse.vue";
 
 console.log('ServiceResponseView.vue');
 
@@ -24,20 +30,31 @@ switch (lastSegment) {
     selectedTool = "FastWaveletTransformResponse";
     break;
 
+  case 'MovingAverage':
+    console.log('Moving Average');
+    selectedTool = "MovingAverageResponse";
+    break;
+
+  case 'SignalAverage':
+    console.log('Signal Average');
+    selectedTool = "SignalAverageResponse";
+    break;
+
   case 'FirstDifference':
     console.log('First Difference');
-    // TODO
+    selectedTool = "FirstDifferenceResponse";
     break;
 
   case 'IFFT-Tool':
     console.log('Inverse Fast Fourier Transform');
-    // TODO
+    selectedTool = "IFFTResponse";
     break;
 
-  case 'MovingAverage':
-    console.log('Moving Average');
-    // TODO
+  case 'FFT-Tool':
+    console.log('Fast Fourier Transform');
+    selectedTool = "FFTResponse";
     break;
+
   case 'RunningSum':
     console.log('Running Sum');
     // TODO
@@ -51,17 +68,13 @@ switch (lastSegment) {
 </script>
 
 <template>
-  <div class="bg-white rounded-xl shadow-md p-6">
-    <div class="mb-6">
-      <h3 class="text-xl font-bold">Service Response</h3>
-      <p class="text-gray-600">This is the response from the service.</p>
-    </div>
-
-    <FastWaveletHaarResponse v-if="selectedTool === 'FastWaveletHaarResponse'"></FastWaveletHaarResponse>
-    <FastWaveletTransformResponse v-if="selectedTool === 'FastWaveletTransformResponse'"></FastWaveletTransformResponse>
-  </div>
-
-
+  <FastWaveletHaarResponse v-if="selectedTool === 'FastWaveletHaarResponse'"></FastWaveletHaarResponse>
+  <FastWaveletTransformResponse v-if="selectedTool === 'FastWaveletTransformResponse'"></FastWaveletTransformResponse>
+  <MovingAverageResponse v-if="selectedTool === 'MovingAverageResponse'"></MovingAverageResponse>
+  <SignalAverageResponse v-if="selectedTool === 'SignalAverageResponse'"></SignalAverageResponse>
+  <FirstDifferenceResponse v-if="selectedTool === 'FirstDifferenceResponse'"></FirstDifferenceResponse>
+  <IFFTResponse v-if="selectedTool === 'IFFTResponse'"></IFFTResponse>
+  <FFTResponse v-if="selectedTool === 'FFTResponse'"></FFTResponse>
 </template>
 
 <style scoped>

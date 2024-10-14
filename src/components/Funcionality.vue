@@ -38,14 +38,13 @@ const shorterBenefits = computed(() => {
   }
   return benefits;
 });
-
 </script>
 
 <template>
-  <div class="bg-white rounded-xl shadow-md relative">
+  <div class="bg-white rounded-xl shadow-md border border-gray-200 transition-transform transform hover:scale-105 hover:shadow-lg hover:bg-gradient-to-br from-green-100 via-transparent to-white">
     <div class="p-4">
       <div class="mb-6">
-        <h3 class="text-xl font-bold">{{ funcionality.title }}</h3>
+        <h3 class="text-xl font-bold text-gray-800">{{ funcionality.title }}</h3>
         <div class="text-gray-600 my-2">{{ funcionality.subtitle }}</div>
       </div>
 
@@ -53,12 +52,10 @@ const shorterBenefits = computed(() => {
         <div>
           {{ shorterDescription }}
         </div>
-        <button @click="toggleFullFuncionalityDescription" class="text-green-500 hover:text-green-600 mb-5">
+        <button @click="toggleFullFuncionalityDescription" class="text-green-600 hover:text-green-700 mb-5">
           {{ showFullFuncionalityDescription ? 'Ver menos' : 'Ver más' }}
         </button>
       </div>
-
-      <!--  <h3 class="text-green-500 mb-2">$70 - $80K / Year</h3>  -->
 
       <div class="border border-gray-100 mb-5"></div>
 
@@ -66,23 +63,20 @@ const shorterBenefits = computed(() => {
         <div>
           {{ shorterBenefits }}
         </div>
-        <button @click="toggleFullFuncionalityBenefits" class="text-green-500 hover:text-green-600 mb-5">
+        <button @click="toggleFullFuncionalityBenefits" class="text-green-600 hover:text-green-700 mb-5">
           {{ showFullFuncionalityBenefits ? 'Ver menos' : 'Ver más' }}
         </button>
       </div>
 
-      <div class="flex flex-col lg:flex-row justify-between mb-4">
-        <div class="text-orange-700 mb-3">
-          <i class="pi pi-clock text-orange-700"></i>
-          {{ funcionality.processTime }}
-        </div>
-        <RouterLink v-bind:to="'/functionalities/' + funcionality.id" class="h-[36px] bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-center text-sm">
+      <div class="flex justify-center mb-4">
+        <RouterLink v-bind:to="'/functionalities/' + funcionality.id" class="h-[48px] bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg text-center text-lg">
           Ver más
         </RouterLink>
       </div>
     </div>
   </div>
 </template>
+
 
 <style scoped>
 

@@ -23,21 +23,23 @@ defineProps({
 
 <template>
   <!-- Sección de funcionalidades -->
-  <section class="bg-blue-50 px-4 py-10">
+  <section class="bg-gradient-to-b from-white via-green-50 to-white px-4 py-10">
     <div class="container-xl lg:container m-auto">
-      <h2 class="text-3xl font-bold text-green-500 mb-6 text-center">
+      <h2 class="text-3xl font-bold text-green-600 mb-6 text-center">
         Funcionalidades de SPOK
       </h2>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Funcionality v-for="funcionality in funcionalities.slice(0, limitOfFuncionalities || funcionalities.lenght)" :key="funcionality.id" v-bind:funcionality="funcionality"/>
+        <Funcionality v-for="funcionality in funcionalities.slice(0, limitOfFuncionalities || funcionalities.length)"
+                      :key="funcionality.id" v-bind:funcionality="funcionality"/>
       </div>
     </div>
   </section>
 
   <!-- Botón para ver todas las funcionalidades -->
   <section v-if="showSeeAllButton === true" class="m-auto max-w-lg my-10 px-6">
-    <RouterLink to="/functionalities" class="block bg-black text-white text-center py-4 px-6 rounded-xl hover:bg-gray-700">
+    <RouterLink to="/functionalities"
+                class="block bg-green-600 text-white text-center py-4 px-6 rounded-xl hover:bg-green-700">
       Ver todas las funcionalidades
     </RouterLink>
   </section>

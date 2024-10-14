@@ -4,7 +4,7 @@
 
 <template>
   <!-- Hero -->
-  <section class="bg-gradient-to-r from-green-400 to-blue-500 py-20 mb-4 relative overflow-hidden animate-bg-gradient">
+  <section class="bg-gradient-to-b from-green-400 via-blue-500 to-white py-48 mb-4 relative overflow-hidden animate-bg-gradient">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
       <div class="text-center">
         <h1 class="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl">
@@ -18,6 +18,8 @@
     <div class="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none">
       <div v-for="n in 15" :key="n" class="absolute w-8 h-8 bg-white rounded-full animate-bounce-signal" :style="`top: ${Math.random() * 90}%; left: ${Math.random() * 90}%; animation-delay: ${Math.random() * 5}s;`"></div>
     </div>
+    <!-- Smooth fade to white at the bottom -->
+    <div class="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-b from-transparent to-white"></div>
   </section>
 </template>
 
@@ -46,7 +48,7 @@
 .animate-bg-gradient {
   background: linear-gradient(270deg, #68D391, #63B3ED, #4FD1C5, #B794F4);
   background-size: 600% 600%;
-  animation: bg-gradient 30s ease infinite;
+  animation: bg-gradient 20s ease infinite;
 }
 
 .animate-bounce-signal {

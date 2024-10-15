@@ -19,8 +19,8 @@ function handleFileProcessed(values) {
     <SimpleChart v-bind:data="realValues" class="h-[40vh] w-full"/>  <!-- Pasar los valores reales al graficador -->
   </div>
 
-  <section class="bg-blue-50 px-4 py-10">
-    <div class="ProcessingToolsForm justify-center border-green-300 border-2">
+  <section class="bg-blue-50 px-4 py-10 shadow-md rounded-lg">
+    <div class="ProcessingToolsForm justify-center">
       <ProcessingToolsFormsComponent v-bind:data="realValues"/>
     </div>
   </section>

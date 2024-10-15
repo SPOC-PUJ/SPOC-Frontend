@@ -234,6 +234,38 @@ export interface FftConvolveResponse {
      */
     result: Complex[];
 }
+/**
+ * CWT
+ *
+ * @generated from protobuf message signal.CWTRequest
+ */
+export interface CWTRequest {
+    /**
+     * @generated from protobuf field: signal.SignalGRPC signal = 1;
+     */
+    signal?: SignalGRPC;
+    /**
+     * @generated from protobuf field: double start = 2;
+     */
+    start: number;
+    /**
+     * @generated from protobuf field: double end = 3;
+     */
+    end: number;
+    /**
+     * @generated from protobuf field: int32 numScales = 4;
+     */
+    numScales: number;
+}
+/**
+ * @generated from protobuf message signal.CWTResponse
+ */
+export interface CWTResponse {
+    /**
+     * @generated from protobuf field: repeated signal.SignalGRPC coeffs = 1;
+     */
+    coeffs: SignalGRPC[];
+}
 // @generated message type with reflection information, may provide speed optimized methods
 class Complex$Type extends MessageType<Complex> {
     constructor() {
@@ -1276,6 +1308,123 @@ class FftConvolveResponse$Type extends MessageType<FftConvolveResponse> {
  * @generated MessageType for protobuf message signal.FftConvolveResponse
  */
 export const FftConvolveResponse = new FftConvolveResponse$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class CWTRequest$Type extends MessageType<CWTRequest> {
+    constructor() {
+        super("signal.CWTRequest", [
+            { no: 1, name: "signal", kind: "message", T: () => SignalGRPC },
+            { no: 2, name: "start", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 3, name: "end", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 4, name: "numScales", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+        ]);
+    }
+    create(value?: PartialMessage<CWTRequest>): CWTRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.start = 0;
+        message.end = 0;
+        message.numScales = 0;
+        if (value !== undefined)
+            reflectionMergePartial<CWTRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: CWTRequest): CWTRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* signal.SignalGRPC signal */ 1:
+                    message.signal = SignalGRPC.internalBinaryRead(reader, reader.uint32(), options, message.signal);
+                    break;
+                case /* double start */ 2:
+                    message.start = reader.double();
+                    break;
+                case /* double end */ 3:
+                    message.end = reader.double();
+                    break;
+                case /* int32 numScales */ 4:
+                    message.numScales = reader.int32();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: CWTRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* signal.SignalGRPC signal = 1; */
+        if (message.signal)
+            SignalGRPC.internalBinaryWrite(message.signal, writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        /* double start = 2; */
+        if (message.start !== 0)
+            writer.tag(2, WireType.Bit64).double(message.start);
+        /* double end = 3; */
+        if (message.end !== 0)
+            writer.tag(3, WireType.Bit64).double(message.end);
+        /* int32 numScales = 4; */
+        if (message.numScales !== 0)
+            writer.tag(4, WireType.Varint).int32(message.numScales);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message signal.CWTRequest
+ */
+export const CWTRequest = new CWTRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class CWTResponse$Type extends MessageType<CWTResponse> {
+    constructor() {
+        super("signal.CWTResponse", [
+            { no: 1, name: "coeffs", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => SignalGRPC }
+        ]);
+    }
+    create(value?: PartialMessage<CWTResponse>): CWTResponse {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.coeffs = [];
+        if (value !== undefined)
+            reflectionMergePartial<CWTResponse>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: CWTResponse): CWTResponse {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated signal.SignalGRPC coeffs */ 1:
+                    message.coeffs.push(SignalGRPC.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: CWTResponse, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* repeated signal.SignalGRPC coeffs = 1; */
+        for (let i = 0; i < message.coeffs.length; i++)
+            SignalGRPC.internalBinaryWrite(message.coeffs[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message signal.CWTResponse
+ */
+export const CWTResponse = new CWTResponse$Type();
 /**
  * @generated ServiceType for protobuf service signal.SignalService
  */
@@ -1288,5 +1437,6 @@ export const SignalService = new ServiceType("signal.SignalService", [
     { name: "ComputeFastWaveletTransform", options: {}, I: FastWaveletTransformRequest, O: FastWaveletTransformResponse },
     { name: "ComputeFFT", options: {}, I: FFTRequest, O: FFTResponse },
     { name: "ComputeAverage", options: {}, I: AverageRequest, O: AverageResponse },
-    { name: "ComputeFftConvolve", options: {}, I: FftConvolveRequest, O: FftConvolveResponse }
+    { name: "ComputeFftConvolve", options: {}, I: FftConvolveRequest, O: FftConvolveResponse },
+    { name: "ComputeCWT", options: {}, I: CWTRequest, O: CWTResponse }
 ]);

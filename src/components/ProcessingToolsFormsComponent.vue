@@ -9,33 +9,38 @@ import RunningSum from "@/components/RunningSum.vue";
 import AverageComponent from "@/components/AverageComponent.vue";
 import FFTComponent from "@/components/FFTComponent.vue";
 
-
 // Reactive variables
 const selectedTool = ref('');
 </script>
 
-
 <template>
   <div class="bg-white rounded-xl shadow-md p-6">
     <div class="mb-6 text-center">
-      <h3 class="text-xl font-bold">Herramientas de Procesamiento</h3>
-      <p class="text-gray-600">Seleccione una de las herraientas para poder introducir los paramentros necesarios.</p>
+      <h3 class="text-xl font-bold text-gray-800">Herramientas de Procesamiento</h3>
+      <p class="text-gray-600">Seleccione una de las herramientas para poder introducir los parámetros necesarios.</p>
     </div>
 
     <div class="mb-5">
-      <label for="toolSelect" class="block text-sm font-medium text-gray-700 mb-2">Seleccione una herraienta:</label>
-      <select id="toolSelect" v-model="selectedTool"
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm">
-        <option value="" disabled>Select a tool</option>
-        <option value="FastWaveletHarr">Fast Wavelet Harr (DONE)</option>
-        <option value="FastWaveletTransform">Fast Wavelet Transform (DONE)</option>
-        <option value="MovingAverage">Moving Average (DONE)</option>
-        <option value="SignalAverage">Signal Average (DONE)</option> <!-- TODO: Terminar de implementar y borrar los "done".-->
-        <option value="FirstDifference">First Difference (DONE)</option>
-        <option value="IFFT-Tool">Inverse Fast Fourier Transform (DONE)</option>
-        <option value="FFT-Tool">Fast Fourier Transform (REVISAR)</option>
-        <option value="RunningSum">Running Sum</option>
-      </select>
+      <label for="toolSelect" class="block text-sm font-medium text-gray-700 mb-2">Seleccione una herramienta:</label>
+      <div class="relative">
+        <select id="toolSelect" v-model="selectedTool"
+                class="block w-full appearance-none bg-white border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 sm:text-sm">
+          <option value="" disabled>Seleccione una herramienta</option>
+          <option value="FastWaveletHarr">Fast Wavelet Harr (DONE)</option>
+          <option value="FastWaveletTransform">Fast Wavelet Transform (DONE)</option>
+          <option value="MovingAverage">Moving Average (DONE)</option>
+          <option value="SignalAverage">Signal Average (DONE)</option> <!-- TODO: Terminar de implementar y borrar los "done". -->
+          <option value="FirstDifference">First Difference (DONE)</option>
+          <option value="IFFT-Tool">Inverse Fast Fourier Transform (DONE)</option>
+          <option value="FFT-Tool">Fast Fourier Transform (REVISAR)</option>
+          <option value="RunningSum">Running Sum</option>
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+            <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
+          </svg>
+        </div>
+      </div>
     </div>
 
     <!-- Formularios Condicionales -->
@@ -82,4 +87,10 @@ const selectedTool = ref('');
 </template>
 
 <style scoped>
+/* Personalización adicional para el select para hacerlo más atractivo */
+select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
 </style>

@@ -19,7 +19,8 @@ function handleFileProcessed(values) {
     <SimpleChart v-bind:data="realValues" class="h-[40vh] w-full"/>  <!-- Pasar los valores reales al graficador -->
   </div>
 
-  <section class="bg-blue-50 px-4 py-10 shadow-md rounded-lg">
+  <!-- Aquí el fondo se extiende hasta el final de la página -->
+  <section class="flex-grow bg-gradient-to-t from-slate-300 via-slate-50 to-white px-4 py-10 shadow-md rounded-lg min-h-[calc(100vh-40vh)]">
     <div class="ProcessingToolsForm justify-center">
       <ProcessingToolsFormsComponent v-bind:data="realValues"/>
     </div>

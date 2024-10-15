@@ -34,18 +34,18 @@ if (routeLastSegment === 'FastWaveletTransform' || routeLastSegment === 'MovingA
 
 <template>
   <!-- Sección de controles -->
-  <div class="p-4 bg-blue-50 rounded-lg shadow-md flex items-center justify-between space-x-4">
+  <div class="p-4 bg-white shadow-md flex items-center justify-between space-x-4 border-2 border-gray-200 rounded-lg">
     <!-- Habilitar zoom en Y -->
     <div class="flex items-center space-x-2">
-      <label class="font-semibold text-black">
-        <input type="checkbox" @change="toggleZoomY" class="mr-2 text-green-500 focus:ring-green-400"/>
+      <label class="font-semibold text-gray-800">
+        <input type="checkbox" @change="toggleZoomY" class="mr-2 text-green-600 focus:ring-green-500 rounded border-gray-300"/>
         Habilitar zoom en Y
       </label>
     </div>
 
     <!-- Grosor de la línea -->
     <div class="flex items-center space-x-2">
-      <label for="lineWidth" class="font-semibold text-black">
+      <label for="lineWidth" class="font-semibold text-gray-800">
         Grosor de la línea: <strong>{{ lineWidth }}px</strong>
       </label>
       <input
@@ -55,20 +55,28 @@ if (routeLastSegment === 'FastWaveletTransform' || routeLastSegment === 'MovingA
           max="10"
           v-model="lineWidth"
           @input="updateLineWidth"
-          class="w-48 h-2 bg-green-200 rounded-lg appearance-none cursor-pointer"
+          class="w-48 h-2 bg-green-300 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-500"
       />
     </div>
 
     <!-- Selector de señal -->
     <div class="flex items-center space-x-2" v-if="showSignalSelector">
-      <label for="signalSelect" class="font-semibold text-black">
+      <label for="signalSelect" class="font-semibold text-gray-800">
         Seleccionar señal:
       </label>
-      <select id="signalSelect" v-model="signalStore.signalSelected" @change="updateSignalSelected" class="form-select">
-        <option v-for="(signal, index) in signalStore.signalJson" :key="index" :value="index">
-          Señal {{ index }}
-        </option>
-      </select>
+      <div class="relative">
+        <select id="signalSelect" v-model="signalStore.signalSelected" @change="updateSignalSelected"
+                class="block w-full appearance-none bg-white border border-gray-300 text-gray-800 py-2 px-3 pr-8 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 sm:text-sm">
+          <option v-for="(signal, index) in signalStore.signalJson" :key="index" :value="index">
+            Señal {{ index }}
+          </option>
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+            <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
+          </svg>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -76,19 +84,27 @@ if (routeLastSegment === 'FastWaveletTransform' || routeLastSegment === 'MovingA
 <style scoped>
 input[type='range']::-webkit-slider-thumb {
   appearance: none;
-  height: 12px;
-  width: 12px;
+  height: 16px;
+  width: 16px;
   border-radius: 50%;
   background: #10b981; /* Verde de la paleta */
   cursor: pointer;
+  border: 2px solid #fff;
 }
 
 input[type='range']::-moz-range-thumb {
   appearance: none;
-  height: 12px;
-  width: 12px;
+  height: 16px;
+  width: 16px;
   border-radius: 50%;
   background: #10b981; /* Verde de la paleta */
   cursor: pointer;
+  border: 2px solid #fff;
+}
+
+select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
 }
 </style>

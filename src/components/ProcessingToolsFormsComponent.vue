@@ -14,7 +14,7 @@ const selectedTool = ref('');
 </script>
 
 <template>
-  <div class="bg-white rounded-xl shadow-md p-6">
+  <div class="bg-white rounded-xl shadow-md p-6 border-2">
     <div class="mb-6 text-center">
       <h3 class="text-xl font-bold text-gray-800">Herramientas de Procesamiento</h3>
       <p class="text-gray-600">Seleccione una de las herramientas para poder introducir los parámetros necesarios.</p>

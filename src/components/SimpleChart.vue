@@ -423,9 +423,11 @@ onMounted(() => {
     <div ref="chartContainer" style="width: 100%; height: 100%;"></div>
 
     <!-- Componente de control como Zoom en Y, slider de grosor y más -->
-    <SimpleChartControls
-        @toggle-zoom-y="handleZoomYToggle"
-        @update-line-width="handleLineWidthUpdate"
-    />
+    <div class="px-4">
+      <SimpleChartControls
+          @toggle-zoom-y="handleZoomYToggle"
+          @update-line-width="handleLineWidthUpdate"
+      />
+    </div>
   </div>
 </template>

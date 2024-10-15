@@ -356,22 +356,50 @@ onMounted(() => {
     // Condicionalmente reescalar la escala Y solo si el checkbox está marcado
     const newY = zoomYEnabled.value ? transform.rescaleY(y) : y;
 
-    // Actualizar los ejes con las nuevas escalas
+    // Determinar el rango actual para ajustar el formato de los ticks
+    const xDomain = newX.domain();
+    const yDomain = newY.domain();
+
+    // Ajuste dinámico del número de ticks
+    const calculateTicks = (domain) => {
+      const range = domain[1] - domain[0];
+      if (range > 1e6) {
+        return 5; // Menos ticks si el rango es muy grande
+      } else if (range > 1e3) {
+        return 10; // Más ticks si el rango es intermedio
+      } else {
+        return 15; // Más ticks si el rango es pequeño
+      }
+    };
+
+    // Formato dinámico de ticks basado en el rango actual
+    const formatTick = (d) => {
+      if (Math.abs(d) >= 1e6) {
+        return `${(d / 1e6).toFixed(1)}M`;
+      } else if (Math.abs(d) >= 1e3) {
+        return `${(d / 1e3).toFixed(1)}K`;
+      } else {
+        return d.toFixed(2); // Mostrar más decimales para rangos pequeños
+      }
+    };
+
+    // Determinar cuántos ticks usar para X e Y basados en el rango actual
+    const xTicks = calculateTicks(xDomain);
+    const yTicks = calculateTicks(yDomain);
+
+    // Actualizar los ejes con las nuevas escalas y el formato dinámico
     xAxisGroup.call(
-        d3.axisBottom(newX).ticks(20).tickFormat((d) => d >= 1000 || d <= -1000 ? `${(d / 1000).toFixed(1)}k` : d)
+        d3.axisBottom(newX).ticks(xTicks).tickFormat(formatTick)
     );
 
     yAxisGroup.call(
-        d3
-            .axisLeft(newY)
-            .ticks(10) // Ajustar el número de ticks para evitar que se peguen
-            .tickFormat((d) => d >= 1000 || d <= -1000 ? `${(d / 1000).toFixed(1)}k` : d)
+        d3.axisLeft(newY).ticks(yTicks).tickFormat(formatTick)
     );
 
     // Añadir gridlines verticales (para el eje X)
     svg
         .selectAll('.xGrid')
-        .data(newX.ticks(20)) // Basado en la nueva escala X
+        .data(newX.ticks(xTicks)) // Basado en la nueva escala X
         .join(
             (enter) => enter.append('line').attr('class', 'xGrid'),
             (update) => update,
@@ -388,9 +416,7 @@ onMounted(() => {
     // Añadir gridlines horizontales (para el eje Y)
     svg
         .selectAll('.yGrid')
-        .data(
-            newY.ticks(10) // Ajustar el número de ticks para evitar que se peguen
-        ) // Basado en la nueva escala Y
+        .data(newY.ticks(yTicks)) // Basado en la nueva escala Y
         .join(
             (enter) => enter.append('line').attr('class', 'yGrid'),
             (update) => update,

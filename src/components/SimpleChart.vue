@@ -361,31 +361,24 @@ onMounted(() => {
     const yDomain = newY.domain();
 
     // Ajuste dinámico del número de ticks
-    const calculateTicks = (domain) => {
+    const calculateTicks = (domain, width) => {
       const range = domain[1] - domain[0];
+      const tickDensity = width / 100; // Controlar la densidad de ticks con base en el tamaño
       if (range > 1e6) {
-        return 5; // Menos ticks si el rango es muy grande
+        return Math.max(2, Math.floor(tickDensity / 2)); // Menos ticks para rangos grandes
       } else if (range > 1e3) {
-        return 10; // Más ticks si el rango es intermedio
+        return Math.max(5, Math.floor(tickDensity)); // Ajustar la cantidad de ticks para rangos medianos
       } else {
-        return 15; // Más ticks si el rango es pequeño
+        return Math.max(10, Math.floor(tickDensity * 1.5)); // Más ticks para rangos pequeños
       }
     };
 
     // Formato dinámico de ticks basado en el rango actual
-    const formatTick = (d) => {
-      if (Math.abs(d) >= 1e6) {
-        return `${(d / 1e6).toFixed(1)}M`;
-      } else if (Math.abs(d) >= 1e3) {
-        return `${(d / 1e3).toFixed(1)}K`;
-      } else {
-        return d.toFixed(2); // Mostrar más decimales para rangos pequeños
-      }
-    };
+    const formatTick = d3.format("~s"); // Usar d3.format para asegurar un buen formato en "K" y "M"
 
-    // Determinar cuántos ticks usar para X e Y basados en el rango actual
-    const xTicks = calculateTicks(xDomain);
-    const yTicks = calculateTicks(yDomain);
+    // Determinar el número de ticks basados en el rango actual y el tamaño del gráfico
+    const xTicks = calculateTicks(xDomain, width);
+    const yTicks = calculateTicks(yDomain, height);
 
     // Actualizar los ejes con las nuevas escalas y el formato dinámico
     xAxisGroup.call(
@@ -441,6 +434,7 @@ onMounted(() => {
         .attr('d', line)
         .attr('stroke-width', lineWidth.value);
   }
+
 });
 </script>
 

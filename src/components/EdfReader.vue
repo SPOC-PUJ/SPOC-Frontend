@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, defineEmits } from 'vue';
+import {onMounted, ref, defineEmits, toRaw} from 'vue';
 import DangerModal from "@/components/DangerModal.vue";
 import { useSignalStore } from "@/stores/signalStore";
 import { Complex } from '../proto/proto-ts/signal';
@@ -90,6 +90,7 @@ const processFile = (event) => {
         signalData.push({ values: complexArray }); // Añadir el array de complejos
       }
       signalStore.setSignalJson(signalData);
+      console.log("En el signalStore (edf):", toRaw(signalStore.signalJson));
 
       output.value = 'Archivo .edf procesado exitosamente';
 
@@ -125,10 +126,15 @@ const processFile = (event) => {
 
         // Procesar la respuesta y emitir los datos necesarios
         // Aquí debes adaptar el código según cómo manejes la respuesta del servidor
-        const processedData = response.data; // Suponiendo que la respuesta tiene un campo 'data'
+        const processedData = response.numbers; // Suponiendo que la respuesta tiene un campo 'data'
 
-        // Emitir los valores procesados
-        emit('fileProcessed', processedData); // Ajusta según tus necesidades
+        console.log("Flag 1")
+        // Guardar en el signalStore
+        signalStore.setSignalJson(processedData);
+        console.log("Data Procesada:", processedData);
+        console.log("En el signalStore (abf):", toRaw(signalStore.signalJson));
+
+        console.log("Flag 2")
 
         output.value = 'Archivo .abf procesado exitosamente';
       } catch (error) {

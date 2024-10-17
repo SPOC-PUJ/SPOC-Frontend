@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, defineEmits } from 'vue';
+import {onMounted, ref, defineEmits, toRaw} from 'vue';
 import DangerModal from "@/components/DangerModal.vue";
 import { useSignalStore } from "@/stores/signalStore";
 import { Complex } from '../proto/proto-ts/signal';
@@ -90,6 +90,7 @@ const processFile = (event) => {
         signalData.push({ values: complexArray }); // Añadir el array de complejos
       }
       signalStore.setSignalJson(signalData);
+      console.log("En el signalStore (edf):", toRaw(signalStore.signalJson));
 
       output.value = 'Archivo .edf procesado exitosamente';
 
@@ -121,14 +122,16 @@ const processFile = (event) => {
 
         // Enviar el Uint8Array al servidor
         const response = await ReaderService.ReadAbf(fileBytes);
-        console.log('Respuesta del servidor:', response);
+        console.log("Respuesta del servidor:", response);
 
-        // Procesar la respuesta y emitir los datos necesarios
-        // Aquí debes adaptar el código según cómo manejes la respuesta del servidor
-        const processedData = response.data; // Suponiendo que la respuesta tiene un campo 'data'
+        // Procesar la respuesta para que toda la señal se almacene correctamente
+        const rawNumbers = response.numbers; // Lista de números obtenida del servidor
+        const signal = transformToSignalObjectWithReal(rawNumbers);
 
-        // Emitir los valores procesados
-        emit('fileProcessed', processedData); // Ajusta según tus necesidades
+        // Guardar la señal procesada en el signalStore
+        signalStore.setSignalJson([signal]); // Usamos un array con una única señal
+        console.log("Data Procesada:", signal);
+        console.log("En el signalStore (abf):", toRaw(signalStore.signalJson));
 
         output.value = 'Archivo .abf procesado exitosamente';
       } catch (error) {
@@ -147,7 +150,7 @@ const processFile = (event) => {
 
     reader.readAsArrayBuffer(file); // Leer el archivo como ArrayBuffer
   }
-  else {
+else {
     output.value = "Formato Incorrecto, solo se aceptan archivos .edf y .abf.";
 
     incompatibleFileName.value = file.name; // Asignar el nombre del archivo
@@ -157,6 +160,15 @@ const processFile = (event) => {
     return;
   }
 };
+
+// Función para transformar los números en objetos de señales con duplas (para .abf).
+function transformToSignalObjectWithReal(numbers) {
+  const values = numbers.map(num => ({
+    real: num, // Mapeamos cada número a un objeto con la propiedad 'real'
+  }));
+
+  return { values }; // Devolvemos un objeto con los valores como propiedad
+}
 
 const handleRetry = () => {
   showDangerModal.value = false;

@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onMounted} from 'vue';
+import {ref, onMounted, toRaw} from 'vue';
 import {openDB} from 'idb';
 import {useResponseStore} from '@/stores/responseStore.js';
 import {JellyfishLoader} from 'vue3-spinner';
@@ -25,6 +25,8 @@ onMounted(async () => {
   } else {
     console.error('No signalResponse found in IndexedDB');
   }
+
+  console.log('Signal Response: ', toRaw(responseStore.signalResponse));
 
   // Desactivar el estado de carga
   loadingStatus.value = false;

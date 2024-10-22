@@ -1,6 +1,6 @@
 <script setup>
 // Se crea una variable reactiva para almacenar las funcionalidades.
-import { ref, defineProps } from "vue";
+import { ref } from "vue";
 import { RouterLink } from "vue-router";
 
 import Funcionality from "@/components/Funcionality.vue";

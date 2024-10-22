@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, defineEmits, toRaw} from 'vue';
+import {onMounted, ref, toRaw} from 'vue';
 import DangerModal from "@/components/DangerModal.vue";
 import { useSignalStore } from "@/stores/signalStore";
 import { Complex } from '../proto/proto-ts/signal';

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch, computed, defineProps, toRaw } from 'vue';
+import { ref, onMounted, watch, computed, toRaw } from 'vue';
 import { useSignalStore } from '@/stores/signalStore';
 import { useResponseStore } from '@/stores/responseStore';
 import SimpleChartControls from './SimpleChartControls.vue';

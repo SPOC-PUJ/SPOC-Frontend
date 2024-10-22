@@ -33,6 +33,9 @@ function handleLineWidthUpdate(newLineWidth) {
 
 // Variables para D3
 let x, y, svg, lineGroup, xAxisGroup, yAxisGroup;
+let brush;
+let initialXDomain, initialYDomain;
+let width, height;
 
 // Computed property para el dataset
 const dataset = computed(() => {
@@ -300,10 +303,8 @@ function decimateDataNyquist(data, xScale, width) {
 onMounted(() => {
   // Paso #1: Crear el contenedor del gráfico
   const margin = { top: 50, right: 20, bottom: 50, left: 70 }; // Márgenes del gráfico
-  const width =
-      chartContainer.value.clientWidth - margin.left - margin.right; // Ancho dinámico del gráfico
-  const height =
-      chartContainer.value.clientHeight - margin.top - margin.bottom; // Alto dinámico del gráfico
+  width = chartContainer.value.clientWidth - margin.left - margin.right; // Ancho dinámico del gráfico
+  height = chartContainer.value.clientHeight - margin.top - margin.bottom; // Alto dinámico del gráfico
 
   // Paso #2: Crear las escalas para los ejes X e Y
   x = d3.scaleLinear().range([0, width]); // Escala para el eje X
@@ -334,18 +335,31 @@ onMounted(() => {
       .append('g') // Añadir un grupo al SVG
       .attr('clip-path', 'url(#clip)'); // Añadir el clipPath al grupo
 
-  // Paso #6: Crear el comportamiento de zoom
-  const zoom = d3
-      .zoom() // Crear un comportamiento de zoom y pan para el gráfico
-      .translateExtent([[-width, -height], [width * 2, height * 2]]) // Limitar el área de pan
-      .extent([[0, 0], [width, height]]) // Limitar el área de zoom
-      .on('zoom', zoomed); // Añadir un evento de zoom al comportamiento
-
-  d3.select(chartContainer.value).select('svg').call(zoom); // Añadir comportamiento de zoom y pan al SVG del gráfico
-
   // Grupos de ejes X e Y
   xAxisGroup = svg.append('g').attr('transform', `translate(0, ${height})`);
   yAxisGroup = svg.append('g');
+
+  // Función para actualizar el brush
+  function updateBrush() {
+    // Eliminar el brush existente
+    svg.select('.brush').remove();
+
+    // Configurar el brush según el estado de zoomYEnabled
+    brush = zoomYEnabled.value
+        ? d3.brush().extent([[0, 0], [width, height]]).on('end', brushed)
+        : d3.brushX().extent([[0, 0], [width, height]]).on('end', brushed);
+
+    // Añadir el brush al SVG
+    svg.append('g').attr('class', 'brush').call(brush);
+  }
+
+  // Llamar a updateBrush en onMounted
+  updateBrush();
+
+  // Observar cambios en zoomYEnabled para actualizar el brush
+  watch(zoomYEnabled, (newValue) => {
+    updateBrush();
+  });
 
   // Observar cambios en el dataset
   watch(
@@ -354,46 +368,19 @@ onMounted(() => {
         if (newDataset && newDataset.length > 0) {
           const rawDataset = toRaw(newDataset);
 
+          // Establecer dominios iniciales
           x.domain(d3.extent(rawDataset, (d) => d.punto));
           y.domain([
             d3.min(rawDataset, (d) => d.value) * 1.1,
             d3.max(rawDataset, (d) => d.value) * 1.1,
           ]);
 
-          // Decimar los datos iniciales usando la nueva función
-          const decimatedData = decimateDataNyquist(rawDataset, x, width);
+          // Almacenar los dominios iniciales
+          initialXDomain = x.domain();
+          initialYDomain = y.domain();
 
-          const line = d3
-              .line()
-              .x((d) => x(d.punto))
-              .y((d) => y(d.value));
-
-          // Limpiar el gráfico antes de redibujar
-          lineGroup.selectAll('path').remove();
-
-          // Dibujar la línea del gráfico con datos decimados
-          lineGroup
-              .append('path')
-              .datum(decimatedData)
-              .attr('fill', 'none')
-              .attr('stroke', 'steelblue')
-              .attr('stroke-width', lineWidth.value)
-              .attr('d', line);
-
-          // Dibujar los ejes
-          xAxisGroup.call(
-              d3.axisBottom(x).ticks(20).tickFormat((d) =>
-                  d >= 1000 || d <= -1000 ? `${(d / 1000).toFixed(1)}k` : d
-              )
-          );
-          yAxisGroup.call(
-              d3
-                  .axisLeft(y)
-                  .ticks(10)
-                  .tickFormat((d) =>
-                      d >= 1000 || d <= -1000 ? `${(d / 1000).toFixed(1)}k` : d
-                  )
-          );
+          // Llamar a updateChart para dibujar el gráfico
+          updateChart();
         } else {
           console.error('El dataset está vacío o es inválido');
         }
@@ -401,67 +388,72 @@ onMounted(() => {
       { immediate: true }
   );
 
-  // Función para aplicar zoom a las escalas y redibujar el gráfico
-  function zoomed(event) {
-    const transform = event.transform;
-
-    // Reescalar las escalas X e Y
-    const newX = transform.rescaleX(x);
-    const newY = zoomYEnabled.value ? transform.rescaleY(y) : y;
-
-    // Decimar los datos basados en la nueva escala X
+  // Función para actualizar el gráfico
+  function updateChart() {
     const rawDataset = toRaw(dataset.value);
-    const decimatedData = decimateDataNyquist(rawDataset, newX, width);
 
-    // Determinar el rango actual para ajustar el formato de los ticks
-    const xDomain = newX.domain();
-    const yDomain = newY.domain();
+    // Filtrar los datos según el dominio actual de X
+    const xDomain = x.domain();
+    const filteredData = rawDataset.filter((d) => d.punto >= xDomain[0] && d.punto <= xDomain[1]);
 
-    // Ajuste dinámico del número de ticks
-    const calculateTicks = (domain, size) => {
-      const range = domain[1] - domain[0];
-      const tickDensity = size / 100; // Controlar la densidad de ticks con base en el tamaño
-      if (range > 1e6) {
-        return Math.max(2, Math.floor(tickDensity / 2)); // Menos ticks para rangos grandes
-      } else if (range > 1e3) {
-        return Math.max(5, Math.floor(tickDensity)); // Ajustar la cantidad de ticks para rangos medianos
-      } else {
-        return Math.max(10, Math.floor(tickDensity * 1.5)); // Más ticks para rangos pequeños
-      }
-    };
+    // Si el zoom en Y está habilitado, ajustar el dominio de Y basado en los datos filtrados
+    if (zoomYEnabled.value) {
+      y.domain([
+        d3.min(filteredData, (d) => d.value) * 1.1,
+        d3.max(filteredData, (d) => d.value) * 1.1,
+      ]);
+    }
 
-    // Formato dinámico de ticks basado en el rango actual
-    const formatTick = d3.format('~s'); // Usar d3.format para asegurar un buen formato en "K" y "M"
+    // Decimar los datos si es necesario
+    const decimatedData = decimateDataNyquist(filteredData, x, width);
 
-    // Determinar el número de ticks basados en el rango actual y el tamaño del gráfico
-    const xTicks = calculateTicks(xDomain, width);
-    const yTicks = calculateTicks(yDomain, height);
+    // Definir la línea
+    const line = d3
+        .line()
+        .x((d) => x(d.punto))
+        .y((d) => y(d.value));
 
-    // Actualizar los ejes con las nuevas escalas y el formato dinámico
-    xAxisGroup.call(d3.axisBottom(newX).ticks(xTicks).tickFormat(formatTick));
-    yAxisGroup.call(d3.axisLeft(newY).ticks(yTicks).tickFormat(formatTick));
+    // Limpiar la línea existente
+    lineGroup.selectAll('path').remove();
 
-    // Añadir gridlines verticales (para el eje X)
+    // Dibujar la nueva línea
+    lineGroup
+        .append('path')
+        .datum(decimatedData)
+        .attr('fill', 'none')
+        .attr('stroke', 'steelblue')
+        .attr('stroke-width', lineWidth.value)
+        .attr('d', line);
+
+    // Actualizar los ejes
+    xAxisGroup.call(d3.axisBottom(x));
+    yAxisGroup.call(d3.axisLeft(y));
+
+    // Actualizar las gridlines
+    const xTicks = x.ticks().length;
+    const yTicks = y.ticks().length;
+
+    // Gridlines verticales (eje X)
     svg
         .selectAll('.xGrid')
-        .data(newX.ticks(xTicks)) // Basado en la nueva escala X
+        .data(x.ticks(xTicks))
         .join(
             (enter) => enter.append('line').attr('class', 'xGrid'),
             (update) => update,
             (exit) => exit.remove()
         )
-        .attr('x1', (d) => newX(d))
-        .attr('x2', (d) => newX(d))
+        .attr('x1', (d) => x(d))
+        .attr('x2', (d) => x(d))
         .attr('y1', 0)
         .attr('y2', height)
         .attr('stroke', '#e0e0e0')
         .attr('stroke-width', 1)
-        .attr('opacity', 0.7); // Gridlines por detrás de la línea
+        .attr('opacity', 0.7);
 
-    // Añadir gridlines horizontales (para el eje Y)
+    // Gridlines horizontales (eje Y)
     svg
         .selectAll('.yGrid')
-        .data(newY.ticks(yTicks)) // Basado en la nueva escala Y
+        .data(y.ticks(yTicks))
         .join(
             (enter) => enter.append('line').attr('class', 'yGrid'),
             (update) => update,
@@ -469,37 +461,78 @@ onMounted(() => {
         )
         .attr('x1', 0)
         .attr('x2', width)
-        .attr('y1', (d) => newY(d))
-        .attr('y2', (d) => newY(d))
+        .attr('y1', (d) => y(d))
+        .attr('y2', (d) => y(d))
         .attr('stroke', '#e0e0e0')
         .attr('stroke-width', 1)
-        .attr('opacity', 0.7); // Gridlines por detrás de la línea
-
-    // Redefinir la línea con los datos decimados
-    const line = d3
-        .line()
-        .x((d) => newX(d.punto))
-        .y((d) => newY(d.value));
-
-    // Redibujar la línea
-    lineGroup
-        .selectAll('path')
-        .datum(decimatedData)
-        .attr('d', line)
-        .attr('stroke-width', lineWidth.value);
+        .attr('opacity', 0.7);
   }
+
+  // Función para manejar el evento de brush
+  function brushed(event) {
+    const selection = event.selection;
+
+    if (!selection) {
+      // Si no hay selección, no hacer nada
+      return;
+    }
+
+    if (zoomYEnabled.value) {
+      const [[x0, y0], [x1, y1]] = selection;
+
+      // Convertir valores de píxeles a valores de dominio
+      const newXDomain = [x.invert(x0), x.invert(x1)];
+      const newYDomain = [y.invert(y1), y.invert(y0)]; // Invertir y0 y y1
+
+      // Actualizar los dominios
+      x.domain(newXDomain);
+      y.domain(newYDomain);
+    } else {
+      const [x0, x1] = selection;
+      const newXDomain = [x.invert(x0), x.invert(x1)];
+
+      // Actualizar el dominio de X
+      x.domain(newXDomain);
+
+      // Mantener el dominio de Y inicial
+      y.domain(initialYDomain);
+    }
+
+    // Redibujar el gráfico
+    updateChart();
+
+    // Eliminar el brush
+    svg.select('.brush').call(brush.move, null);
+  }
+
+  // Agregar un botón para restablecer el zoom
+  const resetZoomButton = d3
+      .select(chartContainer.value)
+      .append('button')
+      .text('Restablecer Zoom')
+      .style('position', 'absolute')
+      .style('top', '10px')
+      .style('right', '10px')
+      .on('click', () => {
+        // Restablecer los dominios iniciales
+        x.domain(initialXDomain);
+        y.domain(initialYDomain);
+
+        // Redibujar el gráfico
+        updateChart();
+      });
 });
 </script>
 
 <template>
-  <div>
+  <div style="position: relative;">
     <div ref="chartContainer" style="width: 100%; height: 100%;"></div>
 
     <!-- Componente de control como Zoom en Y, slider de grosor y más -->
     <div class="px-4">
       <SimpleChartControls
           @toggle-zoom-y="handleZoomYToggle"
-          @update-line-width="handleLineWidthUpdate"xf
+          @update-line-width="handleLineWidthUpdate"
       />
     </div>
   </div>

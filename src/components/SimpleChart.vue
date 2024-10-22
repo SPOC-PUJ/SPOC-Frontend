@@ -148,9 +148,8 @@ const dataset = computed(() => {
       }
       break;
 
-
     case 'usingSingleSignalForIFFT':
-      console.log('Usando datos de una sola señal');
+      console.log('Usando datos de una sola señal para IFFT');
 
       if (responseStore.signalResponse) {
         const initialData = toRaw(responseStore.signalResponse);
@@ -182,7 +181,7 @@ const dataset = computed(() => {
       }
       break;
 
-    case "usingSingleSignalForFFT":
+    case 'usingSingleSignalForFFT':
       console.log('Usando datos de una sola señal para FFT');
 
       if (responseStore.signalResponse) {
@@ -199,14 +198,21 @@ const dataset = computed(() => {
               punto: index + 1,
               value: value,
             }));
-          } else if (typeof data[0] === 'object' && data[0].hasOwnProperty('real') && data[0].hasOwnProperty('imag')) {
+          } else if (
+              typeof data[0] === 'object' &&
+              data[0].hasOwnProperty('real') &&
+              data[0].hasOwnProperty('imag')
+          ) {
             // Imprimir los primeros 10 valores con la suma de real e imag
             const summedData = data.map((item, index) => ({
               punto: index + 1,
               value: Math.abs(item.real + item.imag), // Sumar la parte real e imaginaria y obtener el valor absoluto
             }));
 
-            console.log('Data (primeros 10 elementos después de sumar real e imag):', summedData.slice(0, 10));
+            console.log(
+                'Data (primeros 10 elementos después de sumar real e imag):',
+                summedData.slice(0, 10)
+            );
 
             // Reemplazar data por la suma
             data = summedData;
@@ -248,6 +254,48 @@ const dataset = computed(() => {
 
   return data;
 });
+
+// Función para decimar datos usando el Teorema de Muestreo de Nyquist-Shannon
+function decimateDataNyquist(data, xScale, width) {
+  const domain = xScale.domain();
+  const range = xScale.range();
+  const pixelsPerBucket = 1; // Puedes ajustar este valor según tus necesidades
+  const numberOfBuckets = Math.ceil((range[1] - range[0]) / pixelsPerBucket);
+
+  // Filtrar los datos dentro del dominio visible
+  const visibleData = data.filter((d) => d.punto >= domain[0] && d.punto <= domain[1]);
+
+  // Si hay pocos puntos, no es necesario decimar
+  if (visibleData.length <= numberOfBuckets * 2) {
+    return visibleData;
+  }
+
+  const bucketSize = Math.floor(visibleData.length / numberOfBuckets);
+  const decimatedData = [];
+
+  for (let i = 0; i < numberOfBuckets; i++) {
+    const start = i * bucketSize;
+    const end = i === numberOfBuckets - 1 ? visibleData.length : (i + 1) * bucketSize;
+    const bucket = visibleData.slice(start, end);
+
+    const minPoint = d3.min(bucket, (d) => d.value);
+    const maxPoint = d3.max(bucket, (d) => d.value);
+
+    const minData = bucket.find((d) => d.value === minPoint);
+    const maxData = bucket.find((d) => d.value === maxPoint);
+
+    if (minData && maxData) {
+      // Aseguramos el orden cronológico
+      if (minData.punto < maxData.punto) {
+        decimatedData.push(minData, maxData);
+      } else {
+        decimatedData.push(maxData, minData);
+      }
+    }
+  }
+
+  return decimatedData;
+}
 
 onMounted(() => {
   // Paso #1: Crear el contenedor del gráfico
@@ -312,6 +360,9 @@ onMounted(() => {
             d3.max(rawDataset, (d) => d.value) * 1.1,
           ]);
 
+          // Decimar los datos iniciales usando la nueva función
+          const decimatedData = decimateDataNyquist(rawDataset, x, width);
+
           const line = d3
               .line()
               .x((d) => x(d.punto))
@@ -320,10 +371,10 @@ onMounted(() => {
           // Limpiar el gráfico antes de redibujar
           lineGroup.selectAll('path').remove();
 
-          // Dibujar la línea del gráfico
+          // Dibujar la línea del gráfico con datos decimados
           lineGroup
               .append('path')
-              .datum(rawDataset)
+              .datum(decimatedData)
               .attr('fill', 'none')
               .attr('stroke', 'steelblue')
               .attr('stroke-width', lineWidth.value)
@@ -331,13 +382,17 @@ onMounted(() => {
 
           // Dibujar los ejes
           xAxisGroup.call(
-              d3.axisBottom(x).ticks(20).tickFormat((d) => d >= 1000 || d <= -1000 ? `${(d / 1000).toFixed(1)}k` : d)
+              d3.axisBottom(x).ticks(20).tickFormat((d) =>
+                  d >= 1000 || d <= -1000 ? `${(d / 1000).toFixed(1)}k` : d
+              )
           );
           yAxisGroup.call(
               d3
                   .axisLeft(y)
-                  .ticks(10) // Ajustar el número de ticks para evitar que se peguen
-                  .tickFormat((d) => d >= 1000 || d <= -1000 ? `${(d / 1000).toFixed(1)}k` : d)
+                  .ticks(10)
+                  .tickFormat((d) =>
+                      d >= 1000 || d <= -1000 ? `${(d / 1000).toFixed(1)}k` : d
+                  )
           );
         } else {
           console.error('El dataset está vacío o es inválido');
@@ -350,20 +405,22 @@ onMounted(() => {
   function zoomed(event) {
     const transform = event.transform;
 
-    // Reescalar solo la escala X siempre
+    // Reescalar las escalas X e Y
     const newX = transform.rescaleX(x);
-
-    // Condicionalmente reescalar la escala Y solo si el checkbox está marcado
     const newY = zoomYEnabled.value ? transform.rescaleY(y) : y;
+
+    // Decimar los datos basados en la nueva escala X
+    const rawDataset = toRaw(dataset.value);
+    const decimatedData = decimateDataNyquist(rawDataset, newX, width);
 
     // Determinar el rango actual para ajustar el formato de los ticks
     const xDomain = newX.domain();
     const yDomain = newY.domain();
 
     // Ajuste dinámico del número de ticks
-    const calculateTicks = (domain, width) => {
+    const calculateTicks = (domain, size) => {
       const range = domain[1] - domain[0];
-      const tickDensity = width / 100; // Controlar la densidad de ticks con base en el tamaño
+      const tickDensity = size / 100; // Controlar la densidad de ticks con base en el tamaño
       if (range > 1e6) {
         return Math.max(2, Math.floor(tickDensity / 2)); // Menos ticks para rangos grandes
       } else if (range > 1e3) {
@@ -374,20 +431,15 @@ onMounted(() => {
     };
 
     // Formato dinámico de ticks basado en el rango actual
-    const formatTick = d3.format("~s"); // Usar d3.format para asegurar un buen formato en "K" y "M"
+    const formatTick = d3.format('~s'); // Usar d3.format para asegurar un buen formato en "K" y "M"
 
     // Determinar el número de ticks basados en el rango actual y el tamaño del gráfico
     const xTicks = calculateTicks(xDomain, width);
     const yTicks = calculateTicks(yDomain, height);
 
     // Actualizar los ejes con las nuevas escalas y el formato dinámico
-    xAxisGroup.call(
-        d3.axisBottom(newX).ticks(xTicks).tickFormat(formatTick)
-    );
-
-    yAxisGroup.call(
-        d3.axisLeft(newY).ticks(yTicks).tickFormat(formatTick)
-    );
+    xAxisGroup.call(d3.axisBottom(newX).ticks(xTicks).tickFormat(formatTick));
+    yAxisGroup.call(d3.axisLeft(newY).ticks(yTicks).tickFormat(formatTick));
 
     // Añadir gridlines verticales (para el eje X)
     svg
@@ -423,18 +475,19 @@ onMounted(() => {
         .attr('stroke-width', 1)
         .attr('opacity', 0.7); // Gridlines por detrás de la línea
 
-    // Redibujar la línea del gráfico con la nueva escala X y Y (si está habilitado)
+    // Redefinir la línea con los datos decimados
     const line = d3
         .line()
         .x((d) => newX(d.punto))
         .y((d) => newY(d.value));
 
+    // Redibujar la línea
     lineGroup
         .selectAll('path')
+        .datum(decimatedData)
         .attr('d', line)
         .attr('stroke-width', lineWidth.value);
   }
-
 });
 </script>
 
@@ -446,7 +499,7 @@ onMounted(() => {
     <div class="px-4">
       <SimpleChartControls
           @toggle-zoom-y="handleZoomYToggle"
-          @update-line-width="handleLineWidthUpdate"
+          @update-line-width="handleLineWidthUpdate"xf
       />
     </div>
   </div>

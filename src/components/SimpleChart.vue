@@ -388,7 +388,7 @@ onMounted(() => {
       { immediate: true }
   );
 
-  // Función para actualizar el gráfico
+  // Función para actualizar el gráfico con animación
   function updateChart() {
     const rawDataset = toRaw(dataset.value);
 
@@ -413,59 +413,76 @@ onMounted(() => {
         .x((d) => x(d.punto))
         .y((d) => y(d.value));
 
-    // Limpiar la línea existente
-    lineGroup.selectAll('path').remove();
+    // Actualizar la línea con animación
+    const path = lineGroup.selectAll('path').data([decimatedData]);
 
-    // Dibujar la nueva línea
-    lineGroup
+    path
+        .enter()
         .append('path')
-        .datum(decimatedData)
         .attr('fill', 'none')
         .attr('stroke', 'steelblue')
         .attr('stroke-width', lineWidth.value)
+        .merge(path)
+        .transition()
+        .duration(750)
         .attr('d', line);
 
-    // Actualizar los ejes
-    xAxisGroup.call(d3.axisBottom(x));
-    yAxisGroup.call(d3.axisLeft(y));
+    path.exit().remove();
+
+    // Actualizar los ejes con animación
+    xAxisGroup
+        .transition()
+        .duration(750)
+        .call(d3.axisBottom(x));
+
+    yAxisGroup
+        .transition()
+        .duration(750)
+        .call(d3.axisLeft(y));
 
     // Actualizar las gridlines
     const xTicks = x.ticks().length;
     const yTicks = y.ticks().length;
 
     // Gridlines verticales (eje X)
-    svg
-        .selectAll('.xGrid')
-        .data(x.ticks(xTicks))
-        .join(
-            (enter) => enter.append('line').attr('class', 'xGrid'),
-            (update) => update,
-            (exit) => exit.remove()
-        )
-        .attr('x1', (d) => x(d))
-        .attr('x2', (d) => x(d))
+    const xGrid = svg.selectAll('.xGrid').data(x.ticks(xTicks));
+
+    xGrid
+        .enter()
+        .append('line')
+        .attr('class', 'xGrid')
+        .attr('stroke', '#e0e0e0')
+        .attr('stroke-width', 1)
+        .attr('opacity', 0.7)
         .attr('y1', 0)
         .attr('y2', height)
-        .attr('stroke', '#e0e0e0')
-        .attr('stroke-width', 1)
-        .attr('opacity', 0.7);
+        .merge(xGrid)
+        .transition()
+        .duration(750)
+        .attr('x1', (d) => x(d))
+        .attr('x2', (d) => x(d));
+
+    xGrid.exit().remove();
 
     // Gridlines horizontales (eje Y)
-    svg
-        .selectAll('.yGrid')
-        .data(y.ticks(yTicks))
-        .join(
-            (enter) => enter.append('line').attr('class', 'yGrid'),
-            (update) => update,
-            (exit) => exit.remove()
-        )
-        .attr('x1', 0)
-        .attr('x2', width)
-        .attr('y1', (d) => y(d))
-        .attr('y2', (d) => y(d))
+    const yGrid = svg.selectAll('.yGrid').data(y.ticks(yTicks));
+
+    yGrid
+        .enter()
+        .append('line')
+        .attr('class', 'yGrid')
         .attr('stroke', '#e0e0e0')
         .attr('stroke-width', 1)
-        .attr('opacity', 0.7);
+        .attr('opacity', 0.7)
+        .attr('x1', 0)
+        .attr('x2', width)
+        .merge(yGrid)
+        .transition()
+        .duration(750)
+        .attr('y1', (d) => y(d))
+        .attr('y2', (d) => y(d));
+
+    yGrid.exit().remove();
   }
 
   // Función para manejar el evento de brush
@@ -498,7 +515,7 @@ onMounted(() => {
       y.domain(initialYDomain);
     }
 
-    // Redibujar el gráfico
+    // Redibujar el gráfico con animación
     updateChart();
 
     // Eliminar el brush
@@ -518,7 +535,7 @@ onMounted(() => {
         x.domain(initialXDomain);
         y.domain(initialYDomain);
 
-        // Redibujar el gráfico
+        // Redibujar el gráfico con animación
         updateChart();
       });
 });

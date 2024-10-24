@@ -6,7 +6,7 @@ const client = new MatServiceClient(
     new GrpcWebFetchTransport({ baseUrl: 'http://localhost:8080' })
 );
 
-export const ReaderService = {
+export const MATReaderService = {
 
     async ReadMat(fileBytes,field) {
       const request = MatRequest.create({

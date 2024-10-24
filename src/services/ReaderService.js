@@ -7,7 +7,7 @@ const client = new ABFServiceClient(
 );
 
 
-export const ReaderService = {
+export const ABFReaderService = {
 
     async ReadAbf(fileBytes) {
         const request = ABFRequest.create({

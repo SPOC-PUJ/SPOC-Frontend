@@ -96,7 +96,7 @@ const processFile = (event) => {
         for (let i = 0; i < sigInstanc.size(); i++) {
           const vectorEigen = sigInstanc.get(i);
           const complexArray = [];
-          for (let j = 0; j < vectorEigen.size(); j++) {
+          for (let j = 0; j < vectorEigen.size; j++) {
             var complexValue = vectorEigen.get(j);
             complexArray.push(Complex.create({real: complexValue.real(), imag: complexValue.imag()}));
           }

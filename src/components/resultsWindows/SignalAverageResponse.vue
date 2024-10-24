@@ -4,7 +4,7 @@ import {openDB} from 'idb';
 import {useResponseStore} from '@/stores/responseStore.js';
 import {JellyfishLoader} from 'vue3-spinner';
 import SimpleChart from '@/components/SimpleChart.vue';
-import WaveletChartControls from "@/components/WaveletChartControls.vue";
+import SavingTools from "@/components/extraTools/SavingTools.vue";
 
 // Estado de carga inicial (Jellyfish Loader) como ref para que sea reactivo
 const loadingStatus = ref(true);
@@ -32,6 +32,23 @@ onMounted(async () => {
   loadingStatus.value = false;
   console.log('Loading Response Status: ', loadingStatus.value);
 });
+
+
+const simpleChartRef = ref(null);
+
+const handleDownloadImage = () => {
+  const chartCanvas = simpleChartRef.value?.$el.querySelector('canvas');
+
+  if (!chartCanvas) {
+    alert('No se encontró el gráfico.');
+    return;
+  }
+
+  const link = document.createElement('a');
+  link.download = 'chart.png';
+  link.href = chartCanvas.toDataURL('image/png');
+  link.click();
+};
 </script>
 
 <template>
@@ -53,6 +70,9 @@ onMounted(async () => {
           <SimpleChart dataSource="usingSingleSignal" class="h-[80vh] w-full"/>
         </div>
       </div>
+
+      <!-- SavingTools -->
+      <SavingTools @download-image="handleDownloadImage" />
     </div>
   </div>
 </template>

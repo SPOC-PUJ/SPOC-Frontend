@@ -5,7 +5,7 @@ import { RuningSumRequest , MovingAverageRequest, FirstDifferenceRequest, IFFTRe
   FftConvolveRequest, CWTRequest} from '../proto/proto-ts/signal';
 
 const client = new SignalServiceClient(
-    new GrpcWebFetchTransport({ baseUrl: 'http://localhost:8080' })
+    new GrpcWebFetchTransport({ baseUrl: 'http://localhost:8081' })
 );
 
 

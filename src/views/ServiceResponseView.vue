@@ -7,6 +7,7 @@ import FirstDifferenceResponse from "@/components/resultsWindows/FirstDifference
 import IFFTResponse from "@/components/resultsWindows/IFFTResponse.vue";
 import FFTComponent from "@/components/FFTComponent.vue";
 import FFTResponse from "@/components/resultsWindows/FFTResponse.vue";
+import ContinuousWaveletTransformResponse from "@/components/resultsWindows/ContinuousWaveletTransformResponse.vue";
 
 console.log('ServiceResponseView.vue');
 
@@ -55,6 +56,11 @@ switch (lastSegment) {
     selectedTool = "FFTResponse";
     break;
 
+  case 'CWT-Tool':
+    console.log('Continuous Wavelet Transform');
+    selectedTool = "ContinuousWaveletTransformResponse";
+    break;
+
   case 'RunningSum':
     console.log('Running Sum');
     // TODO
@@ -75,6 +81,7 @@ switch (lastSegment) {
   <FirstDifferenceResponse v-if="selectedTool === 'FirstDifferenceResponse'"></FirstDifferenceResponse>
   <IFFTResponse v-if="selectedTool === 'IFFTResponse'"></IFFTResponse>
   <FFTResponse v-if="selectedTool === 'FFTResponse'"></FFTResponse>
+  <ContinuousWaveletTransformResponse v-if="selectedTool === 'ContinuousWaveletTransformResponse'"></ContinuousWaveletTransformResponse>
 </template>
 
 <style scoped>

@@ -8,6 +8,7 @@ import IFFTComponent from "@/components/IFFTComponent.vue";
 import RunningSum from "@/components/RunningSum.vue";
 import AverageComponent from "@/components/AverageComponent.vue";
 import FFTComponent from "@/components/FFTComponent.vue";
+import CWTComponent from "@/components/CWTComponent.vue";
 
 // Reactive variables
 const selectedTool = ref('');
@@ -32,6 +33,7 @@ const selectedTool = ref('');
           <option value="SignalAverage">Signal Average (DONE)</option> <!-- TODO: Terminar de implementar y borrar los "done". -->
           <option value="FirstDifference">First Difference (DONE)</option>
           <option value="IFFT-Tool">Inverse Fast Fourier Transform (DONE)</option>
+          <option value="CWT-Tool">Continuous Wavelet Transform</option>
           <option value="FFT-Tool">Fast Fourier Transform (REVISAR)</option>
           <option value="RunningSum">Running Sum</option>
         </select>
@@ -72,6 +74,11 @@ const selectedTool = ref('');
     <!-- Formulario para la Herramienta 4: Inverse Fast Fourier Transform -->
     <div v-if="selectedTool === 'IFFT-Tool'" class="mb-6">
       <IFFTComponent/>
+    </div>
+
+    <!-- Formulario para la Herramienta 8: Continuous Wavelet Transform -->
+    <div v-if="selectedTool === 'CWT-Tool'" class="mb-6">
+      <CWTComponent/>
     </div>
 
     <!-- Formulario para la Herramienta 7: Fast Fourier Transform -->

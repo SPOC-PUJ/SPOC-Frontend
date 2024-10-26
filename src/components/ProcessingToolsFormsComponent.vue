@@ -33,8 +33,8 @@ const selectedTool = ref('');
           <option value="SignalAverage">Signal Average (DONE)</option> <!-- TODO: Terminar de implementar y borrar los "done". -->
           <option value="FirstDifference">First Difference (DONE)</option>
           <option value="IFFT-Tool">Inverse Fast Fourier Transform (DONE)</option>
-          <option value="CWT-Tool">Continuous Wavelet Transform</option>
           <option value="FFT-Tool">Fast Fourier Transform (REVISAR)</option>
+          <option value="CWT-Tool">Continuous Wavelet Transform (REVISAR)</option>
           <option value="RunningSum">Running Sum</option>
         </select>
         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
@@ -76,14 +76,14 @@ const selectedTool = ref('');
       <IFFTComponent/>
     </div>
 
-    <!-- Formulario para la Herramienta 8: Continuous Wavelet Transform -->
-    <div v-if="selectedTool === 'CWT-Tool'" class="mb-6">
-      <CWTComponent/>
-    </div>
-
     <!-- Formulario para la Herramienta 7: Fast Fourier Transform -->
     <div v-if="selectedTool === 'FFT-Tool'" class="mb-6">
       <FFTComponent/>
+    </div>
+
+    <!-- Formulario para la Herramienta 8: Continuous Wavelet Transform -->
+    <div v-if="selectedTool === 'CWT-Tool'" class="mb-6">
+      <CWTComponent/>
     </div>
 
     <!-- Formulario para la Herramienta 6: Running Sum -->

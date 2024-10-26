@@ -53,6 +53,9 @@ const handleDownloadImage = () => {
 
 <template>
   <div class="bg-blue-50 px-4 py-10">
+    <!-- SavingTools -->
+    <SavingTools @download-image="handleDownloadImage" />
+
     <!-- Mostrar el loader si loadingStatus es true -->
     <div class="flex justify-center items-center w-full h-full fixed inset-0 m-auto bg-white bg-opacity-70" v-if="loadingStatus">
       <div class="transform scale-[2] flex flex-col justify-center items-center">
@@ -71,8 +74,7 @@ const handleDownloadImage = () => {
         </div>
       </div>
 
-      <!-- SavingTools -->
-      <SavingTools @download-image="handleDownloadImage" />
+
     </div>
   </div>
 </template>

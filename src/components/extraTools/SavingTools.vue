@@ -1,53 +1,49 @@
 <!-- SavingTools.vue -->
 <script setup>
 import { useResponseStore } from '@/stores/responseStore.js';
+import { toRaw } from 'vue'; // Importa toRaw para desreactivar los datos
 
 const emit = defineEmits(['download-image']);
-
 const responseStore = useResponseStore();
 
 const downloadCSV = () => {
-  const signalData = responseStore.signalResponse;
-  if (!signalData) {
+  const signalData = toRaw(responseStore.signalResponse.result); // Desenvuelve los datos reactivos
+
+  console.log('Signal Data: ', signalData);
+
+  if (!signalData || !Array.isArray(signalData) || signalData.length === 0) {
     alert('No hay datos de señal disponibles para descargar.');
     return;
   }
 
-  // Convertir signalData a formato CSV
-  let csvContent = '';
+  // Inicializar contenido del CSV con encabezados explícitos
+  let csvContent = 'real,imag\n';
 
-  if (Array.isArray(signalData)) {
-    if (signalData.length > 0 && typeof signalData[0] === 'object') {
-      // Si signalData es un array de objetos
-      const headers = Object.keys(signalData[0]).join(',');
-      csvContent += headers + '\n';
-      signalData.forEach(row => {
-        const values = Object.values(row).join(',');
-        csvContent += values + '\n';
-      });
-    } else {
-      // Si signalData es un array de números o strings
-      csvContent = signalData.join('\n');
-    }
-  } else {
-    alert('Formato de datos no soportado para exportación CSV.');
-    return;
-  }
+  // Recorrer cada objeto del array y construir las filas del CSV
+  signalData.forEach(row => {
+    const realValue = row.real !== undefined ? row.real.toFixed(6) : '';
+    const imagValue = row.imag !== undefined ? row.imag.toFixed(6) : '';
 
+    csvContent += `${realValue},${imagValue}\n`;
+  });
+
+  // Crear un blob y enlace para descargar el archivo CSV
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.setAttribute('href', url);
   link.setAttribute('download', 'signalData.csv');
   link.style.visibility = 'hidden';
+
+  // Descargar el archivo y limpiar el enlace temporal
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-}
+};
 
 const downloadImage = () => {
   emit('download-image');
-}
+};
 </script>
 
 <template>

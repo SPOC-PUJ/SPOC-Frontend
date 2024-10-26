@@ -11,7 +11,7 @@ console.log('Loading Response Status: ', loadingStatus.value);
 const responseStore = useResponseStore();
 
 onMounted(async () => {
-  console.log('Signal Average Response');
+  console.log('Continuous Wavelet Transform Response component mounted');
   const db = await openDB('response-database', 1);
   const response = await db.get('responses', 'signalResponse');
 
@@ -24,7 +24,7 @@ onMounted(async () => {
     console.error('No signalResponse found in IndexedDB');
   }
 
-  console.log('Signal Response: ', toRaw(responseStore.signalResponse));
+  console.log('CWT Response: ', toRaw(responseStore.signalResponse));
 
   // Desactivar el estado de carga
   loadingStatus.value = false;

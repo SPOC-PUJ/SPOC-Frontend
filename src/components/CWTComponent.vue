@@ -4,6 +4,7 @@ import { useSignalStore } from '@/stores/signalStore';
 import { SignalService } from '@/services/signalService';
 import { JellyfishLoader } from "vue3-spinner";
 import ProcessingToolsDangerModal from "@/components/dangerModals/ProcessingToolsDangerModal.vue";
+import {openDB} from "idb";
 
 // Instancia del store
 const signalStore = useSignalStore();
@@ -107,6 +108,16 @@ const calcularCWT = async () =>
     );
 
     console.log('Respuesta (CWT):', response);
+
+    // Guardar la respuesta en la base de datos.
+    const db = await openDB('response-database', 1, {
+      upgrade(db) {
+        db.createObjectStore('responses');
+      },
+    });
+    await db.put('responses', response, 'signalResponse');
+
+
     loadingStatus.value = false;
     window.open('/response-results/CWT-Tool', '_blank');
   } catch (error) {

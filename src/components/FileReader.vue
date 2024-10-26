@@ -135,7 +135,63 @@ const processFile = (event) => {
     };
 
     reader.readAsArrayBuffer(file); // Leer como datos binarios
-  } else if (file.name.toLowerCase().endsWith(".abf")) {
+  }
+  else if (file.name.toLowerCase().endsWith(".csv")) {
+    output.value = "Formato Correcto (.csv)";
+
+    // Activar el estado de carga
+    loadingStatus.value = true;
+
+    reader.onload = async () => {
+      try {
+        const text = reader.result; // Leer el contenido del archivo como texto
+
+        // Convertir el CSV en un array de números
+        const rows = text.split("\n");
+        const csvNumbers = [];
+        for (const row of rows) {
+          const values = row.split(",").map(v => parseFloat(v.trim()));
+          csvNumbers.push(...values); // Agregar los valores del CSV al array de números
+        }
+
+        // Filtrar los valores NaN si los hay
+        const filteredNumbers = csvNumbers.filter(value => !isNaN(value));
+
+        // Transformar los números en el objeto de señal con duplas
+        const signal = transformToSignalObjectWithReal(filteredNumbers);
+
+        // Guardar la señal procesada en el signalStore
+        signalStore.setSignalJson([signal]); // Usamos un array con una única señal
+        console.log("Data Procesada:", signal);
+        console.log("En el signalStore (csv):", toRaw(signalStore.signalJson));
+
+        output.value = 'Archivo .csv procesado exitosamente';
+
+        // Emitir los valores reales procesados
+        emit('fileProcessed', filteredNumbers); // Emitir los valores para el graficador
+      } catch (error) {
+        console.error('Error al subir el archivo .csv:', error);
+        modalMessage.value = 'Error al subir el archivo .csv: ' + error.message;
+        showModal.value = true;
+      } finally {
+        // Desactivar el estado de carga
+        loadingStatus.value = false;
+
+        event.target.value = ''; // Limpiar el input de archivo
+      }
+    };
+
+    reader.onerror = (error) => {
+      console.error("Error al leer el archivo .csv:", error);
+      modalMessage.value = 'Error al leer el archivo .csv: ' + error.message;
+      showModal.value = true;
+      loadingStatus.value = false;
+      event.target.value = ''; // Limpiar el input de archivo
+    };
+
+    reader.readAsText(file); // Leer el archivo como texto
+  }
+  else if (file.name.toLowerCase().endsWith(".abf")) {
     output.value = "Formato Correcto (.abf)";
 
     // Activar el estado de carga
@@ -308,7 +364,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <input id="fileInputRef" type="file" @change="processFile" accept=".edf,.abf,.mat" hidden />
+    <input id="fileInputRef" type="file" @change="processFile" accept=".edf,.abf,.mat,.csv" hidden />
     <pre hidden>{{ output }}</pre> <!-- Mensaje de salida oculto -->
   </div>
 </template>

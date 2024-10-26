@@ -77,7 +77,7 @@ function drawHeatmap() {
   const numScales = coeffs.length;
   console.log('Número de escalas: ', numScales);
 
-  const numTimePoints = coeffs[0].values.length;
+  const numTimePoints = coeffs[0].coe.length;
   console.log('Número de puntos de tiempo: ', numTimePoints);
 
   // Número deseado de puntos en el eje del tiempo para evitar sobrecargar el navegador
@@ -87,14 +87,14 @@ function drawHeatmap() {
   const dataArray = [];
 
   for (let scaleIdx = 0; scaleIdx < numScales; scaleIdx++) {
-    const scaleData = coeffs[scaleIdx].values;
+    const scaleData = coeffs[scaleIdx].coe;
     for (let timeIdx = 0; timeIdx < numTimePoints; timeIdx += timeSampleStep) {
       const d = scaleData[timeIdx];
-      const magnitude = Math.sqrt(d.real ** 2 + d.imag ** 2);
+      
       dataArray.push({
         scale: scaleIdx,
         time: timeIdx,
-        value: magnitude,
+        value: d,
       });
     }
   }
@@ -112,7 +112,7 @@ function drawHeatmap() {
 
   // Escala de color
   const colorScale = d3
-      .scaleSequential(d3.interpolateInferno)
+      .scaleSequential(d3.interpolateViridis)
       .domain(d3.extent(dataArray, (d) => d.value));
 
   // Dibujar el mapa de calor

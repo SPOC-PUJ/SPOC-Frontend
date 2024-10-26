@@ -107,9 +107,11 @@ message CWTRequest {
     int32 numScales = 4; 
 }
 
-
+message respcoeffs{
+    repeated double coe = 1;
+}
 message CWTResponse  {
-    repeated SignalGRPC coeffs = 1;
+    repeated respcoeffs coeffs = 1;
 }
 
 // The signal service definition.

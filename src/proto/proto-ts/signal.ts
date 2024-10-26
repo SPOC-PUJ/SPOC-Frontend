@@ -258,13 +258,22 @@ export interface CWTRequest {
     numScales: number;
 }
 /**
+ * @generated from protobuf message signal.respcoeffs
+ */
+export interface respcoeffs {
+    /**
+     * @generated from protobuf field: repeated double coe = 1;
+     */
+    coe: number[];
+}
+/**
  * @generated from protobuf message signal.CWTResponse
  */
 export interface CWTResponse {
     /**
-     * @generated from protobuf field: repeated signal.SignalGRPC coeffs = 1;
+     * @generated from protobuf field: repeated signal.respcoeffs coeffs = 1;
      */
-    coeffs: SignalGRPC[];
+    coeffs: respcoeffs[];
 }
 // @generated message type with reflection information, may provide speed optimized methods
 class Complex$Type extends MessageType<Complex> {
@@ -1379,10 +1388,65 @@ class CWTRequest$Type extends MessageType<CWTRequest> {
  */
 export const CWTRequest = new CWTRequest$Type();
 // @generated message type with reflection information, may provide speed optimized methods
+class respcoeffs$Type extends MessageType<respcoeffs> {
+    constructor() {
+        super("signal.respcoeffs", [
+            { no: 1, name: "coe", kind: "scalar", repeat: 1 /*RepeatType.PACKED*/, T: 1 /*ScalarType.DOUBLE*/ }
+        ]);
+    }
+    create(value?: PartialMessage<respcoeffs>): respcoeffs {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.coe = [];
+        if (value !== undefined)
+            reflectionMergePartial<respcoeffs>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: respcoeffs): respcoeffs {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated double coe */ 1:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e;)
+                            message.coe.push(reader.double());
+                    else
+                        message.coe.push(reader.double());
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: respcoeffs, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* repeated double coe = 1; */
+        if (message.coe.length) {
+            writer.tag(1, WireType.LengthDelimited).fork();
+            for (let i = 0; i < message.coe.length; i++)
+                writer.double(message.coe[i]);
+            writer.join();
+        }
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message signal.respcoeffs
+ */
+export const respcoeffs = new respcoeffs$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class CWTResponse$Type extends MessageType<CWTResponse> {
     constructor() {
         super("signal.CWTResponse", [
-            { no: 1, name: "coeffs", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => SignalGRPC }
+            { no: 1, name: "coeffs", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => respcoeffs }
         ]);
     }
     create(value?: PartialMessage<CWTResponse>): CWTResponse {
@@ -1397,8 +1461,8 @@ class CWTResponse$Type extends MessageType<CWTResponse> {
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
-                case /* repeated signal.SignalGRPC coeffs */ 1:
-                    message.coeffs.push(SignalGRPC.internalBinaryRead(reader, reader.uint32(), options));
+                case /* repeated signal.respcoeffs coeffs */ 1:
+                    message.coeffs.push(respcoeffs.internalBinaryRead(reader, reader.uint32(), options));
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1412,9 +1476,9 @@ class CWTResponse$Type extends MessageType<CWTResponse> {
         return message;
     }
     internalBinaryWrite(message: CWTResponse, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
-        /* repeated signal.SignalGRPC coeffs = 1; */
+        /* repeated signal.respcoeffs coeffs = 1; */
         for (let i = 0; i < message.coeffs.length; i++)
-            SignalGRPC.internalBinaryWrite(message.coeffs[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+            respcoeffs.internalBinaryWrite(message.coeffs[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

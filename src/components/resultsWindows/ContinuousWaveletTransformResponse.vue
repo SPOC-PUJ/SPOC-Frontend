@@ -144,7 +144,7 @@ function drawHeatmap() {
       .attr('text-anchor', 'middle')
       .text('Tiempo');
 
-  const yAxis = d3.axisLeft(yScale).ticks(numScales);
+  const yAxis = d3.axisLeft(yScale).ticks(Math.min(numScales, 5));
   svg
       .append('g')
       .call(yAxis)

@@ -52,8 +52,8 @@ function drawHeatmap() {
 
   // Configurar las dimensiones del SVG
   const margin = { top: 20, right: 20, bottom: 50, left: 70 };
-  const width = 800 - margin.left - margin.right;
-  const height = 600 - margin.top - margin.bottom;
+  const width = svgRef.value.clientWidth - margin.left - margin.right;
+  const height = 1000 - margin.top - margin.bottom;
 
   const svg = d3
       .select(svgRef.value)

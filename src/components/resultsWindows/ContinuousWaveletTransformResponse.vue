@@ -47,6 +47,7 @@ watch(
 
 function drawHeatmap() {
   console.log('Dibujando el heatmap...');
+
   // Limpiar cualquier SVG existente
   d3.select(svgRef.value).selectAll('*').remove();
 
@@ -107,7 +108,7 @@ function drawHeatmap() {
 
   const yScale = d3
       .scaleLinear()
-      .domain([0, numScales])
+      .domain([numScales, 0]) // Invertir dominio
       .range([height, 0]);
 
   // Escala de color
@@ -125,7 +126,7 @@ function drawHeatmap() {
       .enter()
       .append('rect')
       .attr('x', (d) => xScale(d.time))
-      .attr('y', (d) => yScale(d.scale + 1))
+      .attr('y', (d) => yScale(d.scale))
       .attr('width', cellWidth)
       .attr('height', cellHeight)
       .attr('fill', (d) => colorScale(d.value));

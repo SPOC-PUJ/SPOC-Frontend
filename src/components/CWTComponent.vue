@@ -101,7 +101,7 @@ const calcularCWT = async () =>
     console.log('Num Scales:', numScales.value);
 
     const response = await SignalService.computeCWT(
-        signalJson[0],
+        signalJson[selectedIndex],
         start.value,
         end.value,
         numScales.value
@@ -110,12 +110,30 @@ const calcularCWT = async () =>
     console.log('Respuesta (CWT):', response);
 
     // Guardar la respuesta en la base de datos.
-    const db = await openDB('response-database', 1, {
+    const db = await openDB('response-database', 2, {
       upgrade(db) {
-        db.createObjectStore('responses');
+        if (!db.objectStoreNames.contains('responses')) {
+          db.createObjectStore('responses');
+        }
+        if (!db.objectStoreNames.contains('signals')) {
+          db.createObjectStore('signals');
+        }
       },
     });
-    await db.put('responses', response, 'signalResponse');
+
+    console.log("Response: ", response);
+    console.log("Signal: ", signalJson[selectedIndex]);
+
+    // Store response and signal using standard keys
+    await db.put('responses', response, 'responses');
+    await db.put('signals', signalJson[selectedIndex], 'signals');
+
+    // Verify that the data is saved correctly
+    const savedResponse = await db.get('responses', 'responses');
+    console.log('Saved Response:', savedResponse);
+
+    const savedSignal = await db.get('signals', 'signals');
+    console.log('Saved Signal:', savedSignal);
 
 
     loadingStatus.value = false;

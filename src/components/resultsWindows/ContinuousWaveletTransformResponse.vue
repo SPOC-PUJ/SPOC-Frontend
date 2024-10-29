@@ -1,3 +1,4 @@
+<!-- CWTResponseComponent.vue -->
 <script setup>
 import { ref, onMounted, toRaw, watch } from 'vue';
 import { openDB } from 'idb';
@@ -5,7 +6,7 @@ import { useResponseStore } from '@/stores/responseStore.js';
 import { JellyfishLoader } from 'vue3-spinner';
 import * as d3 from 'd3';
 
-// Estado de carga inicial (Jellyfish Loader) como ref para que sea reactivo
+// Estado de carga inicial como ref para que sea reactivo
 const loadingStatus = ref(true);
 console.log('Loading Response Status: ', loadingStatus.value);
 
@@ -14,25 +15,40 @@ const svgRef = ref(null);
 
 onMounted(async () => {
   console.log('Continuous Wavelet Transform Response component mounted');
-  const db = await openDB('response-database', 1);
-  const response = await db.get('responses', 'signalResponse');
 
-  // Una vez cargada la página, revisar si hay una respuesta almacenada en IndexedDB
-  if (response) {
+  // Abrir la base de datos con la versión correcta
+  const db = await openDB('response-database', 2);
+
+  console.log('IndexedDB abierta con éxito');
+
+  // Retrieve the response and original signal using consistent keys
+  const response = await db.get('responses', 'responses');
+  console.log('CWT Response from IndexedDB:', response);
+
+  const originalSignal = await db.get('signals', 'signals');
+  console.log('Original Signal from IndexedDB:', originalSignal);
+
+
+  // Verificar si se obtuvieron los datos
+  if (response && originalSignal) {
     responseStore.setSignalResponse(response);
-    // Borrar los datos de la respuesta almacenada en IndexedDB para evitar duplicados.
+    responseStore.setOriginalSignal(originalSignal);
+
+    // Borrar los datos almacenados en IndexedDB para evitar duplicados
     await db.delete('responses', 'signalResponse');
+    await db.delete('signals', 'originalSignal');
   } else {
-    console.error('No signalResponse found in IndexedDB');
+    console.error('No se encontraron datos en IndexedDB');
   }
 
   console.log('CWT Response: ', toRaw(responseStore.signalResponse));
-
-  // Desactivar el estado de carga
-  console.log('Loading Response Status: ', loadingStatus.value);
+  console.log('Original Signal: ', toRaw(responseStore.originalSignal));
 
   // Llamar a la función para dibujar el heatmap
   drawHeatmap();
+
+  // Desactivar el estado de carga después de procesar los datos
+  loadingStatus.value = false;
 });
 
 // Observar cambios en los datos para redibujar el heatmap si es necesario
@@ -53,7 +69,7 @@ function drawHeatmap() {
 
   // Configurar las dimensiones del SVG
   const margin = { top: 20, right: 20, bottom: 50, left: 70 };
-  const width = svgRef.value.clientWidth - margin.left - margin.right;
+  const width = 1000 - margin.left - margin.right;
   const height = 1000 - margin.top - margin.bottom;
 
   const svg = d3
@@ -66,9 +82,9 @@ function drawHeatmap() {
 
   // Procesar los datos
   console.log('Procesando los datos de la respuesta...');
-  const coeffs = responseStore.signalResponse.coeffs;
+  const coeffs = toRaw(responseStore.signalResponse.coeffs);
 
-  console.log('Coeffs: ', coeffs);
+  console.log('Coefficients:', coeffs);
 
   if (!coeffs || coeffs.length === 0) {
     console.error('No hay datos de coeficientes para dibujar el heatmap.');
@@ -156,8 +172,6 @@ function drawHeatmap() {
       .attr('text-anchor', 'middle')
       .text('Escala');
 }
-
-loadingStatus.value = false;
 </script>
 
 <template>

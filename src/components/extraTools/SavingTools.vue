@@ -47,8 +47,28 @@ const downloadImage = () => {
 </script>
 
 <template>
-  <div class="saving-tools">
-    <button @click="downloadCSV">Descargar CSV</button>
-    <button @click="downloadImage">Descargar Imagen</button>
+  <div class="saving-tools flex space-x-4">
+    <button
+        @click="downloadCSV"
+        class="flex items-center px-4 py-2 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
+    >
+      <i class="pi pi-file-excel mr-2"></i>
+      Descargar CSV
+    </button>
+
+    <button
+        @click="downloadImage"
+        class="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+    >
+      <i class="pi pi-image mr-2"></i>
+      Descargar Imagen
+    </button>
   </div>
 </template>
+
+<style scoped>
+.saving-tools {
+  justify-content: center;
+  align-items: center;
+}
+</style>

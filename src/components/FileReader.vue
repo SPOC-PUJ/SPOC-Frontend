@@ -259,19 +259,25 @@ const processFile = (event) => {
         const response = await MATReaderService.ReadMat(fileBytes, "m_Trials_selected");
         console.log('Respuesta del servidor:', response);
 
-        // Procesar la respuesta para que toda la señal se almacene correctamente
-        const rawNumbers = response.numbers; // Lista de números obtenida del servidor
-        const signal = transformToSignalObjectWithReal(rawNumbers);
+        // Procesar la respuesta para obtener el formato deseado
+        const transformedData = response.matrix.map((entry) => {
+          return {
+            values: entry.numbers.map((num) => ({
+              real: num,
+              imag: 0
+            }))
+          };
+        });
 
         // Guardar la señal procesada en el signalStore
-        signalStore.setSignalJson([signal]); // Usamos un array con una única señal
-        console.log("Data Procesada:", signal);
+        signalStore.setSignalJson(transformedData);
+        console.log("Data Procesada:", transformedData);
         console.log("En el signalStore (mat):", toRaw(signalStore.signalJson));
 
         output.value = 'Archivo .mat procesado exitosamente';
 
         // Emitir los valores reales procesados
-        emit('fileProcessed', rawNumbers); // Emitir los valores para el graficador
+        emit('fileProcessed', transformedData); // Emitir los valores para el graficador
       } catch (error) {
         console.error('Error al subir el archivo .mat:', error);
         modalMessage.value = 'Error al subir el archivo .mat: ' + error.message;
@@ -279,7 +285,6 @@ const processFile = (event) => {
       } finally {
         // Desactivar el estado de carga
         loadingStatus.value = false;
-
         event.target.value = ''; // Limpiar el input de archivo
       }
     };
@@ -304,7 +309,7 @@ const processFile = (event) => {
   }
 };
 
-// Función para transformar los números en objetos de señales con duplas (para .abf y .mat)
+// Función para transformar los números en objetos de señales con duplas (para .abf, .csv y .mat)
 function transformToSignalObjectWithReal(numbers) {
   const values = numbers.map(num => ({
     real: num, // Mapeamos cada número a un objeto con la propiedad 'real'

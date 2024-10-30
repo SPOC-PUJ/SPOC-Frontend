@@ -150,15 +150,14 @@ const processFile = (event) => {
         const rows = text.split("\n");
         const csvNumbers = [];
         for (const row of rows) {
-          const values = row.split(",").map(v => parseFloat(v.trim()));
-          csvNumbers.push(...values); // Agregar los valores del CSV al array de números
+          const [real] = row.split(",").map(v => parseFloat(v.trim())); // Solo extraer la parte real
+          if (!isNaN(real)) {
+            csvNumbers.push(real); // Agregar solo los valores reales
+          }
         }
 
-        // Filtrar los valores NaN si los hay
-        const filteredNumbers = csvNumbers.filter(value => !isNaN(value));
-
-        // Transformar los números en el objeto de señal con duplas
-        const signal = transformToSignalObjectWithReal(filteredNumbers);
+        // Transformar los números reales en el objeto de señal
+        const signal = transformToSignalObjectWithReal(csvNumbers);
 
         // Guardar la señal procesada en el signalStore
         signalStore.setSignalJson([signal]); // Usamos un array con una única señal
@@ -168,7 +167,7 @@ const processFile = (event) => {
         output.value = 'Archivo .csv procesado exitosamente';
 
         // Emitir los valores reales procesados
-        emit('fileProcessed', filteredNumbers); // Emitir los valores para el graficador
+        emit('fileProcessed', csvNumbers); // Emitir los valores para el graficador
       } catch (error) {
         console.error('Error al subir el archivo .csv:', error);
         modalMessage.value = 'Error al subir el archivo .csv: ' + error.message;

@@ -14,7 +14,7 @@ const responseStore = useResponseStore();
 
 onMounted(async () => {
   console.log('Moving Average Response');
-  const db = await openDB('response-database', 1);
+  const db = await openDB('response-database', 2);
   const response = await db.get('responses', 'signalResponse');
 
   // Una vez cargada la página, revisar si hay una respuesta almacenada en IndexedDB

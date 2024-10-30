@@ -60,7 +60,7 @@ const calcularPromedioMovil = async () => {
     console.log('Raw Response (Moving Average): ', response);
 
     // Guardar la respuesta en la base de datos.
-    const db = await openDB('response-database', 1, {
+    const db = await openDB('response-database', 2, {
       upgrade(db) {
         db.createObjectStore('responses');
       },

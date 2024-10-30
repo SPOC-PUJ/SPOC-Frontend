@@ -230,6 +230,39 @@ const dataset = computed(() => {
       }
       break;
 
+    case 'usingSingleSignalForCWT':
+      console.log('Usando señal original para el CWT');
+
+      if (responseStore.originalSignal) {
+        const initialData = toRaw(responseStore.originalSignal);
+        data = initialData.values;
+
+        console.log('Initial Data:', initialData);
+        console.log('Data:', data);
+
+        // Transformar data al formato esperado
+        if (Array.isArray(data) && data.length > 0) {
+          if (typeof data[0] === 'number') {
+            data = data.map((value, index) => ({
+              punto: index + 1,
+              value: value,
+            }));
+          } else if (typeof data[0] === 'object' && data[0].hasOwnProperty('real')) {
+            data = data.map((item, index) => ({
+              punto: index + 1,
+              value: item.real,
+            }));
+          } else {
+            console.error('Los elementos de data no están en un formato reconocido.');
+          }
+        } else {
+          console.error('Data no es un arreglo o está vacío.');
+        }
+      } else {
+        console.error('No hay datos de Moving Average disponibles en responseStore');
+      }
+      break;
+
     default:
       console.log('Usando datos de signalStore');
       if (signalStore.signalJson && signalStore.signalJson.length > 0) {

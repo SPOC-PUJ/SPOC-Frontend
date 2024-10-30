@@ -5,6 +5,7 @@ import { openDB } from 'idb';
 import { useResponseStore } from '@/stores/responseStore.js';
 import { JellyfishLoader } from 'vue3-spinner';
 import * as d3 from 'd3';
+import SimpleChart from "@/components/SimpleChart.vue";
 
 // Estado de carga inicial como ref para que sea reactivo
 const loadingStatus = ref(true);
@@ -187,6 +188,10 @@ function drawHeatmap() {
         <h2 class="text-blue-600 mt-4">Procesando respuesta...</h2>
       </div>
     </div>
+
+    <!-- Contenedor de SimpleChart -->
+    <SimpleChart dataSource="usingSingleSignalForCWT" class="h-[60vh] w-full"/>
+
     <!-- Contenedor para el heatmap -->
     <div ref="svgRef"></div>
   </div>

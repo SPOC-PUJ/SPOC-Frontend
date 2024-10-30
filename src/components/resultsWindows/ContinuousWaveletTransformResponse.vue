@@ -52,15 +52,6 @@ onMounted(async () => {
   loadingStatus.value = false;
 });
 
-// Observar cambios en los datos para redibujar el heatmap si es necesario
-watch(
-    () => responseStore.signalResponse,
-    () => {
-      if (!loadingStatus.value) {
-        drawHeatmap();
-      }
-    }
-);
 
 function drawHeatmap() {
   console.log('Dibujando el heatmap...');
@@ -180,8 +171,8 @@ function drawHeatmap() {
 </script>
 
 <template>
-  <div class="bg-blue-50 px-4 py-10">
-    <!-- Mostrar el loader si loadingStatus es true -->
+  <div class="bg-blue-50 px-4 py-10 space-y-10">
+    <!-- Loader -->
     <div class="flex justify-center items-center w-full h-full fixed inset-0 m-auto bg-white bg-opacity-70" v-if="loadingStatus">
       <div class="transform scale-[2] flex flex-col justify-center items-center">
         <JellyfishLoader color="#3B82F6" />
@@ -190,10 +181,16 @@ function drawHeatmap() {
     </div>
 
     <!-- Contenedor de SimpleChart -->
-    <SimpleChart dataSource="usingSingleSignalForCWT" class="h-[60vh] w-full"/>
+    <div class="bg-white rounded-lg shadow-lg p-6 pb-24">
+      <h2 class="text-2xl font-semibold text-center text-gray-800 mb-4">Señal Original</h2>
+      <SimpleChart dataSource="usingSingleSignalForCWT" class="h-[50vh] w-full" />
+    </div>
 
-    <!-- Contenedor para el heatmap -->
-    <div ref="svgRef"></div>
+    <!-- Contenedor del Heatmap con título -->
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <h2 class="text-2xl font-semibold text-center text-gray-800 mb-4">CWT</h2>
+      <div ref="svgRef"></div>
+    </div>
   </div>
 </template>
 

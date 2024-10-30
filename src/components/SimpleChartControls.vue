@@ -68,7 +68,7 @@ if (routeLastSegment === 'FastWaveletTransform' || routeLastSegment === 'MovingA
         <select id="signalSelect" v-model="signalStore.signalSelected" @change="updateSignalSelected"
                 class="block w-full appearance-none bg-white border border-gray-300 text-gray-800 py-2 px-3 pr-8 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 sm:text-sm">
           <option v-for="(signal, index) in signalStore.signalJson" :key="index" :value="index">
-            Señal {{ index }}
+            Señal {{ index + 1 }} 
           </option>
         </select>
         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">

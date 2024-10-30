@@ -69,8 +69,12 @@ function drawHeatmap() {
 
   // Configurar las dimensiones del SVG
   const margin = { top: 20, right: 20, bottom: 50, left: 70 };
-  const width = 1000 - margin.left - margin.right;
-  const height = 1000 - margin.top - margin.bottom;
+  const width = 1600 - margin.left - margin.right;
+  const height = 600 - margin.top - margin.bottom;
+
+  console.log('Dimensiones del SVG:', width, height);
+  console.log('Referencia del SVG:', svgRef);
+  console.log("SVG: ", svgRef.value);
 
   const svg = d3
       .select(svgRef.value)
@@ -107,7 +111,7 @@ function drawHeatmap() {
     const scaleData = coeffs[scaleIdx].coe;
     for (let timeIdx = 0; timeIdx < numTimePoints; timeIdx += timeSampleStep) {
       const d = scaleData[timeIdx];
-      
+
       dataArray.push({
         scale: scaleIdx,
         time: timeIdx,
@@ -177,17 +181,14 @@ function drawHeatmap() {
 <template>
   <div class="bg-blue-50 px-4 py-10">
     <!-- Mostrar el loader si loadingStatus es true -->
-    <div
-        class="flex justify-center items-center w-full h-full fixed inset-0 m-auto bg-white bg-opacity-70"
-        v-if="loadingStatus"
-    >
+    <div class="flex justify-center items-center w-full h-full fixed inset-0 m-auto bg-white bg-opacity-70" v-if="loadingStatus">
       <div class="transform scale-[2] flex flex-col justify-center items-center">
         <JellyfishLoader color="#3B82F6" />
         <h2 class="text-blue-600 mt-4">Procesando respuesta...</h2>
       </div>
     </div>
     <!-- Contenedor para el heatmap -->
-    <div v-else ref="svgRef"></div>
+    <div ref="svgRef"></div>
   </div>
 </template>
 

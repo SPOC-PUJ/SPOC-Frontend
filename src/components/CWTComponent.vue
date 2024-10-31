@@ -4,7 +4,7 @@ import { useSignalStore } from '@/stores/signalStore';
 import { SignalService } from '@/services/signalService';
 import { JellyfishLoader } from "vue3-spinner";
 import ProcessingToolsDangerModal from "@/components/dangerModals/ProcessingToolsDangerModal.vue";
-import {openDB} from "idb";
+import { openDB } from "idb";
 
 // Instancia del store
 const signalStore = useSignalStore();
@@ -20,7 +20,7 @@ const loadingStatus = ref(false);
 // Propiedades para los parámetros de CWT
 const start = ref(1);
 const end = ref(10);
-const numScales = ref(5);
+const numScales = ref(1);  // Inicio en 1
 
 // Función para manejar el submit del formulario
 const submitToolCWT = () => {
@@ -37,12 +37,11 @@ const submitToolCWT = () => {
 };
 
 // Función para validar los inputs
-const validarInputs = () =>
-{
+const validarInputs = () => {
   const verificationSelectedIndex = signalStore.signalSelected;
   const verificationSignalJson = toRaw(signalStore.signalJson);
 
-  console.log('Signal Legth:', verificationSignalJson[verificationSelectedIndex].values.length);
+  console.log('Signal Length:', verificationSignalJson[verificationSelectedIndex].values.length);
 
   const signalLength = verificationSignalJson[verificationSelectedIndex].values.length;
 
@@ -74,11 +73,8 @@ const validarInputs = () =>
 };
 
 // Función asíncrona para calcular el CWT
-const calcularCWT = async () =>
-{
-  // Verificar si signalObject está inicializado
-  if (!signalComputed.value)
-  {
+const calcularCWT = async () => {
+  if (!signalComputed.value) {
     modalMessage.value = 'El objeto signalObject es null o no está inicializado.';
     console.error("Error: ", modalMessage.value);
     loadingStatus.value = false;
@@ -86,20 +82,11 @@ const calcularCWT = async () =>
     return;
   }
 
-  // Obtener el índice de la señal seleccionada
   const selectedIndex = signalStore.signalSelected;
-
-  // Obtener el objeto raw desde el store
   const signalJson = toRaw(signalStore.signalJson);
 
   try {
     console.log('Enviando solicitud gRPC para calcular CWT...');
-    console.log('Signal JSON:', signalJson[selectedIndex]);
-    console.log('Selected Index:', selectedIndex);
-    console.log('Start:', start.value);
-    console.log('End:', end.value);
-    console.log('Num Scales:', numScales.value);
-
     const response = await SignalService.computeCWT(
         signalJson[selectedIndex],
         start.value,
@@ -107,9 +94,6 @@ const calcularCWT = async () =>
         numScales.value
     );
 
-    console.log('Respuesta (CWT):', response);
-
-    // Guardar la respuesta en la base de datos.
     const db = await openDB('response-database', 2, {
       upgrade(db) {
         if (!db.objectStoreNames.contains('responses')) {
@@ -121,20 +105,8 @@ const calcularCWT = async () =>
       },
     });
 
-    console.log("Response: ", response);
-    console.log("Signal: ", signalJson[selectedIndex]);
-
-    // Store response and signal using standard keys
     await db.put('responses', response, 'responses');
     await db.put('signals', signalJson[selectedIndex], 'signals');
-
-    // Verify that the data is saved correctly
-    const savedResponse = await db.get('responses', 'responses');
-    console.log('Saved Response:', savedResponse);
-
-    const savedSignal = await db.get('signals', 'signals');
-    console.log('Saved Signal:', savedSignal);
-
 
     loadingStatus.value = false;
     window.open('/response-results/CWT-Tool', '_blank');
@@ -177,13 +149,20 @@ const handleModalConfirm = () => {
     </div>
 
     <div class="flex flex-col">
-      <label for="numScales" class="text-sm font-medium text-gray-700 mb-1">Num Scales</label>
+      <label class="text-sm font-medium text-gray-700 mb-1">Calidad</label>
+      <div class="flex justify-between text-xs font-semibold mb-2 text-gray-500">
+        <span>Calidad Baja</span>
+        <span>Calidad Media</span>
+        <span>Calidad Alta</span>
+      </div>
       <input
-          id="numScales"
-          type="number"
+          type="range"
+          min="1"
+          max="200"
           v-model="numScales"
-          class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          class="slider"
       />
+      <span class="mt-1 text-center text-gray-600">Num Scales: {{ numScales }}</span>
     </div>
 
     <button
@@ -217,8 +196,41 @@ label {
   margin-right: 10px;
 }
 
-input {
+input[type="number"] {
   margin-bottom: 10px;
   display: block;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 10px;
+  background: linear-gradient(to right, #10B981, #34D399);
+  outline: none;
+  transition: background 0.15s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #10B981;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: background 0.15s ease-in-out;
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #10B981;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: background 0.15s ease-in-out;
 }
 </style>

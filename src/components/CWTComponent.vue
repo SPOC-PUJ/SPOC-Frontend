@@ -34,8 +34,31 @@ watch(signalLength, (newLength) => {
   rangeValues.value = [1, newLength + 1];
 });
 
-// Propiedades para los parámetros de CWT
-const numScales = ref(1); // Inicio en 1
+// Variable para el nivel de resolución
+const resolutionLevel = ref(2); // 1: Baja, 2: Media, 3: Alta
+
+// Computed para Num Scales basado en resolutionLevel
+const numScales = computed(() => {
+  if (resolutionLevel.value === 1) return 30;
+  if (resolutionLevel.value === 2) return 75;
+  if (resolutionLevel.value === 3) return 120;
+  return 75; // Valor por defecto
+});
+
+// Marcas para el slider
+const marks = {
+  1: 'Baja',
+  2: 'Media',
+  3: 'Alta',
+};
+
+// Formatear el tooltip del slider
+const formatTooltip = (value) => {
+  if (value === 1) return 'Resolución Baja';
+  if (value === 2) return 'Resolución Media';
+  if (value === 3) return 'Resolución Alta';
+  return '';
+};
 
 // Función para manejar el submit del formulario
 const submitToolCWT = () => {
@@ -74,12 +97,6 @@ const validarInputs = () => {
 
   if (startValue > endValue) {
     modalMessage.value = 'El valor de Inicio no puede ser mayor que Fin.';
-    console.error('Error:', modalMessage.value);
-    return false;
-  }
-
-  if (numScales.value < 1) {
-    modalMessage.value = 'El valor de Num Scales debe ser al menos 1.';
     console.error('Error:', modalMessage.value);
     return false;
   }
@@ -151,39 +168,48 @@ const handleModalConfirm = () => {
 
   <form @submit.prevent="submitToolCWT" class="space-y-6">
     <!-- Rango Deslizante para Start y End -->
-    <div class="flex flex-col">
+    <div class="flex flex-col items-center">
       <label class="text-sm font-medium text-gray-700 mb-1">Selecciona el rango</label>
-      <VueSlider
-          v-model="rangeValues"
-          :min="1"
-          :max="signalLength + 1"
-          :interval="1"
-          :use-range="true"
-          :lazy="true"
-          class="mt-2"
-      />
-      <div class="flex justify-between text-xs font-semibold mt-2 text-gray-500">
+      <div class="slider-container">
+        <VueSlider
+            v-model="rangeValues"
+            :min="1"
+            :max="signalLength + 1"
+            :interval="1"
+            :use-range="true"
+            :lazy="true"
+            class="mt-2 slider"
+            :dot-size="20"
+            :height="6"
+            :process-style="{ backgroundColor: '#3B82F6' }"
+            :rail-style="{ backgroundColor: '#D1D5DB' }"
+        />
+      </div>
+      <div class="flex justify-between text-xs font-semibold mt-2 text-gray-500 w-full">
         <span>Inicio: {{ rangeValues[0] }}</span>
         <span>Fin: {{ rangeValues[1] }}</span>
       </div>
     </div>
 
-    <!-- Slider para Num Scales -->
-    <div class="flex flex-col">
-      <label class="text-sm font-medium text-gray-700 mb-1">Calidad</label>
-      <div class="flex justify-between text-xs font-semibold mb-2 text-gray-500">
-        <span>Calidad Baja</span>
-        <span>Calidad Media</span>
-        <span>Calidad Alta</span>
+    <!-- Slider para Resolución -->
+    <div class="flex flex-col items-center">
+      <label class="text-sm font-medium text-gray-700 mb-1">Resolución</label>
+      <div class="slider-container">
+        <VueSlider
+            v-model="resolutionLevel"
+            :min="1"
+            :max="3"
+            :step="1"
+            :marks="marks"
+            :tooltip="'always'"
+            :tooltip-formatter="formatTooltip"
+            class="mt-2 slider"
+            :dot-size="20"
+            :height="6"
+            :process-style="{ backgroundColor: '#3B82F6' }"
+            :rail-style="{ backgroundColor: '#D1D5DB' }"
+        />
       </div>
-      <input
-          type="range"
-          min="1"
-          max="200"
-          v-model="numScales"
-          class="slider"
-      />
-      <span class="mt-1 text-center text-gray-600">Num Scales: {{ numScales }}</span>
     </div>
 
     <button
@@ -215,37 +241,54 @@ const handleModalConfirm = () => {
 </template>
 
 <style scoped>
-/* Estilos para el slider de Num Scales */
-.slider {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 8px;
-  border-radius: 10px;
-  background: linear-gradient(to right, #10B981, #34D399);
-  outline: none;
-  transition: background 0.15s ease-in-out;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.slider-container {
+  width: 95%;
+  margin: 0 auto;
 }
 
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #10B981;
-  cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  transition: background 0.15s ease-in-out;
+.vue-slider {
+  margin-top: 1rem;
 }
 
-.slider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #10B981;
-  cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  transition: background 0.15s ease-in-out;
+.vue-slider-mark {
+  font-size: 0.75rem;
+  color: #4B5563; /* Texto en gris */
+  white-space: nowrap;
+}
+
+.vue-slider-mark-text {
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+}
+
+/* Ajustar las posiciones de las marcas */
+.vue-slider-mark-1 .vue-slider-mark-text {
+  left: 0% !important;
+  transform: translateX(0%);
+}
+
+.vue-slider-mark-3 .vue-slider-mark-text {
+  left: 100% !important;
+  transform: translateX(-100%);
+}
+
+.vue-slider-mark-2 .vue-slider-mark-text {
+  left: 50% !important;
+}
+
+.vue-slider-dot {
+  background-color: #3B82F6; /* Azul */
+  border: none;
+}
+
+.vue-slider-tooltip {
+  background-color: #3B82F6;
+  border-color: #3B82F6;
+}
+
+/* Estilos comunes */
+.vue-slider-dot {
+  border: none;
 }
 </style>

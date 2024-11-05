@@ -22,6 +22,7 @@
     "primeicons": "^7.0.0",
     "vue": "^3.4.29",
     "vue-router": "^4.4.3",
+    "vue-slider-component": "^4.1.0-beta.7",
     "vue3-spinner": "^0.0.17"
   },
   "devDependencies": {

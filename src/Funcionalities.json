@@ -55,17 +55,6 @@
     "functionalityScientificExplanation": "La Transformada Wavelet es una técnica avanzada en el análisis de señales neuronales, ya que permite la descomposición de señales cerebrales en diferentes escalas y frecuencias. Al aplicar la transformada wavelet a datos neurofisiológicos, los investigadores pueden estudiar señales no estacionarias, como EEG y MEG, con mayor detalle y precisión. Esta funcionalidad es esencial para el análisis de la actividad cerebral, ya que proporciona una visión detallada de la actividad cerebral a lo largo del tiempo, capturando tanto eventos rápidos como tendencias prolongadas, lo que es crucial para investigaciones sobre dinámicas cerebrales."
   },
   {
-    "id": "convolutions",
-    "title": "Convoluciones",
-    "subtitle": "Refinamiento de señales cerebrales para análisis avanzado",
-    "description": "Realiza convoluciones en señales neuronales para tareas como el filtrado de ruido o la detección de patrones específicos en EEG, MEG, y señales de neuroimagen.",
-    "benefits": "Mejora la precisión del análisis de señales cerebrales, permitiendo la detección y el estudio de fenómenos sutiles y específicos dentro de los datos neuronales.",
-    "processTime": "Tiempo de procesamiento: N/A segundos",
-    "longDescription": "Las convoluciones son una técnica avanzada en el análisis de señales neuronales, ya que permiten el refinamiento de señales cerebrales para tareas como el filtrado de ruido o la detección de patrones específicos en EEG, MEG y señales de neuroimagen. Al aplicar convoluciones a datos neurofisiológicos, los investigadores pueden mejorar la precisión del análisis de señales cerebrales, permitiendo la detección y el estudio de fenómenos sutiles y específicos dentro de los datos neuronales. Esta funcionalidad es crucial para el análisis avanzado de la actividad cerebral, ya que proporciona una forma eficaz de refinar y analizar datos neuronales para investigaciones detalladas y precisas.",
-    "image": "https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_960_720.jpg",
-    "functionalityScientificExplanation": "Las convoluciones son una técnica avanzada en el análisis de señales neuronales, ya que permiten el refinamiento de señales cerebrales para tareas como el filtrado de ruido o la detección de patrones específicos en EEG, MEG y señales de neuroimagen. Al aplicar convoluciones a datos neurofisiológicos, los investigadores pueden mejorar la precisión del análisis de señales cerebrales, permitiendo la detección y el estudio de fenómenos sutiles y específicos dentro de los datos neuronales. Esta funcionalidad es crucial para el análisis avanzado de la actividad cerebral, ya que proporciona una forma eficaz de refinar y analizar datos neuronales para investigaciones detalladas y precisas."
-  },
-  {
     "id": "moving-average-filter",
     "title": "Filtro Moving Average",
     "subtitle": "Suaviza la actividad cerebral para revelar tendencias claras",

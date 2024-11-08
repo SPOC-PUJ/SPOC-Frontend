@@ -27,15 +27,16 @@ const selectedTool = ref('');
         <select id="toolSelect" v-model="selectedTool"
                 class="block w-full appearance-none bg-white border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 sm:text-sm">
           <option value="" disabled>Seleccione una herramienta</option>
-          <option value="FastWaveletHarr">Fast Wavelet Harr (DONE)</option>
-          <option value="FastWaveletTransform">Fast Wavelet Transform (DONE)</option>
-          <option value="MovingAverage">Moving Average (DONE)</option>
-          <option value="SignalAverage">Signal Average (DONE)</option> <!-- TODO: Terminar de implementar y borrar los "done". -->
-          <option value="FirstDifference">First Difference (DONE)</option>
-          <option value="IFFT-Tool">Inverse Fast Fourier Transform (DONE)</option>
-          <option value="FFT-Tool">Fast Fourier Transform (REVISAR)</option>
-          <option value="CWT-Tool">Continuous Wavelet Transform (REVISAR)</option>
-          <option value="RunningSum">Running Sum</option>
+          <!-- <option value="FastWaveletHarr">Transformada Wavelet Rápida Harr (HECHO)</option> -->
+          <option value="FastWaveletTransform">Descomposición Wavelet</option>
+          <option value="MovingAverage">Media Móvil</option>
+          <option value="SignalAverage">Promediar Señales</option>
+          <!-- <option value="FirstDifference">Primera Diferencia (HECHO)</option> -->
+          <!-- <option value="IFFT-Tool">Transformada Inversa de Fourier Rápida (HECHO)</option> -->
+          <option value="FFT-Tool">Transformada Rápida de Fourier</option>
+          <option value="CWT-Tool">Transformada Wavelet</option>
+          <!-- <option value="RunningSum">Suma Acumulativa</option> -->
+
         </select>
         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
           <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">

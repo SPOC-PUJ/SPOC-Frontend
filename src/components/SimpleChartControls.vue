@@ -25,7 +25,7 @@ console.log('Last Segment of the URL:', routeLastSegment);
 
 let showSignalSelector = true;
 
-if (routeLastSegment === 'FastWaveletTransform' || routeLastSegment === 'MovingAverage' || routeLastSegment === 'SignalAverage' || routeLastSegment === 'FirstDifference' || routeLastSegment === 'IFFT-Tool' || routeLastSegment === 'CWT-Tool')
+if (routeLastSegment === 'FastWaveletTransform' || routeLastSegment === 'MovingAverage' || routeLastSegment === 'SignalAverage' || routeLastSegment === 'FirstDifference' || routeLastSegment === "FFT-Tool" || routeLastSegment === 'IFFT-Tool' || routeLastSegment === 'CWT-Tool')
 {
   showSignalSelector = false;
 }

@@ -222,6 +222,10 @@ const dataset = computed(() => {
           } else {
             console.error('Los elementos de data no están en un formato reconocido.');
           }
+
+          // Recortar data a la mitad
+          const halfLength = Math.ceil(data.length / 2);
+          data = data.slice(0, halfLength);
         } else {
           console.error('Data no es un arreglo o está vacío.');
         }

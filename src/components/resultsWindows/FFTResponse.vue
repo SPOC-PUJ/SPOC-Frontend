@@ -4,6 +4,7 @@ import {openDB} from 'idb';
 import {useResponseStore} from '@/stores/responseStore.js';
 import {JellyfishLoader} from 'vue3-spinner';
 import SimpleChart from '@/components/SimpleChart.vue';
+import SavingTools from "@/components/extraTools/SavingTools.vue";
 
 // Estado de carga inicial (Jellyfish Loader) como ref para que sea reactivo
 const loadingStatus = ref(true);
@@ -43,6 +44,7 @@ onMounted(async () => {
 
     <!-- Mostrar los gráficos una vez que loadingStatus es false -->
     <div v-else>
+      <SavingTools/>
       <!-- Caja para Moving Average -->
       <div class="bg-white rounded-xl shadow-md relative mt-4 pb-16">
         <div class="p-4">

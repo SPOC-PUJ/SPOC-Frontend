@@ -164,7 +164,7 @@ const handleModalConfirm = () => {
 </script>
 
 <template>
-  <h4 class="text-lg font-semibold text-green-500 mb-6">Continuous Wavelet Transform (CWT)</h4>
+  <h4 class="text-lg font-semibold text-green-500 mb-6">Transformada Wavelet</h4>
 
   <form @submit.prevent="submitToolCWT" class="space-y-6">
     <!-- Rango Deslizante para Start y End -->

@@ -101,7 +101,7 @@ const selectAllSignals = () => {
 </script>
 
 <template>
-  <h4 class="text-lg font-semibold text-green-500 mb-4">Calcular Average</h4>
+  <h4 class="text-lg font-semibold text-green-500 mb-4">Promediar Señales</h4>
 
   <form @submit.prevent="submitForm">
     <label class="block text-sm font-medium text-gray-700 mb-2">Selecciona las señales:</label>
@@ -131,7 +131,7 @@ const selectAllSignals = () => {
     </button>
 
     <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
-      Calcular Average
+      Procesar...
     </button>
   </form>
 

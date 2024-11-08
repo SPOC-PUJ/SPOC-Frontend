@@ -95,7 +95,7 @@ const handleModalConfirm = () => {
 </script>
 
 <template>
-  <h4 class="text-lg font-semibold text-green-500 mb-4">Fast Fourier Transform (FFT)</h4>
+  <h4 class="text-lg font-semibold text-green-500 mb-4">Transformada Rápida de Fourier</h4>
   <form @submit.prevent="submitToolFFT">
     <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Procesar...</button>
   </form>

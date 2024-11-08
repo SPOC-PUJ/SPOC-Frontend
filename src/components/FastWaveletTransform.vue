@@ -166,7 +166,7 @@ const handleModalConfirm = () => {
     </div>
 
     <!-- Wave Name (Select Menu) -->
-    <label class="block text-sm font-medium text-gray-700 mb-2">Wave Name:</label>
+    <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de la Wavelet:</label>
     <select
         v-model="tool2Data.waveName"
         class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm mb-4"

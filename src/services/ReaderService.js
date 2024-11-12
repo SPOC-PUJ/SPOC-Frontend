@@ -3,7 +3,7 @@ import { GrpcWebFetchTransport } from '@protobuf-ts/grpcweb-transport';
 import { ABFRequest } from '../proto/proto-ts/reader';
 
 const client = new ABFServiceClient(
-    new GrpcWebFetchTransport({ baseUrl: 'http://localhost:8080' })
+    new GrpcWebFetchTransport({ baseUrl: 'http://34.173.110.150:80' })
 );
 
 

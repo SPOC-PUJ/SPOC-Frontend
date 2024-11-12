@@ -41,7 +41,7 @@ const submitToolFFT = () => {
 const calcularFFT = async () =>
 {
   // Verificar si signalObject está inicializado
-  if (!signalComputed.value)
+  if (!signalStore.signalJson)
   {
     modalMessage.value = 'El objeto signalObject es null o no está inicializado.';
     console.error("Error: ", modalMessage.value);

@@ -42,7 +42,7 @@ const submitTool5 = () => {
 };
 
 const calcularPromedioMovil = async () => {
-  if (!signalComputed.value) {
+  if (!signalStore.signalJson) {
     modalMessage.value = 'No hay una señal seleccionada.';
     console.error(modalMessage.value);
     showModal.value = true;

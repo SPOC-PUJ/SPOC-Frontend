@@ -89,7 +89,7 @@ const submitTool2 = () => {
 // Función para calcular Fast Wavelet Transform
 const calcularFastWaveletTransform = async () => {
   // Verificar si signalObject está inicializado
-  if (!signalComputed.value)
+  if (!signalStore.signalJson)
   {
     modalMessage.value = 'El objeto signalObject es null o no está inicializado.';
     console.error(modalMessage.value);

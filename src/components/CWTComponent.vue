@@ -106,7 +106,7 @@ const validarInputs = () => {
 
 // Función asíncrona para calcular el CWT
 const calcularCWT = async () => {
-  if (!signalComputed.value) {
+  if (!signalStore.signalJson) {
     modalMessage.value = 'El objeto signalObject es null o no está inicializado.';
     console.error('Error:', modalMessage.value);
     loadingStatus.value = false;

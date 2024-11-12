@@ -22,8 +22,6 @@ function handleFileProcessed(values) {
   <div class="flex justify-center">
     <SimpleChart v-bind:data="realValues" class="h-[80vh] w-full"/> <!-- Pasar los valores reales al graficador -->
   </div>
-
-  <CWTComponent/>
 </template>
 
 <style scoped>

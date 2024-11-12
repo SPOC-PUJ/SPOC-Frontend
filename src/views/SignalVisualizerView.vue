@@ -5,7 +5,7 @@ import SimpleChart from "@/components/SimpleChart.vue";
 const fileName = ref(null);
 
 import UploadFileButtonCard from "@/components/UploadFileButtonCard.vue";
-import CWTComponent from '@/components/CWTComponent.vue';
+
 
 const realValues = ref([]); // Array para almacenar los valores reales y pasarlos al graficador
 
